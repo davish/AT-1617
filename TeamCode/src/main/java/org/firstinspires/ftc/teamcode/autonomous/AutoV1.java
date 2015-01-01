@@ -262,10 +262,6 @@ public abstract class AutoV1 extends LinearOpMode {
     robot.runChoo(0);
   }
 
-  void moveUntilVuforia(double pow, double angle, double dist, double offset, String target) {
-
-  }
-
   /**
    * Move around while orthogonal with a Vuforia vision target.
    *

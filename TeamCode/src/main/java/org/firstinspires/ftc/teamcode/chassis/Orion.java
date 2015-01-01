@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
 import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,8 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.robotcontroller.external.samples.SensorMRRangeSensor;
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.sensors.Gyro;
 
@@ -40,8 +43,7 @@ public class Orion {
   public DigitalChannel redLights;
   public DigitalChannel greenLights;
 
-  public AnalogInput distl;
-  public AnalogInput distr;
+  public ModernRoboticsI2cRangeSensor dist;
 
   public final double PIVOT_SENSELEFT = .45;
   public final double PIVOT_CENTER = .55;
@@ -75,8 +77,9 @@ public class Orion {
 
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+    dist = hwMap.get(ModernRoboticsI2cRangeSensor.class, "dist");
+
 //    ods = hwMap.opticalDistanceSensor.get("ods");
-//    dist=  hwMap.analogInput.get("distance");
 //    odsl = hwMap.opticalDistanceSensor.get("odsl");
 //    odsr = hwMap.opticalDistanceSensor.get("odsr");
 //    distl =  hwMap.analogInput.get("distancel");
@@ -113,6 +116,10 @@ public class Orion {
   public void driveTank(double l, double r) {
     moveLeft(l);
     moveRight(r);
+  }
+
+  public double getDistanceAway() {
+    return dist.getDistance(DistanceUnit.CM);
   }
 
   public void stopMotors() {
