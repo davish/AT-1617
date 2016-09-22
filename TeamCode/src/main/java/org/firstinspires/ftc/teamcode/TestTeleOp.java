@@ -1,7 +1,7 @@
 package org.firstinspires.ftc.teamcode;
 
 /**
- * Created by Davis for Dalton's Oldest and Most Prestigious Robotics Team on September the 9th, 2016. 
+ * Created by Davis for Dalton's Oldest and Most Prestigious Robotics Team on September the 15th, 2016. 
  */
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
