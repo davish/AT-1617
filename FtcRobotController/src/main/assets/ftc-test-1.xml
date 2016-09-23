@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="gears" size="0.279400 0.215900" />
+    <ImageTarget name="legos" size="0.279400 0.215900" />
+    <ImageTarget name="tools" size="0.279400 0.215900" />
+    <ImageTarget name="wheels" size="0.279400 0.215900" />
+  </Tracking>
+</QCARConfig>

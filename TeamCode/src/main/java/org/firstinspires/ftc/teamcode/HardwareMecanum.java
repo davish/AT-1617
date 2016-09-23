@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.hardware.adafruit.BNO055IMU;
 
 /**
  * Created by davis on 9/13/16.
  */
 public class HardwareMecanum {
   HardwareMap hwMap;
-
-
   /**
    *          Front
    *      1 |-------| 2
@@ -17,9 +16,11 @@ public class HardwareMecanum {
    *         -------
    *      3 |-------| 4
    *           Back
-   *
-   *
    */
+
+
+
+  IMU imu;
 
 
   DcMotor FL; // v1
@@ -29,10 +30,12 @@ public class HardwareMecanum {
 
   public void init(HardwareMap ahwMap) {
     hwMap = ahwMap;
-    FR = hwMap.dcMotor.get("front right");
-    BR = hwMap.dcMotor.get("back right");
-    FL = hwMap.dcMotor.get("front left");
-    BL = hwMap.dcMotor.get("back left");
+    FL = hwMap.dcMotor.get("FL");
+    FR = hwMap.dcMotor.get("FR");
+    BL = hwMap.dcMotor.get("BL");
+    BR = hwMap.dcMotor.get("BR");
+
+//    imu = new IMU(hwMap.get(BNO055IMU.class, "imu"));
 
     FR.setDirection(DcMotor.Direction.REVERSE);
     BR.setDirection(DcMotor.Direction.REVERSE);
@@ -48,12 +51,61 @@ public class HardwareMecanum {
     BR.setPower(pow);
   }
 
-  void drive(double l, double r) {
+  void driveTank(double l, double r) {
     moveLeft(l);
     moveRight(r);
   }
 
   void stopMotors() {
-    drive(0, 0);
+    driveTank(0, 0);
+  }
+
+  /**
+   * Drive in a certain direction with a mecanum chassis
+   * @param pow Base power (magnitude)
+   * @param angle Angle to drive towards
+   * @param rot speed of rotation
+   */
+  void omniMove(double pow, double angle, double rot) {
+    pow = FtcUtil.motorScale(pow);
+    rot = FtcUtil.motorScale(rot);
+
+    // Adding PI/4 ensures that 0 degrees is straight ahead
+    double vx = pow*Math.cos(angle+Math.PI/4);
+    double vy = pow*Math.sin(angle+Math.PI/4);
+
+    double[] V = {vx+rot, vy-rot, vy+rot, vx-rot}; // contains motor powers for each motor.
+
+    /*
+     * because of adding/subtracting rotation, these numbers could be between [-2,2].
+     * To get around this, find the maximum motor power, and divide all of them by that
+     * so that the proportions stay the same but now it's between [-1,1].
+     */
+
+    // find max
+    double m = 0.0;
+    for (double v : V)
+      if (Math.abs(v) > m)
+        m = v;
+
+    double mult = Math.max(Math.abs(pow), Math.abs(rot)); // If we're just rotating, pow will be 0
+    // adjust values, still keeping power in mind.
+    if (m != 0) // if the max power isn't 0 (can't divide by 0)
+      for(int i = 0; i < V.length; i++)
+        V[i] = Math.abs(mult) * (V[i]/Math.abs(m));
+
+    // finally, set motor powers.
+    FL.setPower(V[0]);
+    FR.setPower(V[1]);
+    BL.setPower(V[2]);
+    BR.setPower(V[3]);
+
+  }
+
+  public double PID(double val, double target) {
+    double K = .2;
+    double error = val - target;
+
+    return error * K;
   }
 }
