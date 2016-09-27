@@ -149,13 +149,21 @@ public class Vuforia {
    * @return location in 3 dimensions, {x, y, z} with the target at the origin.
    */
   public float[] getPosition(OpenGLMatrix loc) {
-    VectorF pos = loc.getTranslation();
-    return pos.getData();
+    if (loc != null) {
+      VectorF pos = loc.getTranslation();
+      return pos.getData();
+    } else {
+      return new float[] {Float.NaN, Float.NaN, Float.NaN};
+    }
   }
 
   public float getHeading(OpenGLMatrix loc) {
-    Orientation o = Orientation.getOrientation(loc, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
-    return o.secondAngle;
+    if (loc != null) {
+      Orientation o = Orientation.getOrientation(loc, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
+      return o.secondAngle;
+    } else {
+      return Float.NaN;
+    }
   }
 
   public void activate() {

@@ -24,22 +24,22 @@ public abstract class FourWheel {
     BL.setDirection(DcMotor.Direction.REVERSE);
   }
 
-  void moveLeft(double pow) {
+  public void moveLeft(double pow) {
     FL.setPower(pow);
     BL.setPower(pow);
   }
 
-  void moveRight(double pow) {
+  public void moveRight(double pow) {
     FR.setPower(pow);
     BR.setPower(pow);
   }
 
-  void driveTank(double l, double r) {
+  public void driveTank(double l, double r) {
     moveLeft(l);
     moveRight(r);
   }
 
-  void stopMotors() {
+  public void stopMotors() {
     driveTank(0, 0);
   }
 }
