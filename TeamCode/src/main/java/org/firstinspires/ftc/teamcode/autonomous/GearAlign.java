@@ -1,17 +1,21 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
+import org.firstinspires.ftc.teamcode.FtcUtil;
+import org.firstinspires.ftc.teamcode.sensors.Vuforia;
+import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+
 /**
  * Created by davis on 9/23/16.
  */
 @Autonomous(name="Align with Gears", group="Tests")
 public class GearAlign extends LinearOpMode {
-  HardwareMecanum robot;
+  Mecanum robot;
   public void runOpMode() throws InterruptedException{
-    robot = new HardwareMecanum();
+    robot = new Mecanum();
     robot.init(hardwareMap);
     Vuforia vuforia = new Vuforia();
     waitForStart();

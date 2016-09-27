@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
 /**
  * Created by davis on 9/13/16.
@@ -7,13 +7,16 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.teamcode.FtcUtil;
+import org.firstinspires.ftc.teamcode.chassis.Omni;
+
 /**
  * Created by davis on 5/22/16.
  */
 @TeleOp(name="Mecanum Drive", group="TeleOp")
 public class MecanumDrive extends OpMode {
 
-  HardwareMecanum robot = new HardwareMecanum();
+  Omni robot = new Omni();
 
   double lastPow = 0;
   double targetHeading = 0;
@@ -23,8 +26,7 @@ public class MecanumDrive extends OpMode {
   }
 
   public void loop() {
-    robot.imu.update();
-
+//    robot.imu.update();
     driveRobot(gamepad1);
   }
 
@@ -45,10 +47,12 @@ public class MecanumDrive extends OpMode {
     double rot = FtcUtil.threshold(gp.right_stick_x);
 
     double pow = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-    double angle = Math.atan2(vy, vx) + Math.PI/2;
+    double angle = Math.atan2(vy, vx);
 
-    if (angle < 0)
-      angle += Math.PI*2;
+
+    pow *= .25;
+    rot *= .25;
+
 
 //    // if we are moving now, and we weren't moving last loop, set a new heading.
 //    if (pow > 0 && lastPow == 0) {
@@ -61,5 +65,26 @@ public class MecanumDrive extends OpMode {
 
     robot.omniMove(pow, angle, rot);
     lastPow = pow;
+  }
+
+  void dpadDrive(Gamepad gp) {
+    double rot = FtcUtil.threshold(gp.right_stick_x);
+    double angle;
+    double pow = 1;
+    if (gp.dpad_up)
+      angle = 0;
+    else if (gp.dpad_right)
+      angle = -Math.PI/2;
+    else if (gp.dpad_down)
+      angle = Math.PI;
+    else if (gp.dpad_left)
+      angle = Math.PI/2;
+    else {
+      angle = 0;
+      pow = 0;
+    }
+    pow *= .25;
+    rot *= .25;
+    robot.omniMove(pow, angle, rot);
   }
 }

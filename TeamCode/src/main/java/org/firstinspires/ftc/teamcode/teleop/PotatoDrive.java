@@ -1,5 +1,6 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.teleop;
 
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -10,6 +11,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
  */
 
 @TeleOp(name="Potato Drive", group="TeleOp")
+@Disabled
 public class PotatoDrive extends OpMode {
 
   DcMotor FL, FR, BL, BR;

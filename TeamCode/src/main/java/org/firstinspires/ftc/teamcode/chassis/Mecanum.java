@@ -1,13 +1,15 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.chassis;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-import com.qualcomm.hardware.adafruit.BNO055IMU;
+
+import org.firstinspires.ftc.teamcode.FtcUtil;
+import org.firstinspires.ftc.teamcode.sensors.IMU;
 
 /**
  * Created by davis on 9/13/16.
  */
-public class HardwareMecanum {
+public class Mecanum extends Holonomic{
   HardwareMap hwMap;
   /**
    *          Front
@@ -19,54 +21,13 @@ public class HardwareMecanum {
    */
 
 
-
-  IMU imu;
-
-
-  DcMotor FL; // v1
-  DcMotor FR; // v2
-  DcMotor BL; // v3
-  DcMotor BR; // v4
-
-  public void init(HardwareMap ahwMap) {
-    hwMap = ahwMap;
-    FL = hwMap.dcMotor.get("FL");
-    FR = hwMap.dcMotor.get("FR");
-    BL = hwMap.dcMotor.get("BL");
-    BR = hwMap.dcMotor.get("BR");
-
-//    imu = new IMU(hwMap.get(BNO055IMU.class, "imu"));
-
-    FR.setDirection(DcMotor.Direction.REVERSE);
-    BR.setDirection(DcMotor.Direction.REVERSE);
-  }
-
-  void moveLeft(double pow) {
-    FL.setPower(pow);
-    BL.setPower(pow);
-  }
-
-  void moveRight(double pow) {
-    FR.setPower(pow);
-    BR.setPower(pow);
-  }
-
-  void driveTank(double l, double r) {
-    moveLeft(l);
-    moveRight(r);
-  }
-
-  void stopMotors() {
-    driveTank(0, 0);
-  }
-
   /**
    * Drive in a certain direction with a mecanum chassis
    * @param pow Base power (magnitude)
    * @param angle Angle to drive towards
    * @param rot speed of rotation
    */
-  void omniMove(double pow, double angle, double rot) {
+  public void omniMove(double pow, double angle, double rot) {
     pow = FtcUtil.motorScale(pow);
     rot = FtcUtil.motorScale(rot);
 
@@ -100,12 +61,5 @@ public class HardwareMecanum {
     BL.setPower(V[2]);
     BR.setPower(V[3]);
 
-  }
-
-  public double PID(double val, double target) {
-    double K = .2;
-    double error = val - target;
-
-    return error * K;
   }
 }
