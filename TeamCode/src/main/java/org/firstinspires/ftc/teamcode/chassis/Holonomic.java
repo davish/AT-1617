@@ -8,6 +8,6 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
  */
 public abstract class Holonomic extends FourWheel{
 
-  public abstract void omniMove(double pow, double angle, double rot);
+  public abstract void move(double pow, double angle, double rot);
 
 }

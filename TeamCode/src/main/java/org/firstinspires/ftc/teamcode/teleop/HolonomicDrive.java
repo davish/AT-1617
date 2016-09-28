@@ -8,25 +8,22 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FtcUtil;
+import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Omni;
 
 /**
  * Created by davis on 5/22/16.
  */
 @TeleOp(name="Mecanum Drive", group="TeleOp")
-public class MecanumDrive extends OpMode {
+public class HolonomicDrive extends OpMode {
 
-  Omni robot = new Omni();
-
-  double lastPow = 0;
-  double targetHeading = 0;
+  Holonomic robot = new Omni();
 
   public void init() {
     robot.init(hardwareMap);
   }
 
   public void loop() {
-//    robot.imu.update();
     driveRobot(gamepad1);
   }
 
@@ -53,18 +50,7 @@ public class MecanumDrive extends OpMode {
     pow *= .25;
     rot *= .25;
 
-
-//    // if we are moving now, and we weren't moving last loop, set a new heading.
-//    if (pow > 0 && lastPow == 0) {
-//      targetHeading = robot.imu.heading();
-//    }
-//    // If we're not rotating intentionally, then override the rotation with PID control so we're continually facing straight.
-//    if (pow > Math.abs(rot) && pow > 0) {
-//      rot = robot.PID(robot.imu.heading(), targetHeading);
-//    }
-
-    robot.omniMove(pow, angle, rot);
-    lastPow = pow;
+    robot.move(pow, angle, rot);
   }
 
   void dpadDrive(Gamepad gp) {
@@ -85,6 +71,6 @@ public class MecanumDrive extends OpMode {
     }
     pow *= .25;
     rot *= .25;
-    robot.omniMove(pow, angle, rot);
+    robot.move(pow, angle, rot);
   }
 }
