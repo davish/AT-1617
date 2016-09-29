@@ -29,7 +29,7 @@ public class Omni extends Holonomic{
   public void move(double pow, double angle, double rot) {
     pow = FtcUtil.motorScale(pow);
     rot = FtcUtil.motorScale(rot);
-
+    angle += Math.PI/2;
     // Adding PI/4 ensures that 0 degrees is straight ahead
     double vx = -pow*Math.cos(angle+Math.PI/4);
     double vy = pow*Math.sin(angle+Math.PI/4);

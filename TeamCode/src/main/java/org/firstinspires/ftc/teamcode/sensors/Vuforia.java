@@ -104,7 +104,7 @@ public class Vuforia {
   }
 
   public OpenGLMatrix getAlignment(String guide) {
-    VuforiaTrackable target = null;
+    VuforiaTrackable target;
     switch(guide) {
       case "gears":
         target = red1;

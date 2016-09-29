@@ -15,6 +15,7 @@ public class FtcUtil {
   public static double motorScale(double d) {
     if (d < -1.0) return -1.0;
     if (d > 1.0)  return 1.0;
+    if (Math.abs(d) < 0.1) return 0.0;
     return d;
   }
 

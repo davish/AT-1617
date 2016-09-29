@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 public class GearAlign extends LinearOpMode {
   Holonomic robot;
 
-  double SPEED = .25;
+  double SPEED = .15;
   String TARGET = "gears";
 
   public void runOpMode() throws InterruptedException{
@@ -30,27 +30,32 @@ public class GearAlign extends LinearOpMode {
       float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       double pow = 0, angle = 0, rot = 0;
-      if (loc == null) { // if the target can't be located, rotate slowly so we can find it.
-        rot = SPEED / 2;
-      }
-      else if (Math.abs(pos[0]) > 10) { // Line up horizontally by strafing left or right
+
+//      if (Math.abs(heading) > 14) {
+//        pow = 0;
+//        telemetry.addData("status", "aligning");
+//      }
+//      else
+      if (Math.abs(pos[1]) > 50) {
         pow = SPEED;
-        angle = FtcUtil.sign(pos[0]) * Math.PI/2;
+        angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
+        telemetry.addData("status", "strafing");
       }
-      else if (Math.abs(heading) > 3) { // If lined up horizontally, rotate to the right orientation
-        rot = FtcUtil.sign(heading) * SPEED;
-      }
-      else if (Math.abs(pos[2]) > 200) { // If we're lined up, move forward until we're within 20cm
+      else if (Math.abs(pos[2]) > 500) {
+        angle = 0;
         pow = SPEED;
+        telemetry.addData("status", "approaching");
       }
-      // if we're lined up and the target's in view, don't move.
 
       telemetry.addData("power", pow);
-      telemetry.addData("angle", angle);
+      telemetry.addData("angle", Math.toDegrees(angle));
       telemetry.addData("rotation", rot);
       telemetry.update();
 
-      robot.move(pow, angle, rot);
+      if (!Float.isNaN(heading))
+        robot.moveStraight(pow, angle, heading);
+      else
+        robot.moveStraight(0, 0, 0);
     }
   }
 }

@@ -31,6 +31,7 @@ public class Mecanum extends Holonomic{
     pow = FtcUtil.motorScale(pow);
     rot = FtcUtil.motorScale(rot);
 
+
     // Adding PI/4 ensures that 0 degrees is straight ahead
     double vx = pow*Math.cos(angle+Math.PI/4);
     double vy = pow*Math.sin(angle+Math.PI/4);
