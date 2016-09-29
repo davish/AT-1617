@@ -10,6 +10,13 @@ import org.firstinspires.ftc.teamcode.FtcUtil;
  */
 public abstract class Holonomic extends FourWheel{
 
+  double integral = 0.0; // Accumulation of error over time. Used in PID controller.
+
+  final double Kp = -0.007; // Proportional constant for PID. Seems to work pretty well at -.007.
+  // Integral constant for PID. Set for 0 so it doesn't affect anything now, but play with this for
+  // the best result.
+  final double Ki = 0;
+
   public abstract void move(double pow, double angle, double rot);
 
   /**
@@ -20,10 +27,12 @@ public abstract class Holonomic extends FourWheel{
    * @param target Desired orientation/rotation
    */
   public void moveStraight(double pow, double angle, double actual, double target) {
-    double Kp = -0.007;
     double error = actual - target;
+    integral += error;
 
-    double rot = FtcUtil.motorScale(error*Kp);
+    double PID = Kp*error + Ki+integral;
+
+    double rot = FtcUtil.motorScale(PID);
     this.move(pow, angle, rot);
   }
 
