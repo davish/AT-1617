@@ -37,6 +37,7 @@ public abstract class Holonomic extends FourWheel{
 
     double change = (error - lastError);
     lastError = error;
+
     double PID = Kp*error + Ki*integral + Kd*change;
 
     double rot = FtcUtil.motorScale(PID);
