@@ -32,14 +32,19 @@ public class IMU {
     angles = imu.getAngularOrientation().toAxesReference(AxesReference.INTRINSIC).toAxesOrder(AxesOrder.ZYX);
   }
 
-  public double heading() {
+  public double heading() { // forward is 0. range is -180-180.
     if (angles != null) {
-      double h = angles.firstAngle + forwardHeading;
-      if (h < 0) h += 360;
+      double h = angles.firstAngle - forwardHeading;
+      if (h < -180) h += 360;
+      if (h > 180) h -= 360;
       return h;
     }
     else
       return 0.0;
+  }
+
+  public void resetHeading() {
+    forwardHeading = angles.firstAngle;
   }
 
   public double roll() {
