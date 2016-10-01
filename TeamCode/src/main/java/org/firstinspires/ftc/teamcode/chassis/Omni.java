@@ -27,6 +27,8 @@ public class Omni extends Holonomic{
    * @param rot speed of rotation
    */
   public void move(double pow, double angle, double rot) {
+    pow *= .25;
+    rot *= .25;
     pow = FtcUtil.motorScale(pow);
     rot = FtcUtil.motorScale(rot);
     angle += Math.PI/2;

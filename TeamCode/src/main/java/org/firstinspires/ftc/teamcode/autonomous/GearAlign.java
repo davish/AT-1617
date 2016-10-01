@@ -20,6 +20,8 @@ public class GearAlign extends LinearOpMode {
     robot.init(hardwareMap);
 
     Vuforia vuforia = new Vuforia();
+    telemetry.addData(">", "Vuforia initialized.");
+    telemetry.update();
     waitForStart();
     vuforia.activate();
 
@@ -49,7 +51,6 @@ public class GearAlign extends LinearOpMode {
 
       telemetry.addData("power", pow);
       telemetry.addData("angle", Math.toDegrees(angle));
-      telemetry.addData("rotation", rot);
       telemetry.update();
 
       if (!Float.isNaN(heading))

@@ -9,15 +9,16 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.chassis.Holonomic;
+import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 import org.firstinspires.ftc.teamcode.chassis.Omni;
 
 /**
  * Created by davis on 5/22/16.
  */
-@TeleOp(name="Mecanum Drive", group="TeleOp")
+@TeleOp(name="Actual Mecanum Drive", group="TeleOp")
 public class HolonomicDrive extends OpMode {
 
-  Holonomic robot = new Omni();
+  Holonomic robot = new Mecanum();
 
   public void init() {
     robot.init(hardwareMap);
@@ -48,10 +49,6 @@ public class HolonomicDrive extends OpMode {
     double pow = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
     double angle = Math.atan2(vy, vx) + Math.PI/2;
 
-
-    pow *= .25;
-    rot *= .25;
-
     telemetry.addData("angle", Math.toDegrees(angle));
     robot.move(pow, angle, rot);
   }
@@ -72,8 +69,6 @@ public class HolonomicDrive extends OpMode {
       angle = 0;
       pow = 0;
     }
-    pow *= .25;
-    rot *= .25;
     robot.move(pow, angle, rot);
   }
 }

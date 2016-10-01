@@ -21,6 +21,8 @@ public class StraightLine extends LinearOpMode{
     robot = new Omni();
     robot.init(hardwareMap);
     Vuforia vuforia = new Vuforia();
+    telemetry.addData(">", "Vuforia initialized.");
+    telemetry.update();
     waitForStart();
     vuforia.activate();
     while (opModeIsActive()) {
@@ -38,6 +40,9 @@ public class StraightLine extends LinearOpMode{
         pow = 0;
         angle = 0;
       }
+
+      telemetry.addData("angle", angle);
+      telemetry.update();
 
 
       if (!Float.isNaN(heading))
