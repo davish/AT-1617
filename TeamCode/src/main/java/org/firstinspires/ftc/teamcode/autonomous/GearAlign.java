@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 public class GearAlign extends LinearOpMode {
   Holonomic robot;
 
-  double SPEED = .15;
+  double SPEED = 0.6;
   String TARGET = "gears";
 
   public void runOpMode() throws InterruptedException{

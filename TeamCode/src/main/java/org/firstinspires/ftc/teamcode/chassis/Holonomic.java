@@ -13,14 +13,13 @@ public abstract class Holonomic extends FourWheel{
   double integral = 0.0; // Accumulation of error over time. Used in PID controller.
   double lastError = 0.0;
 
-
-  final double Kp = -0.007; // Proportional constant for PID. Seems to work pretty well at -.007.
-  // Integral constant for PID. Set for 0 so it doesn't affect anything now, but play with this for
-  // the best result.
-  final double Ki = 0.0;
-  // Derivitive control for PID. Make sure to read up on Derivitive control before using, since
-  // it isn't always necessary. http://www.controleng.com/search/search-single-display/understanding-derivative-in-pid-control/4ea87c406e.html
-  final double Kd = 0.0;
+  /*
+   PID constants for the chassis. These are abstract methods since each chassis (Mecanum, Omni, etc)
+   will have different values for each.
+   */
+  abstract double getKp();
+  abstract double getKi();
+  abstract double getKd();
 
   public abstract void move(double pow, double angle, double rot);
 
@@ -38,7 +37,7 @@ public abstract class Holonomic extends FourWheel{
     double change = (error - lastError);
     lastError = error;
 
-    double PID = Kp*error + Ki*integral + Kd*change;
+    double PID = getKp()*error + getKi()*integral + getKd()*change;
 
     double rot = FtcUtil.motorScale(PID);
     this.move(pow, angle, rot);

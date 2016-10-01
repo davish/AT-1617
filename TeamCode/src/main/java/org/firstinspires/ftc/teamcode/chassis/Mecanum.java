@@ -21,6 +21,16 @@ public class Mecanum extends Holonomic{
    */
 
 
+  double getKp() {
+    return -0.028;
+  }
+  double getKi() {
+    return 0.0;
+  }
+  double getKd() {
+    return 0.0;
+  }
+
   /**
    * Drive in a certain direction with a mecanum chassis
    * @param pow Base power (magnitude)

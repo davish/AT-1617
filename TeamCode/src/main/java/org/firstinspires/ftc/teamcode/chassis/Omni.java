@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.sensors.IMU;
  * Created by davis on 9/13/16.
  */
 public class Omni extends Holonomic{
-  HardwareMap hwMap;
   /**
    *          Front
    *      1 /-------\ 2
@@ -19,6 +18,18 @@ public class Omni extends Holonomic{
    *      3 \-------/ 4
    *           Back
    */
+
+  double getKp() {
+    return -0.007;
+  }
+
+  double getKi() {
+    return 0.0;
+  }
+
+  double getKd() {
+    return 0.0;
+  }
 
   /**
    * Drive in a certain direction with a mecanum chassis
