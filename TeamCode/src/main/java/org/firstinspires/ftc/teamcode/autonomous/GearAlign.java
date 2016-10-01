@@ -41,12 +41,12 @@ public class GearAlign extends LinearOpMode {
       if (Math.abs(pos[1]) > 50) {
         pow = SPEED;
         angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
-        telemetry.addData("status", "strafing");
+        telemetry.addData(">", "strafing");
       }
       else if (Math.abs(pos[2]) > 500) {
         angle = 0;
         pow = SPEED;
-        telemetry.addData("status", "approaching");
+        telemetry.addData(">", "approaching");
       }
 
       telemetry.addData("power", pow);
