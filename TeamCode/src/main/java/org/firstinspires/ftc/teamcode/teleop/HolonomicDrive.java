@@ -15,7 +15,7 @@ import org.firstinspires.ftc.teamcode.chassis.Omni;
 /**
  * Created by davis on 5/22/16.
  */
-@TeleOp(name="Actual Mecanum Drive", group="TeleOp")
+@TeleOp(name="Holonomic Drive", group="TeleOp")
 public class HolonomicDrive extends OpMode {
 
   Holonomic robot = new Mecanum();

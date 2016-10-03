@@ -28,13 +28,13 @@ public class StraightLine extends LinearOpMode{
     while (opModeIsActive()) {
       OpenGLMatrix loc = vuforia.getAlignment(TARGET);
       // pos={x, y z}. y is alignment, z is distance from target. x is height, which doesn't matter as of now.
-      float[] pos = vuforia.getPosition(loc);
-      float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
+      float[] pos = Vuforia.getPosition(loc);
+      float heading = Vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       double pow = 0, angle = 0, rot = 0;
 
       if (Math.abs(pos[2]) > 500) {
-        angle = Math.atan2(pos[2], pos[1]) + Math.PI/2;
+        angle = Math.atan2(pos[2] - 500, pos[1]) + Math.PI/2;
         pow = SPEED;
       } else {
         pow = 0;

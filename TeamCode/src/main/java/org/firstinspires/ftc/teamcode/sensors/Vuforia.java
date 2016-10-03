@@ -148,7 +148,7 @@ public class Vuforia {
    * @param loc Relative location as a matrix
    * @return location in 3 dimensions, {x, y, z} with the target at the origin.
    */
-  public float[] getPosition(OpenGLMatrix loc) {
+  public static float[] getPosition(OpenGLMatrix loc) {
     if (loc != null) {
       VectorF pos = loc.getTranslation();
       return pos.getData();
@@ -157,7 +157,7 @@ public class Vuforia {
     }
   }
 
-  public float getHeading(OpenGLMatrix loc) {
+  public static float getHeading(OpenGLMatrix loc) {
     if (loc != null) {
       Orientation o = Orientation.getOrientation(loc, AxesReference.EXTRINSIC, AxesOrder.XYZ, AngleUnit.DEGREES);
       return o.secondAngle;

@@ -28,8 +28,8 @@ public class GearAlign extends LinearOpMode {
     while (opModeIsActive()) {
       OpenGLMatrix loc = vuforia.getAlignment(TARGET);
       // pos={x, y z}. x is alignment, z is distance from target. y is height, which doesn't matter as of now.
-      float[] pos = vuforia.getPosition(loc);
-      float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
+      float[] pos = Vuforia.getPosition(loc);
+      float heading = Vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       double pow = 0, angle = 0, rot = 0;
 
