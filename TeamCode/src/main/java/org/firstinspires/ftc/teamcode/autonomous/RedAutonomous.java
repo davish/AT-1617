@@ -53,7 +53,7 @@ public class RedAutonomous extends LinearOpMode{
     sleep(500);
 
     // Strafe/move forward until we're 30cm away.
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 300) {
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 300 && opModeIsActive()) {
       OpenGLMatrix loc = vuforia.getAlignment(FIRST_TARGET);
       robot.alignWithTarget(Vuforia.getPosition(loc), Vuforia.getHeading(loc), .8);
     }
