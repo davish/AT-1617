@@ -77,4 +77,27 @@ public abstract class FourWheel {
   public void centerServo() {
     pivot(PIVOT_CENTER);
   }
+
+  public void hitBeacon(int color) throws InterruptedException {
+    int redLeft, blueLeft, redRight, blueRight;
+    this.senseLeft();
+    Thread.sleep(500);
+    redLeft = this.colorSensor.red();
+    blueLeft = this.colorSensor.blue();
+    this.senseRight();
+    Thread.sleep(500);
+    redRight = this.colorSensor.red();
+    blueRight = this.colorSensor.blue();
+    this.centerServo();
+    Thread.sleep(500);
+
+    if (redLeft*color > redRight*color)
+      this.hitLeft();
+    else if (redRight*color > redLeft*color)
+      this.hitRight();
+    else if (blueLeft*color > blueRight*color)
+      this.hitRight();
+    else if (blueRight*color > blueLeft*color)
+      this.hitLeft();
+  }
 }

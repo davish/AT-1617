@@ -60,48 +60,8 @@ public class RedAutonomous extends LinearOpMode{
     robot.stopMotors();
     sleep(500);
 
-    int redLeft, blueLeft, redRight, blueRight;
-    swivel(1);
-    sleep(500);
-    redLeft = robot.colorSensor.red();
-    blueLeft = robot.colorSensor.blue();
-    swivel(-1);
-    sleep(500);
-    redRight = robot.colorSensor.red();
-    blueRight = robot.colorSensor.blue();
-    robot.centerServo();
-    sleep(500);
-
-    if (redLeft > redRight)
-      robot.hitLeft();
-    else if (redRight > redLeft)
-      robot.hitRight();
-    else if (blueLeft > blueRight)
-      robot.hitRight();
-    else if (blueRight > blueLeft)
-      robot.hitLeft();
+    robot.hitBeacon(1);
 
     sleep(10000);
-  }
-
-  void swivel(int dir) {
-    switch(dir) {
-      case 1:
-        robot.pivot(robot.PIVOT_SENSELEFT);
-        break;
-      case -1:
-        robot.pivot(robot.PIVOT_SENSERIGHT);
-        break;
-      case -2:
-        robot.pivot(robot.PIVOT_HITRIGHT);
-        break;
-      case 2:
-        robot.pivot(robot.PIVOT_HITLEFT);
-        break;
-      case 0:
-      default:
-        robot.pivot(robot.PIVOT_CENTER);
-        break;
-    }
   }
 }
