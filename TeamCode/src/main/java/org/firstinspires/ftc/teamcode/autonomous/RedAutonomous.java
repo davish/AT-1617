@@ -20,13 +20,17 @@ public class RedAutonomous extends LinearOpMode{
   String FIRST_TARGET = "legos";
   String SECOND_TARGET = "tools";
 
-  float PHONE_OFFSET = 30; // offset of phone camera in millimeters
+
+  OpenGLMatrix loc;
+  float[] pos;
+  float heading;
+  Vuforia vuforia;
 
   public void runOpMode() throws InterruptedException {
     robot = new Mecanum();
     robot.init(hardwareMap);
 
-    Vuforia vuforia = new Vuforia();
+    vuforia = new Vuforia();
     telemetry.addData(">", "Vuforia initialized.");
     telemetry.update();
     waitForStart();
@@ -35,27 +39,32 @@ public class RedAutonomous extends LinearOpMode{
     // Move forward to get in range of vision targets
     do {
       robot.move(SPEED, 0, 0);
+      updatePosition(FIRST_TARGET);
       idle();
-    } while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive());
+    } while (loc == null && opModeIsActive());
     // Keep moving until we're 63cm away from the target
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 630 && opModeIsActive()) {
+    updatePosition();
+    while (Math.abs(pos[2]) > 630 && opModeIsActive()) {
       robot.move(SPEED, 0, 0);
+      updatePosition(FIRST_TARGET);
       idle();
     }
     robot.stopMotors();
     sleep(500);
     // Rotate until we're facing the target
-    while (Math.abs(Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET))) > 5  && opModeIsActive()) {
+    updatePosition();
+    while (Math.abs(heading) > 5  && opModeIsActive()) {
       robot.move(0, 0, SPEED);
+      updatePosition(FIRST_TARGET);
       idle();
     }
     robot.stopMotors();
     sleep(500);
-
     // Strafe/move forward until we're 30cm away.
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 300 && opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment(FIRST_TARGET);
-      robot.alignWithTarget(Vuforia.getPosition(loc), Vuforia.getHeading(loc), .8);
+    updatePosition();
+    while (Math.abs(pos[2]) > 300 && opModeIsActive()) {
+      updatePosition(FIRST_TARGET);
+      robot.alignWithTarget(pos, heading, .8);
     }
     robot.stopMotors();
     sleep(500);
@@ -63,5 +72,14 @@ public class RedAutonomous extends LinearOpMode{
     robot.hitBeacon(1);
 
     sleep(10000);
+  }
+
+  void updatePosition(String target) {
+    loc = vuforia.getAlignment(target);
+    pos = Vuforia.getPosition(loc);
+    heading = Vuforia.getHeading(loc);
+  }
+  void updatePosition() {
+    updatePosition(FIRST_TARGET);
   }
 }
