@@ -13,10 +13,10 @@ public class GearAlign extends LinearOpMode {
   Holonomic robot;
 
   double SPEED = 0.6;
-  String TARGET = "gears";
+  String TARGET = "legos";
 
   public void runOpMode() throws InterruptedException{
-    robot = new Omni();
+    robot = new Mecanum();
     robot.init(hardwareMap);
 
     Vuforia vuforia = new Vuforia();
@@ -43,10 +43,13 @@ public class GearAlign extends LinearOpMode {
         angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
         telemetry.addData(">", "strafing");
       }
-      else if (Math.abs(pos[2]) > 500) {
+      else if (Math.abs(pos[2]) > 400) {
         angle = 0;
         pow = SPEED;
         telemetry.addData(">", "approaching");
+      } else {
+        pow = 0;
+        telemetry.addData(">", "stopped");
       }
 
       telemetry.addData("power", pow);

@@ -1,7 +1,9 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.Servo;
 
 /**
  * Created by davis on 9/27/16.
@@ -13,6 +15,15 @@ public abstract class FourWheel {
   DcMotor BL; // v3
   DcMotor BR; // v4
 
+  public ColorSensor colorSensor;
+  Servo beacon;
+
+  public final double PIVOT_SENSELEFT = .65;
+  public final double PIVOT_CENTER = .75;
+  public final double PIVOT_SENSERIGHT = .85;
+  public final double PIVOT_HITLEFT = 1.0;
+  public final double PIVOT_HITRIGHT = .45;
+
   public void init(HardwareMap ahwMap) {
     hwMap = ahwMap;
     FL = hwMap.dcMotor.get("FL");
@@ -22,6 +33,10 @@ public abstract class FourWheel {
 
     FL.setDirection(DcMotor.Direction.REVERSE);
     BL.setDirection(DcMotor.Direction.REVERSE);
+
+    colorSensor = hwMap.colorSensor.get("mr");
+    beacon = hwMap.servo.get("beacon");
+    beacon.setPosition(PIVOT_CENTER);
   }
 
   public void moveLeft(double pow) {
@@ -41,5 +56,25 @@ public abstract class FourWheel {
 
   public void stopMotors() {
     driveTank(0, 0);
+  }
+
+  public void pivot(double pos) {
+    beacon.setPosition(pos);
+  }
+
+  public void senseLeft() {
+    pivot(PIVOT_SENSELEFT);
+  }
+  public void senseRight() {
+    pivot(PIVOT_SENSERIGHT);
+  }
+  public void hitLeft() {
+    pivot(PIVOT_HITLEFT);
+  }
+  public void hitRight() {
+    pivot(PIVOT_HITRIGHT);
+  }
+  public void centerServo() {
+    pivot(PIVOT_CENTER);
   }
 }

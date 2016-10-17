@@ -27,6 +27,7 @@ public class HolonomicDrive extends OpMode {
   public void loop() {
 //    driveRobot(gamepad1);
     dpadDrive(gamepad1);
+    swivel(gamepad1);
     telemetry.update();
   }
 
@@ -56,19 +57,24 @@ public class HolonomicDrive extends OpMode {
   void dpadDrive(Gamepad gp) {
     double rot = FtcUtil.threshold(gp.right_stick_x);
     double angle;
-    double pow = 1;
+    double pow = .8;
     if (gp.dpad_up)
       angle = 0;
     else if (gp.dpad_right)
-      angle = -Math.PI/2;
+      angle = Math.PI/2;
     else if (gp.dpad_down)
       angle = Math.PI;
     else if (gp.dpad_left)
-      angle = Math.PI/2;
+      angle = -Math.PI/2;
     else {
       angle = 0;
       pow = 0;
     }
     robot.move(pow, angle, rot);
+  }
+
+  void swivel(Gamepad gp) {
+    robot.pivot(gp.left_trigger);
+    telemetry.addData("Servo pos", gp.left_trigger);
   }
 }

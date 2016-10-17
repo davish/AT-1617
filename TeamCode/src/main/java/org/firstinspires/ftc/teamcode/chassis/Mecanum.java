@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.sensors.IMU;
  * Created by davis on 9/13/16.
  */
 public class Mecanum extends Holonomic{
-  HardwareMap hwMap;
   /**
    *          Front
    *      1 |-------| 2
@@ -22,7 +21,7 @@ public class Mecanum extends Holonomic{
 
 
   double getKp() {
-    return -0.028;
+    return -0.04;
   }
   double getKi() {
     return 0.0;
@@ -72,5 +71,9 @@ public class Mecanum extends Holonomic{
     BL.setPower(V[2]);
     BR.setPower(V[3]);
 
+  }
+
+  double getPhoneOffset() {
+    return 120;
   }
 }

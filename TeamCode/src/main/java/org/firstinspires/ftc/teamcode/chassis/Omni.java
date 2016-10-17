@@ -75,4 +75,8 @@ public class Omni extends Holonomic{
 
   }
 
+  double getPhoneOffset() {
+    return 0.0;
+  }
+
 }

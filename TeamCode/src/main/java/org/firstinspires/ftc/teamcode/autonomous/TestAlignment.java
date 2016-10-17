@@ -11,11 +11,13 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 public class TestAlignment extends LinearOpMode{
   public void runOpMode() throws InterruptedException {
     Vuforia vuforia = new Vuforia();
+    telemetry.addData(">", "Vuforia initialized.");
+    telemetry.update();
     waitForStart();
     vuforia.activate();
 
     while (opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment("gears");
+      OpenGLMatrix loc = vuforia.getAlignment("legos");
       float[] pos = vuforia.getPosition(loc);
       float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
