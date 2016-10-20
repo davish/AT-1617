@@ -59,10 +59,10 @@ public abstract class Holonomic extends FourWheel{
       pow = SPEED;
       angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
     }
-    else {
-      angle = 0;
-      pow = SPEED;
-    }
+//    else {
+//      angle = 0;
+//      pow = SPEED;
+//    }
 
     this.moveStraight(pow, angle, heading);
   }

@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
@@ -28,6 +29,7 @@ public class HolonomicDrive extends OpMode {
 //    driveRobot(gamepad1);
     dpadDrive(gamepad1);
     swivel(gamepad1);
+    telemetry.addData("distance", "%.2f mm", robot.rangeSensor.getDistance(DistanceUnit.MM));
     telemetry.update();
   }
 

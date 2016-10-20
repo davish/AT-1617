@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -16,6 +17,7 @@ public abstract class FourWheel {
   DcMotor BR; // v4
 
   public ColorSensor colorSensor;
+  public ModernRoboticsI2cRangeSensor rangeSensor;
   Servo beacon;
 
   public final double PIVOT_SENSELEFT = .65;
@@ -35,6 +37,7 @@ public abstract class FourWheel {
     BL.setDirection(DcMotor.Direction.REVERSE);
 
     colorSensor = hwMap.colorSensor.get("mr");
+    rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range");
     beacon = hwMap.servo.get("beacon");
     beacon.setPosition(PIVOT_CENTER);
   }
@@ -80,6 +83,7 @@ public abstract class FourWheel {
 
   public void hitBeacon(int color) throws InterruptedException {
     int redLeft, blueLeft, redRight, blueRight;
+    this.colorSensor.enableLed(false);
     this.senseLeft();
     Thread.sleep(500);
     redLeft = this.colorSensor.red();

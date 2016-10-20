@@ -17,7 +17,7 @@ public class TestAlignment extends LinearOpMode{
     vuforia.activate();
 
     while (opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment("legos");
+      OpenGLMatrix loc = vuforia.getAlignment("gears");
       float[] pos = vuforia.getPosition(loc);
       float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
