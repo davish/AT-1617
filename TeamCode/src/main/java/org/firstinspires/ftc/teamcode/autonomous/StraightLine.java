@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
  * Created by davis on 9/29/16.
  */
 @Autonomous(name="Line to Gears", group="Tests")
+@Disabled
 public class StraightLine extends LinearOpMode{
   Holonomic robot;
 

@@ -1,10 +1,6 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
-import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.teamcode.FtcUtil;
-import org.firstinspires.ftc.teamcode.sensors.IMU;
 
 /**
  * Created by davis on 9/13/16.
@@ -73,7 +69,7 @@ public class Mecanum extends Holonomic{
 
   }
 
-  double getPhoneOffset() {
-    return 120;
+  public double getPhoneOffset() {
+    return 100;
   }
 }

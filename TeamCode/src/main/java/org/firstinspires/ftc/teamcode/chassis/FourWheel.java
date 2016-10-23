@@ -1,10 +1,14 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
+import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+
+import org.firstinspires.ftc.teamcode.sensors.Gyro;
 
 /**
  * Created by davis on 9/27/16.
@@ -17,7 +21,9 @@ public abstract class FourWheel {
   DcMotor BR; // v4
 
   public ColorSensor colorSensor;
-  public ModernRoboticsI2cRangeSensor rangeSensor;
+  public AnalogInput lineSensor;
+  public Gyro imu;
+
   Servo beacon;
 
   public final double PIVOT_SENSELEFT = .65;
@@ -37,9 +43,14 @@ public abstract class FourWheel {
     BL.setDirection(DcMotor.Direction.REVERSE);
 
     colorSensor = hwMap.colorSensor.get("mr");
-    rangeSensor = hwMap.get(ModernRoboticsI2cRangeSensor.class, "range");
+    lineSensor = hwMap.analogInput.get("line");
+
+    imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+
     beacon = hwMap.servo.get("beacon");
     beacon.setPosition(PIVOT_CENTER);
+
+
   }
 
   public void moveLeft(double pow) {
@@ -104,4 +115,6 @@ public abstract class FourWheel {
     else if (blueRight*color > blueLeft*color)
       this.hitLeft();
   }
+
+
 }

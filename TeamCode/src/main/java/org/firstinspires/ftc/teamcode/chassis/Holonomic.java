@@ -21,7 +21,7 @@ public abstract class Holonomic extends FourWheel{
   abstract double getKi();
   abstract double getKd();
 
-  abstract double getPhoneOffset();
+  public abstract double getPhoneOffset();
 
   public abstract void move(double pow, double angle, double rot);
 
@@ -55,14 +55,14 @@ public abstract class Holonomic extends FourWheel{
   public void alignWithTarget(float[] pos, float heading, double SPEED) {
     double pow = 0, angle = 0;
 
-    if (Math.abs(pos[1] - getPhoneOffset()) > 50) {
+    if (Math.abs(pos[1] - 150) > 50) {
       pow = SPEED;
       angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
     }
-//    else {
-//      angle = 0;
-//      pow = SPEED;
-//    }
+    else {
+      angle = 0;
+      pow = SPEED;
+    }
 
     this.moveStraight(pow, angle, heading);
   }

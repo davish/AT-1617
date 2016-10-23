@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 public class GearAlign extends LinearOpMode {
   Holonomic robot;
 
-  double SPEED = 0.6;
+  double SPEED = 0.4;
   String FIRST_TARGET= "gears";
 
   OpenGLMatrix loc;
@@ -31,23 +31,27 @@ public class GearAlign extends LinearOpMode {
     telemetry.update();
     waitForStart();
     vuforia.activate();
+    double prevReading = 0.0;
 
     updatePosition(FIRST_TARGET);
-    telemetry.addData("distance", pos[2]);
+    robot.lineSensor.getVoltage();
     telemetry.update();
-    do {
-      updatePosition(FIRST_TARGET);
-      if (loc != null)
-        robot.alignWithTarget(pos, heading, .8);
-      else
-        robot.move(SPEED, -Math.PI/2, 0);
-    } while ((loc == null || Math.abs(pos[2]) > 300) && opModeIsActive());
-    robot.stopMotors();
+    robot.move(SPEED, -Math.PI/2, 0);
+    while (opModeIsActive()) {
+      telemetry.addData(">", robot.lineSensor.getVoltage());
+      telemetry.update();
+      double currReading = robot.lineSensor.getVoltage();
+      if (currReading > .001 && prevReading > .001) {
+        robot.stopMotors();
+        break;
+      }
+      prevReading = currReading;
+    }
+    sleep(1000);
   }
   void updatePosition(String target) {
     loc = vuforia.getAlignment(target);
     pos = Vuforia.getPosition(loc);
     heading = Vuforia.getHeading(loc);
-    distance = robot.rangeSensor.getDistance(DistanceUnit.MM);
   }
 }

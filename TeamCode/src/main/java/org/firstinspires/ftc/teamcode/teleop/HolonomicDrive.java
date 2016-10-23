@@ -29,7 +29,7 @@ public class HolonomicDrive extends OpMode {
 //    driveRobot(gamepad1);
     dpadDrive(gamepad1);
     swivel(gamepad1);
-    telemetry.addData("distance", "%.2f mm", robot.rangeSensor.getDistance(DistanceUnit.MM));
+    telemetry.addData("Line Sensor output", robot.lineSensor.getVoltage());
     telemetry.update();
   }
 
