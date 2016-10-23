@@ -23,6 +23,8 @@ public class HolonomicDrive extends OpMode {
 
   public void init() {
     robot.init(hardwareMap);
+    telemetry.addData(">", "Initialization complete.");
+    telemetry.update();
   }
 
   public void loop() {
@@ -30,6 +32,10 @@ public class HolonomicDrive extends OpMode {
     dpadDrive(gamepad1);
     swivel(gamepad1);
     telemetry.addData("Line Sensor output", robot.lineSensor.getVoltage());
+    telemetry.addData("Gyro heading", robot.imu.heading());
+    if (gamepad1.a)
+      robot.imu.resetHeading();
+
     telemetry.update();
   }
 
