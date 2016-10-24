@@ -22,7 +22,13 @@ public class GyroTest extends LinearOpMode{
     telemetry.update();
 
     waitForStart();
+    robot.imu.update();
     robot.imu.resetHeading();
-    robot.moveStraight(SPEED, 0, robot.imu.heading());
+    while (opModeIsActive()) {
+      robot.imu.update();
+      robot.moveStraight(SPEED, 0, -robot.imu.heading());
+      idle();
+    }
+
   }
 }

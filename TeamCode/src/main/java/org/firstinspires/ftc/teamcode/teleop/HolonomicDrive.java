@@ -29,6 +29,7 @@ public class HolonomicDrive extends OpMode {
 
   public void loop() {
 //    driveRobot(gamepad1);
+    robot.imu.update();
     dpadDrive(gamepad1);
     swivel(gamepad1);
     telemetry.addData("Line Sensor output", robot.lineSensor.getVoltage());

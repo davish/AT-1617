@@ -44,7 +44,8 @@ public class Gyro {
   }
 
   public void resetHeading() {
-    forwardHeading = angles.firstAngle;
+    if (angles != null)
+      forwardHeading = angles.firstAngle;
   }
 
   public double roll() {
