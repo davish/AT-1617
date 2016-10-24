@@ -37,7 +37,7 @@ public class Gyro {
       double h = angles.firstAngle - forwardHeading;
       if (h < -180) h += 360;
       if (h > 180) h -= 360;
-      return h;
+      return -h; // in order to line up with Vuforia alignment, invert the heading measurement.
     }
     else
       return 0.0;

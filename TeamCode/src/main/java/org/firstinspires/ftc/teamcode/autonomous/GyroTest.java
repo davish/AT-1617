@@ -26,7 +26,7 @@ public class GyroTest extends LinearOpMode{
     robot.imu.resetHeading();
     while (opModeIsActive()) {
       robot.imu.update();
-      robot.moveStraight(SPEED, 0, -robot.imu.heading());
+      robot.moveStraight(SPEED, 0, robot.imu.heading());
       idle();
     }
 
