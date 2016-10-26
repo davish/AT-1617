@@ -13,7 +13,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 /**
  * Created by davis on 10/6/16.
  */
-@Autonomous(name="Red Auto", group="auto")
+@Autonomous(name="1 Red Auto", group="auto")
 public class RedAutonomous extends LinearOpMode{
   Holonomic robot;
 

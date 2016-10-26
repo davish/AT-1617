@@ -114,6 +114,8 @@ public abstract class FourWheel {
       this.hitRight();
     else if (blueRight*color > blueLeft*color)
       this.hitLeft();
+
+    Thread.sleep(500);
   }
 
 

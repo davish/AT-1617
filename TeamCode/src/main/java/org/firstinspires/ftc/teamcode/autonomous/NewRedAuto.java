@@ -11,7 +11,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 /**
  * Created by davis on 10/6/16.
  */
-@Autonomous(name="Updated Original Auto", group="auto")
+@Autonomous(name="3 Updated Original Auto", group="auto")
 public class NewRedAuto extends LinearOpMode {
   Holonomic robot;
 

@@ -11,16 +11,14 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 /**
  * Created by davis on 10/6/16.
  */
-@Autonomous(name="2 Original Auto", group="auto")
-public class OldRedAuto extends LinearOpMode {
+@Autonomous(name="4 Integrated Auto", group="auto")
+public class SuperNewRedAuto extends LinearOpMode {
   Holonomic robot;
 
   double SPEED = 0.6;
 
   String FIRST_TARGET = "legos";
   String SECOND_TARGET = "tools";
-
-  float PHONE_OFFSET = 30; // offset of phone camera in millimeters
 
   public void runOpMode() throws InterruptedException {
     robot = new Mecanum();
@@ -33,31 +31,37 @@ public class OldRedAuto extends LinearOpMode {
     vuforia.activate();
 
     // Move forward to get in range of vision targets
+    robot.imu.resetHeading();
     do {
-      robot.move(SPEED, 0, 0);
+      robot.imu.update();
+      robot.moveStraight(SPEED, 0, robot.imu.heading());
       idle();
     } while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive());
     // Keep moving until we're 63cm away from the target
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 630 && opModeIsActive()) {
-      robot.move(SPEED, 0, 0);
+    double orientationDiscrepancy = Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET));
+    sleep(500);
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 700 && opModeIsActive()) {
+      robot.imu.update();
+      robot.moveStraight(SPEED, 0, robot.imu.heading());
       idle();
     }
     robot.stopMotors();
     sleep(500);
-    // Rotate until we're facing the target
-    while (Math.abs(Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET))) > 5 && opModeIsActive()) {
+    robot.imu.resetHeading();
+    do {
+      robot.imu.update();
       robot.move(0, 0, SPEED);
       idle();
-    }
+    } while (orientationDiscrepancy + robot.imu.heading() > 5 && opModeIsActive());
     robot.stopMotors();
-    sleep(500);
 
-    // Strafe/move forward until we're 30cm away.
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 300) {
-      OpenGLMatrix loc = vuforia.getAlignment(FIRST_TARGET);
-      robot.alignWithTarget(Vuforia.getPosition(loc), Vuforia.getHeading(loc), .8);
-    }
-    robot.stopMotors();
+    sleep(500);
+    robot.imu.resetHeading();
+    do {
+      robot.imu.update();
+      robot.move(SPEED, -Math.PI/2, robot.imu.heading());
+    } while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]) > 50);
+
     sleep(500);
   }
 }
