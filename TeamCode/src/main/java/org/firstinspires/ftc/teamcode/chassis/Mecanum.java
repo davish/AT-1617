@@ -70,6 +70,6 @@ public class Mecanum extends Holonomic{
   }
 
   public double getPhoneOffset() {
-    return 100;
+    return 120;
   }
 }

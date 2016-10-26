@@ -146,7 +146,7 @@ public class Vuforia {
   /**
    *
    * @param loc Relative location as a matrix
-   * @return location in 3 dimensions, {x, y, z} with the target at the origin.
+   * @return NON-PERSPECTIVE location in 3 dimensions, {x, y, z} with the target at the origin.
    */
   public static float[] getPosition(OpenGLMatrix loc) {
     if (loc != null) {

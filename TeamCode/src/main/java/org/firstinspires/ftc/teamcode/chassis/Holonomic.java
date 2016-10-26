@@ -53,9 +53,9 @@ public abstract class Holonomic extends FourWheel{
   }
 
   public void alignWithTarget(float[] pos, float heading, double SPEED) {
-    double pow = 0, angle = 0;
+    double pow, angle;
 
-    if (Math.abs(pos[1] - 150) > 50) {
+    if (Math.abs(pos[1] - getPhoneOffset()) > 50) {
       pow = SPEED;
       angle = FtcUtil.sign(pos[1]) * -Math.PI/2;
     }
