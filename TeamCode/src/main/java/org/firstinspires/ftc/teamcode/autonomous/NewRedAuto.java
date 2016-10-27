@@ -17,7 +17,7 @@ public class NewRedAuto extends LinearOpMode {
 
   double SPEED = 0.6;
 
-  String FIRST_TARGET = "legos";
+  String FIRST_TARGET = "wheels";
   String SECOND_TARGET = "tools";
 
   public void runOpMode() throws InterruptedException {

@@ -52,6 +52,14 @@ public abstract class Holonomic extends FourWheel{
     this.moveStraight(pow, angle, actual, 0);
   }
 
+  public void turnDegs(double pow, double degs) {
+    this.imu.resetHeading();
+    while (Math.abs(this.imu.heading()) < degs) {
+      this.move(0, 0, pow);
+    }
+    this.stopMotors();
+  }
+
   public void alignWithTarget(float[] pos, float heading, double SPEED) {
     double pow, angle;
 

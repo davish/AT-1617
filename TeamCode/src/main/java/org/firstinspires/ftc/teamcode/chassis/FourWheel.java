@@ -26,11 +26,11 @@ public abstract class FourWheel {
 
   Servo beacon;
 
-  public final double PIVOT_SENSELEFT = .65;
-  public final double PIVOT_CENTER = .75;
-  public final double PIVOT_SENSERIGHT = .85;
+  public final double PIVOT_SENSELEFT = .55;
+  public final double PIVOT_CENTER = .65;
+  public final double PIVOT_SENSERIGHT = .75;
   public final double PIVOT_HITLEFT = 1.0;
-  public final double PIVOT_HITRIGHT = .45;
+  public final double PIVOT_HITRIGHT = .30;
 
   public void init(HardwareMap ahwMap) {
     hwMap = ahwMap;
@@ -92,7 +92,7 @@ public abstract class FourWheel {
     pivot(PIVOT_CENTER);
   }
 
-  public void hitBeacon(int color) throws InterruptedException {
+  public int hitBeacon(int color) throws InterruptedException {
     int redLeft, blueLeft, redRight, blueRight;
     this.colorSensor.enableLed(false);
     this.senseLeft();
@@ -106,16 +106,25 @@ public abstract class FourWheel {
     this.centerServo();
     Thread.sleep(500);
 
-    if (redLeft*color > redRight*color)
+    if (redLeft*color > redRight*color) {
       this.hitLeft();
-    else if (redRight*color > redLeft*color)
+      return 1;
+    }
+    else if (redRight*color > redLeft*color) {
       this.hitRight();
-    else if (blueLeft*color > blueRight*color)
+      return -1;
+    }
+    else if (blueLeft*color > blueRight*color) {
       this.hitRight();
-    else if (blueRight*color > blueLeft*color)
+      return -1;
+    }
+    else if (blueRight*color > blueLeft*color) {
       this.hitLeft();
+      return 1;
+    }
+    else
+      return 0;
 
-    Thread.sleep(500);
   }
 
 

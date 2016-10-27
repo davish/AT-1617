@@ -17,7 +17,7 @@ public class SuperNewRedAuto extends LinearOpMode {
 
   double SPEED = 0.6;
 
-  String FIRST_TARGET = "legos";
+  String FIRST_TARGET = "wheels";
   String SECOND_TARGET = "tools";
 
   public void runOpMode() throws InterruptedException {
@@ -30,38 +30,63 @@ public class SuperNewRedAuto extends LinearOpMode {
     waitForStart();
     vuforia.activate();
 
-    // Move forward to get in range of vision targets
-    robot.imu.resetHeading();
+    robot.move(SPEED, 0, 0);
+    sleep(500);
+    robot.stopMotors();
+    sleep(500);
     do {
       robot.imu.update();
-      robot.moveStraight(SPEED, 0, robot.imu.heading());
+      robot.move(0, 0, SPEED);
+    } while (Math.abs(robot.imu.heading()) < 50);
+    robot.stopMotors();
+    sleep(500);
+    // Move forward to get in range of vision targets
+    double target = robot.imu.heading();
+    do {
+      robot.imu.update();
+      robot.moveStraight(SPEED, 0, robot.imu.heading(), target);
       idle();
     } while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive());
     // Keep moving until we're 63cm away from the target
-    double orientationDiscrepancy = Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET));
     sleep(500);
     while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 700 && opModeIsActive()) {
       robot.imu.update();
-      robot.moveStraight(SPEED, 0, robot.imu.heading());
+      robot.moveStraight(SPEED, 0, robot.imu.heading(), target);
       idle();
     }
     robot.stopMotors();
     sleep(500);
-    robot.imu.resetHeading();
     do {
       robot.imu.update();
       robot.move(0, 0, SPEED);
-      idle();
-    } while (orientationDiscrepancy + robot.imu.heading() > 5 && opModeIsActive());
+    } while (Math.abs(robot.imu.heading()) < 86);
     robot.stopMotors();
-
+    telemetry.addData(">", robot.imu.heading());
+    telemetry.update();
     sleep(500);
-    robot.imu.resetHeading();
-    do {
-      robot.imu.update();
-      robot.move(SPEED, -Math.PI/2, robot.imu.heading());
-    } while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]) > 50);
-
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1] - 165) > 50) {
+      robot.imu.heading();
+      robot.moveStraight(SPEED, -Math.PI/2, robot.imu.heading(), 86);
+    }
+    robot.stopMotors();
     sleep(500);
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 250 && opModeIsActive()) {
+      robot.moveStraight(2 * SPEED / 3, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
+    }
+    robot.stopMotors();
+    sleep(500);
+    int a = robot.hitBeacon(-1);
+    sleep(1000);
+    if (a != 0) {
+      robot.move(2 * SPEED / 3, 0, 0);
+      sleep(500);
+      robot.stopMotors();
+      robot.move(2 * SPEED / 3, Math.PI, 0);
+      sleep(500);
+    }
+//    while (Math.abs(Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET))) > 2) {
+//      robot.moveStraight(0, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
+//    }
+//    robot.stopMotors();
   }
 }

@@ -17,7 +17,7 @@ public class OldRedAuto extends LinearOpMode {
 
   double SPEED = 0.6;
 
-  String FIRST_TARGET = "legos";
+  String FIRST_TARGET = "wheels";
   String SECOND_TARGET = "tools";
 
   float PHONE_OFFSET = 30; // offset of phone camera in millimeters
