@@ -63,14 +63,21 @@ public class SuperNewRedAuto extends LinearOpMode {
     robot.stopMotors();
     telemetry.addData(">", robot.imu.heading());
     telemetry.update();
+//    sleep(500);
+//    while (Math.abs(Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET))) > 5) {
+//      robot.moveStraight(0, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
+//    }
+//    robot.stopMotors();
     sleep(500);
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1] - 165) > 50) {
-      robot.imu.heading();
-      robot.moveStraight(SPEED, -Math.PI/2, robot.imu.heading(), 86);
+    robot.imu.update();
+    double h = robot.imu.heading();
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1] - 170) > 50) {
+      robot.imu.update();
+      robot.moveStraight(SPEED, -Math.PI/2, robot.imu.heading(), h);
     }
     robot.stopMotors();
     sleep(500);
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 250 && opModeIsActive()) {
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 275 && opModeIsActive()) {
       robot.moveStraight(2 * SPEED / 3, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
     }
     robot.stopMotors();
@@ -81,12 +88,10 @@ public class SuperNewRedAuto extends LinearOpMode {
       robot.move(2 * SPEED / 3, 0, 0);
       sleep(500);
       robot.stopMotors();
+      sleep(250);
       robot.move(2 * SPEED / 3, Math.PI, 0);
       sleep(500);
     }
-//    while (Math.abs(Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET))) > 2) {
-//      robot.moveStraight(0, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
-//    }
-//    robot.stopMotors();
+
   }
 }
