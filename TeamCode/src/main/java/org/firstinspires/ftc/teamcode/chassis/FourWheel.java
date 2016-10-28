@@ -26,11 +26,11 @@ public abstract class FourWheel {
 
   Servo beacon;
 
-  public final double PIVOT_SENSELEFT = .55;
+  public final double PIVOT_SENSELEFT = .50;
   public final double PIVOT_CENTER = .65;
   public final double PIVOT_SENSERIGHT = .75;
-  public final double PIVOT_HITLEFT = 1.0;
-  public final double PIVOT_HITRIGHT = .30;
+  public final double PIVOT_HITLEFT = .85;
+  public final double PIVOT_HITRIGHT = .45;
 
   public void init(HardwareMap ahwMap) {
     hwMap = ahwMap;

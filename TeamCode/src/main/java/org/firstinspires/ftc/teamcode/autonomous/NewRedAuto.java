@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -12,6 +13,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
  * Created by davis on 10/6/16.
  */
 @Autonomous(name="3 Updated Original Auto", group="auto")
+@Disabled
 public class NewRedAuto extends LinearOpMode {
   Holonomic robot;
 
