@@ -20,6 +20,9 @@ public abstract class FourWheel {
   DcMotor BL; // v3
   DcMotor BR; // v4
 
+  DcMotor choo;
+  DcMotor pickup;
+
   public ColorSensor colorSensor;
   public AnalogInput lineSensor;
   public Gyro imu;
@@ -39,18 +42,19 @@ public abstract class FourWheel {
     BL = hwMap.dcMotor.get("BL");
     BR = hwMap.dcMotor.get("BR");
 
+    choo = hwMap.dcMotor.get("choo");
+    pickup = hwMap.dcMotor.get("pickup");
+
     FL.setDirection(DcMotor.Direction.REVERSE);
     BL.setDirection(DcMotor.Direction.REVERSE);
 
-    colorSensor = hwMap.colorSensor.get("mr");
-    lineSensor = hwMap.analogInput.get("line");
-
-    imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
-
-    beacon = hwMap.servo.get("beacon");
-    beacon.setPosition(PIVOT_CENTER);
-
-
+//    colorSensor = hwMap.colorSensor.get("mr");
+//    lineSensor = hwMap.analogInput.get("line");
+//
+//    imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+//
+//    beacon = hwMap.servo.get("beacon");
+//    beacon.setPosition(PIVOT_CENTER);
   }
 
   public void moveLeft(double pow) {
@@ -90,6 +94,14 @@ public abstract class FourWheel {
   }
   public void centerServo() {
     pivot(PIVOT_CENTER);
+  }
+
+  public void runPickup(double pow) {
+    pickup.setPower(pow);
+  }
+
+  public void runChoo(double pow) {
+    choo.setPower(pow);
   }
 
   public int hitBeacon(int color) throws InterruptedException {

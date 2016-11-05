@@ -28,39 +28,35 @@ public class HolonomicDrive extends OpMode {
   }
 
   public void loop() {
-//    driveRobot(gamepad1);
-    robot.imu.update();
     dpadDrive(gamepad1);
-    swivel(gamepad1);
-    telemetry.addData("Line Sensor output", robot.lineSensor.getVoltage());
-    telemetry.addData("Gyro heading", robot.imu.heading());
-    if (gamepad1.a)
-      robot.imu.resetHeading();
-
+    pickup(gamepad1);
+    transfer(gamepad1);
+    launch(gamepad1);
     telemetry.update();
   }
 
-  /**
-   * Mecanum drive.
-   *
-   * Has three inputs: vx, vy, and r.
-   * vx and vy determine the power and direction of motion, r determines the rotation rate.
-   * vx and vy should be on the same joystick, r should be the other joystick.
-   *
-   * @param gp gamepad that controls driving
-   *
-   *
-   */
-  void driveRobot(Gamepad gp) {
-    double vx = FtcUtil.threshold(gp.left_stick_x);
-    double vy = FtcUtil.threshold(gp.left_stick_y);
-    double rot = FtcUtil.threshold(gp.right_stick_x);
 
-    double pow = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
-    double angle = Math.atan2(vy, vx) + Math.PI/2;
+  void pickup(Gamepad gp) {
+    if (gp.a)
+      robot.runPickup(1);
+    else
+      robot.runPickup(0);
+  }
 
-    telemetry.addData("angle", Math.toDegrees(angle));
-    robot.move(pow, angle, rot);
+  void transfer(Gamepad gp) {
+    if (gp.x)
+      robot.hitRight();
+    else
+      robot.senseRight();
+  }
+
+  void launch(Gamepad gp) {
+    if (Math.abs(gp.right_trigger) > .1)
+      robot.runChoo(gp.right_trigger);
+    else if (Math.abs(gp.left_trigger) > .1)
+      robot.runChoo(-gp.left_trigger);
+    else
+      robot.runChoo(0);
   }
 
   void dpadDrive(Gamepad gp) {
@@ -85,5 +81,28 @@ public class HolonomicDrive extends OpMode {
   void swivel(Gamepad gp) {
     robot.pivot(gp.left_trigger);
     telemetry.addData("Servo pos", gp.left_trigger);
+  }
+
+  /**
+   * Mecanum drive.
+   *
+   * Has three inputs: vx, vy, and r.
+   * vx and vy determine the power and direction of motion, r determines the rotation rate.
+   * vx and vy should be on the same joystick, r should be the other joystick.
+   *
+   * @param gp gamepad that controls driving
+   *
+   *
+   */
+  void driveRobot(Gamepad gp) {
+    double vx = FtcUtil.threshold(gp.left_stick_x);
+    double vy = FtcUtil.threshold(gp.left_stick_y);
+    double rot = FtcUtil.threshold(gp.right_stick_x);
+
+    double pow = Math.sqrt(Math.pow(vx, 2) + Math.pow(vy, 2));
+    double angle = Math.atan2(vy, vx) + Math.PI/2;
+
+    telemetry.addData("angle", Math.toDegrees(angle));
+    robot.move(pow, angle, rot);
   }
 }
