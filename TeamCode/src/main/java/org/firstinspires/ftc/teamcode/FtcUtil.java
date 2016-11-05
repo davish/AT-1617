@@ -6,17 +6,18 @@ package org.firstinspires.ftc.teamcode;
 public class FtcUtil {
   public static final double JOYSTICK_THRESHOLD = .1;
 
-  public static double servoScale(double d) {
-    if (d < 0.0) return 0.0;
-    if (d > 1.0) return 1.0;
+  public static double scale(double d, double l, double r) {
+    if (d < l) return l;
+    if (d > r) return r;
     return d;
   }
 
+  public static double servoScale(double d) {
+    return scale(d, 0, 1);
+  }
+
   public static double motorScale(double d) {
-    if (d < -1.0) return -1.0;
-    if (d > 1.0)  return 1.0;
-//    if (Math.abs(d) < 0.1) return 0.0; // Prevent motor stall-out
-    return d;
+    return scale(d, -1, 1);
   }
 
   public static double sign(double d) {
@@ -24,8 +25,12 @@ public class FtcUtil {
     else return -1.0;
   }
   public static double threshold(double d) {
+    return threshold(d, d);
+  }
+
+  public static double threshold(double d, double o) {
     if (Math.abs(d) > JOYSTICK_THRESHOLD)
-      return d;
+      return o;
     else
       return 0.0;
   }

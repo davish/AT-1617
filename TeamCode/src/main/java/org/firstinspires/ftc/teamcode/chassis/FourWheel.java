@@ -5,8 +5,11 @@ import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
 
 import org.firstinspires.ftc.teamcode.sensors.Gyro;
 
@@ -26,6 +29,7 @@ public abstract class FourWheel {
   public ColorSensor colorSensor;
   public AnalogInput lineSensor;
   public Gyro imu;
+  DigitalChannel chooLimit;
 
   Servo beacon;
 
@@ -42,19 +46,23 @@ public abstract class FourWheel {
     BL = hwMap.dcMotor.get("BL");
     BR = hwMap.dcMotor.get("BR");
 
-    choo = hwMap.dcMotor.get("choo");
-    pickup = hwMap.dcMotor.get("pickup");
 
     FL.setDirection(DcMotor.Direction.REVERSE);
     BL.setDirection(DcMotor.Direction.REVERSE);
 
-//    colorSensor = hwMap.colorSensor.get("mr");
-//    lineSensor = hwMap.analogInput.get("line");
-//
-//    imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
-//
-//    beacon = hwMap.servo.get("beacon");
-//    beacon.setPosition(PIVOT_CENTER);
+    choo = hwMap.dcMotor.get("choo");
+    choo.setDirection(DcMotor.Direction.REVERSE);
+
+    pickup = hwMap.dcMotor.get("pickup");
+
+    beacon = hwMap.servo.get("beacon");
+    beacon.setPosition(PIVOT_CENTER);
+
+    chooLimit = hwMap.digitalChannel.get("choo limit");
+    chooLimit.setMode(DigitalChannelController.Mode.INPUT);
+
+    colorSensor = hwMap.colorSensor.get("mr");
+    imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
   }
 
   public void moveLeft(double pow) {
@@ -102,6 +110,13 @@ public abstract class FourWheel {
 
   public void runChoo(double pow) {
     choo.setPower(pow);
+  }
+
+  public void runChooSafe(double pow) {
+    if (!chooLimit.getState()) // only run if limit switch isn't closed
+      runChoo(pow);
+    else
+      runChoo(0);
   }
 
   public int hitBeacon(int color) throws InterruptedException {
