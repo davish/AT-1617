@@ -21,15 +21,17 @@ public class TestAlignment extends LinearOpMode{
     vuforia.activate();
 
     while (opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment("wheels");
+      OpenGLMatrix loc = vuforia.getAlignment("tools");
       float[] pos = vuforia.getPosition(loc);
       float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       robot.imu.update();
+      telemetry.addData("Absolute Orientation", robot.imu.heading());
+      telemetry.addData("Limit switch", robot.catapultLoaded());
+      telemetry.addData("Line", robot.ods.getLightDetected());
       telemetry.addData("Alignment", pos[1]);
       telemetry.addData("Distance", pos[2]);
       telemetry.addData("Relative Orientation", heading);
-      telemetry.addData("Absolute Orientation", robot.imu.heading());
       telemetry.update();
     }
   }

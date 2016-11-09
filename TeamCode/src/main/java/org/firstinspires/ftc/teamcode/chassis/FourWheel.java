@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 
@@ -29,6 +30,7 @@ public abstract class FourWheel {
   public ColorSensor colorSensor;
   public AnalogInput lineSensor;
   public Gyro imu;
+  public OpticalDistanceSensor ods;
   DigitalChannel chooLimit;
 
   Servo beacon;
@@ -63,6 +65,7 @@ public abstract class FourWheel {
 
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+    ods = hwMap.opticalDistanceSensor.get("ods");
   }
 
   public void moveLeft(double pow) {
@@ -108,15 +111,12 @@ public abstract class FourWheel {
     pickup.setPower(pow);
   }
 
-  public void runChoo(double pow) {
-    choo.setPower(pow);
+  public boolean catapultLoaded() {
+    return !chooLimit.getState();
   }
 
-  public void runChooSafe(double pow) {
-    if (!chooLimit.getState()) // only run if limit switch isn't closed
-      runChoo(pow);
-    else
-      runChoo(0);
+  public void runChoo(double pow) {
+    choo.setPower(pow);
   }
 
   public int hitBeacon(int color) throws InterruptedException {

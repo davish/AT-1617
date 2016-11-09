@@ -51,11 +51,28 @@ public class HolonomicDrive extends OpMode {
     robot.pivot(chamberPos);
   }
 
+  boolean debounce = false;
+  boolean wasDown = false;
+  boolean hasLaunched = false;
   void launch(Gamepad gp) {
-    if (Math.abs(gp.right_trigger) > .1)
-      robot.runChoo(gp.right_trigger);
-    else if (gp.y)
-      robot.runChoo(-1.0);
+    boolean shouldMove;
+    if (Math.abs(gp.right_trigger) > .1) {
+      if (robot.catapultLoaded()) {
+        shouldMove = !hasLaunched;
+        wasDown = true;
+      } else {
+        if (!debounce) // If
+          wasDown = true;
+        shouldMove = true;
+        hasLaunched = wasDown;
+      }
+      debounce = true;
+    } else {
+      shouldMove = hasLaunched = wasDown = false;
+      debounce = false;
+    }
+    if (shouldMove)
+      robot.runChoo(1);
     else
       robot.runChoo(0);
   }
