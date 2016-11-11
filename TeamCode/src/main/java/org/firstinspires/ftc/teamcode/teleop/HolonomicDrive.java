@@ -29,7 +29,8 @@ public class HolonomicDrive extends OpMode {
     drive(gamepad1);
     pickup(gamepad1);
     transfer(gamepad2);
-    launch(gamepad2);
+//    launch(gamepad2);
+    altLaunch(gamepad1);
     telemetry.update();
   }
 
@@ -75,6 +76,22 @@ public class HolonomicDrive extends OpMode {
       robot.runChoo(1);
     else
       robot.runChoo(0);
+  }
+
+  boolean lastState = false;
+  boolean isMoving = false;
+  void altLaunch(Gamepad gp) {
+    // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
+    // been pressed in the past, persist that state.
+    isMoving = gp.y || isMoving;
+    // if we're moving and we're transitioning from open to closed, stop moving
+    if (isMoving && !lastState && robot.catapultLoaded()) isMoving = false;
+
+    if (isMoving)
+      robot.runChoo(1);
+    else
+      robot.runChoo(0);
+    lastState = robot.catapultLoaded();
   }
 
   void drive(Gamepad gp) {
