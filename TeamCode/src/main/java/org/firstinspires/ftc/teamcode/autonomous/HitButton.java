@@ -16,5 +16,6 @@ public class HitButton extends LinearOpMode {
     robot.init(hardwareMap);
     waitForStart();
     robot.hitBeacon(1);
+    sleep(1000);
   }
 }

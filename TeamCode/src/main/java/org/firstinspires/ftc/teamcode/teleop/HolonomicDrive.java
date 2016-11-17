@@ -38,6 +38,8 @@ public class HolonomicDrive extends OpMode {
   void pickup(Gamepad gp) {
     if (gp.right_trigger > .1)
       robot.runPickup(1);
+    else if (gp.left_trigger > .1)
+      robot.runPickup(-1);
     else
       robot.runPickup(0);
   }
@@ -48,7 +50,7 @@ public class HolonomicDrive extends OpMode {
       chamberPos += .01;
     else if (gp.dpad_left)
       chamberPos -= .01;
-    chamberPos = FtcUtil.scale(chamberPos, robot.PIVOT_HITRIGHT, robot.PIVOT_SENSERIGHT);
+    chamberPos = FtcUtil.scale(chamberPos, robot.PIVOT_HITRIGHT-.05, robot.PIVOT_SENSERIGHT);
     robot.pivot(chamberPos);
   }
 
@@ -83,7 +85,7 @@ public class HolonomicDrive extends OpMode {
   void altLaunch(Gamepad gp) {
     // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
     // been pressed in the past, persist that state.
-    isMoving = gp.y || isMoving;
+    isMoving = (gp.y || isMoving) && !gp.x;
     // if we're moving and we're transitioning from open to closed, stop moving
     if (isMoving && !lastState && robot.catapultLoaded()) isMoving = false;
 
