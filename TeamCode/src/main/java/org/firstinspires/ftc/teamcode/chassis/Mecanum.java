@@ -62,10 +62,10 @@ public class Mecanum extends Holonomic{
         V[i] = Math.abs(mult) * (V[i]/Math.abs(m));
 
     // finally, set motor powers.
-    FL.setPower(V[0]);
-    FR.setPower(V[1]);
-    BL.setPower(V[2]);
-    BR.setPower(V[3]);
+    FL.setPower(FtcUtil.motorScale(V[0]));
+    FR.setPower(FtcUtil.motorScale(V[1]));
+    BL.setPower(FtcUtil.motorScale(V[2]));
+    BR.setPower(FtcUtil.motorScale(V[3]));
 
   }
 

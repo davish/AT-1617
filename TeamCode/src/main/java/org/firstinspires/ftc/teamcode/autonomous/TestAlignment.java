@@ -9,7 +9,7 @@ import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
-@Autonomous(name="Vuforia Util", group="Tests")
+@Autonomous(name="Vuforia Util", group="test")
 public class TestAlignment extends LinearOpMode{
   public void runOpMode() throws InterruptedException {
     Vuforia vuforia = new Vuforia();
@@ -21,7 +21,7 @@ public class TestAlignment extends LinearOpMode{
     vuforia.activate();
 
     while (opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment("tools");
+      OpenGLMatrix loc = vuforia.getAlignment("gears");
       float[] pos = vuforia.getPosition(loc);
       float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.chassis.*;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
 @Autonomous(name="Align with Gears", group="Tests")
+@Disabled
 public class GearAlign extends LinearOpMode {
   Holonomic robot;
 

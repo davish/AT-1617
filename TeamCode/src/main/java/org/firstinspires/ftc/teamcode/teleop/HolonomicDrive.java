@@ -50,7 +50,7 @@ public class HolonomicDrive extends OpMode {
       chamberPos += .01;
     else if (gp.dpad_left)
       chamberPos -= .01;
-    chamberPos = FtcUtil.scale(chamberPos, robot.PIVOT_HITRIGHT-.05, robot.PIVOT_SENSERIGHT);
+    chamberPos = FtcUtil.scale(chamberPos, robot.PIVOT_HITRIGHT, robot.PIVOT_SENSERIGHT);
     robot.pivot(chamberPos);
   }
 
@@ -120,6 +120,14 @@ public class HolonomicDrive extends OpMode {
         angle = Math.PI/2;
       else
         angle = -Math.PI/2;
+    }
+
+    if (gp.dpad_up) {
+      angle = Math.PI;
+      pow = .5;
+    } else if (gp.dpad_down) {
+      angle = 0;
+      pow = .5;
     }
 
     rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));

@@ -7,15 +7,19 @@ import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 
 /**
- * Created by davis on 10/20/16.
+ * Created by davis on 11/18/16.
  */
-@Autonomous(name="Hit Red Button", group="test")
-public class HitButton extends LinearOpMode {
+
+@Autonomous(name="Prime Catapult", group="prep")
+public class LoadChoo extends LinearOpMode{
+
   public void runOpMode() throws InterruptedException {
     Holonomic robot = new Mecanum();
     robot.init(hardwareMap);
     waitForStart();
-    robot.hitBeacon(1);
-    sleep(1000);
+    while (!robot.catapultLoaded())
+      robot.runChoo(1);
+    robot.runChoo(0);
   }
+
 }
