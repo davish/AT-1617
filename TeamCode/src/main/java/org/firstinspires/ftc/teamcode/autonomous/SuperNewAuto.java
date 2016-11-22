@@ -113,6 +113,7 @@ public abstract class SuperNewAuto extends LinearOpMode {
     robot.stopMotors();
     sleep(500);
     int a = robot.hitBeacon(-1*(int)getDir());
+
     sleep(1000);
     int count = 0;
     if (a != 0) {

@@ -35,6 +35,7 @@ public abstract class FourWheel {
 
   Servo beacon;
 
+  public AnalogInput dist;
   public final double PIVOT_SENSELEFT = .45;
   public final double PIVOT_CENTER = .55;
   public final double PIVOT_SENSERIGHT = .65;
@@ -66,6 +67,7 @@ public abstract class FourWheel {
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
     ods = hwMap.opticalDistanceSensor.get("ods");
+    dist=  hwMap.analogInput.get("distance");
   }
 
   public boolean isOnLine() {
@@ -121,6 +123,18 @@ public abstract class FourWheel {
 
   public void runChoo(double pow) {
     choo.setPower(pow);
+  }
+
+  public void lineFollow() throws InterruptedException
+  {
+
+    if(!this.isOnLine())
+    {
+      this.moveLeft(.5);
+    }
+    else{
+      this.driveTank(.5, .5);
+    }
   }
 
   public int hitBeacon(int color) throws InterruptedException {
