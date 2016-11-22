@@ -68,6 +68,10 @@ public abstract class FourWheel {
     ods = hwMap.opticalDistanceSensor.get("ods");
   }
 
+  public boolean isOnLine() {
+    return ods.getLightDetected() > .5;
+  }
+
   public void moveLeft(double pow) {
     FL.setPower(pow);
     BL.setPower(pow);
