@@ -29,8 +29,7 @@ public class HolonomicDrive extends OpMode {
     drive(gamepad1);
     pickup(gamepad1);
     transfer(gamepad2);
-//    launch(gamepad2);
-    altLaunch(gamepad1);
+    launch(gamepad1);
     telemetry.update();
   }
 
@@ -54,35 +53,9 @@ public class HolonomicDrive extends OpMode {
     robot.pivot(chamberPos);
   }
 
-  boolean debounce = false;
-  boolean wasDown = false;
-  boolean hasLaunched = false;
-  void launch(Gamepad gp) {
-    boolean shouldMove;
-    if (Math.abs(gp.right_trigger) > .1) {
-      if (robot.catapultLoaded()) {
-        shouldMove = !hasLaunched;
-        wasDown = true;
-      } else {
-        if (!debounce) // If
-          wasDown = true;
-        shouldMove = true;
-        hasLaunched = wasDown;
-      }
-      debounce = true;
-    } else {
-      shouldMove = hasLaunched = wasDown = false;
-      debounce = false;
-    }
-    if (shouldMove)
-      robot.runChoo(1);
-    else
-      robot.runChoo(0);
-  }
-
   boolean lastState = false;
   boolean isMoving = false;
-  void altLaunch(Gamepad gp) {
+  void launch(Gamepad gp) {
     // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
     // been pressed in the past, persist that state.
     isMoving = (gp.y || isMoving) && !gp.x;
@@ -101,9 +74,9 @@ public class HolonomicDrive extends OpMode {
     double angle;
     double pow;
 
-    double forward = gp.right_stick_y;
-    double strafe = gp.right_stick_x;
-    double rotate = gp.left_stick_x;
+    double forward = gp.left_stick_y;
+    double strafe = gp.left_stick_x;
+    double rotate = gp.right_stick_x;
 
     if (FtcUtil.threshold(forward) == 0 && FtcUtil.threshold(strafe) == 0) {
       pow = 0;

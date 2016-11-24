@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 /**
  * Created by davis on 10/6/16.
  */
-public abstract class SuperNewAuto extends LinearOpMode {
+public abstract class AutoBase extends LinearOpMode {
   Holonomic robot;
 
   double SPEED = 0.6;
@@ -140,12 +140,6 @@ public abstract class SuperNewAuto extends LinearOpMode {
     }
     robot.stopMotors();
     sleep(500);
-//    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]) < 250 && opModeIsActive()) {
-//      robot.imu.update();
-//      robot.moveStraight(1.0, Math.PI / 2 * dir, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
-//      idle();
-//    }
-//    robot.stopMotors();
 
     while (!robot.catapultLoaded())
       robot.runChoo(1);

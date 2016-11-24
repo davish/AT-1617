@@ -35,6 +35,10 @@ public abstract class FourWheel {
 
   Servo beacon;
 
+  DigitalChannel blueLights;
+  DigitalChannel redLights;
+  DigitalChannel greenLights;
+
   public final double PIVOT_SENSELEFT = .45;
   public final double PIVOT_CENTER = .55;
   public final double PIVOT_SENSERIGHT = .65;

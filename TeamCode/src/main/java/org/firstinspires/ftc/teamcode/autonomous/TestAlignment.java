@@ -22,8 +22,8 @@ public class TestAlignment extends LinearOpMode{
 
     while (opModeIsActive()) {
       OpenGLMatrix loc = vuforia.getAlignment("gears");
-      float[] pos = vuforia.getPosition(loc);
-      float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
+      float[] pos = Vuforia.getPosition(loc);
+      float heading = Vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       robot.imu.update();
       telemetry.addData("Absolute Orientation", robot.imu.heading());
