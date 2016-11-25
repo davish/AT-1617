@@ -132,6 +132,7 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(500);
     // Check both sides of beacon, put the right paddle forward.
     int a = robot.hitBeacon(-1*(int)getDir());
+
     sleep(1000);
     // Go forwards and hit the beacon twice to make sure the button is pressed
     int count = 0;
