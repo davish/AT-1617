@@ -45,6 +45,7 @@ public class HolonomicDrive extends OpMode {
 
   double chamberPos = robot.PIVOT_SENSERIGHT;
   void transfer(Gamepad gp) {
+    // Slowly move the chamber using the dpad.
     if (gp.dpad_right)
       chamberPos += .01;
     else if (gp.dpad_left)
@@ -74,27 +75,30 @@ public class HolonomicDrive extends OpMode {
     double angle;
     double pow;
 
+    // Standard FPS xbox controls: Left stick for movement, right stick for rotation/orientation.
     double forward = gp.left_stick_y;
     double strafe = gp.left_stick_x;
     double rotate = gp.right_stick_x;
+    // *** Put forward and strafe on right stick and rotate on left stick for Ryan's alternate drivemode.
 
-    if (FtcUtil.threshold(forward) == 0 && FtcUtil.threshold(strafe) == 0) {
-      pow = 0;
+    if (FtcUtil.threshold(forward) == 0 && FtcUtil.threshold(strafe) == 0) { // if no joystick is engaged,
+      pow = 0; // power is 0.
       angle = 0;
-    } else if (Math.abs(forward) > Math.abs(strafe)) {
-      pow = .8;
-      if (forward > 0)
+    } else if (Math.abs(forward) > Math.abs(strafe)) { // If forward is greater than sideways,
+      pow = .8; // power is 80% forward
+      if (forward > 0) // Go forwards if stick is pushed up
         angle = 0;
-      else
+      else // go backwards if stick is pushed down
         angle = Math.PI;
-    } else {
-      pow = 1;
-      if (strafe > 0)
+    } else { // if sideways movement is the strongest input,
+      pow = 1; // 100% power.
+      if (strafe > 0) // go right
         angle = Math.PI/2;
-      else
+      else // go left
         angle = -Math.PI/2;
     }
 
+    // SLOW MODE
     if (gp.dpad_up) {
       angle = Math.PI;
       pow = .5;
