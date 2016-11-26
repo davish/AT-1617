@@ -30,6 +30,7 @@ public class HolonomicDrive extends OpMode {
     pickup(gamepad1);
     transfer(gamepad2);
     launch(gamepad1);
+    lights(gamepad2);
     telemetry.update();
   }
 
