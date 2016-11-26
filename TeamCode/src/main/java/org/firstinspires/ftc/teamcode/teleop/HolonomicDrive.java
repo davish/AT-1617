@@ -14,7 +14,7 @@ import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 /**
  * Created by davis on 5/22/16.
  */
-@TeleOp(name="Holonomic Drive", group="TeleOp")
+@TeleOp(name="Holonomic Drive", group="teleop")
 public class HolonomicDrive extends OpMode {
 
   Holonomic robot = new Mecanum();
@@ -147,6 +147,23 @@ public class HolonomicDrive extends OpMode {
     rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));
 
     robot.move(pow, angle, rot);
+  }
+
+  void tankDrive(Gamepad gp) {
+    double leftPow = FtcUtil.threshold(gp.left_stick_y);
+    double rightPow = FtcUtil.threshold(gp.right_stick_y);
+
+    double leftStrafe = FtcUtil.threshold(gp.left_stick_x);
+    double rightStrafe = FtcUtil.threshold(gp.right_stick_x);
+
+    if (leftStrafe <= leftPow && rightStrafe <= rightPow)
+      robot.driveTank(leftPow, rightPow);
+    else if (rightStrafe > 0 && leftStrafe > 0)
+      robot.move(Math.min(rightStrafe, leftStrafe), Math.PI/2, 0);
+    else if (rightStrafe < 0 && leftStrafe < 0)
+      robot.move(Math.min(Math.abs(rightStrafe), Math.abs(leftStrafe)), -Math.PI/2, 0);
+    else
+      robot.driveTank(0, 0);
   }
 
   void lights(Gamepad gp) {
