@@ -219,4 +219,19 @@ public abstract class AutoV1 extends LinearOpMode {
     }
 
   }
+
+  void transferBall() throws InterruptedException{
+    double chamberPos = robot.PIVOT_SENSERIGHT;
+    while (opModeIsActive() && chamberPos > robot.PIVOT_HITRIGHT) {
+      chamberPos -= .01;
+      robot.pivot(chamberPos);
+      idle();
+    }
+    sleep(150);
+    while (opModeIsActive() && chamberPos < robot.PIVOT_SENSERIGHT) {
+      chamberPos += .01;
+      robot.pivot(chamberPos);
+      idle();
+    }
+  }
 }

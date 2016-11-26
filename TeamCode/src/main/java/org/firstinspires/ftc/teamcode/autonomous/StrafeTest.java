@@ -4,7 +4,6 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
-import org.firstinspires.ftc.teamcode.teleop.PotatoDrive;
 
 /**
  * Created by student on 11/22/16.

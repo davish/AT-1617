@@ -28,7 +28,10 @@ public class HolonomicDrive extends OpMode {
   public void loop() {
     drive(gamepad1);
     pickup(gamepad1);
-    transfer(gamepad2);
+    if (gamepad2.right_bumper)
+      transfer(gamepad2);
+    else
+      altTransfer(gamepad2);
     launch(gamepad1);
     lights(gamepad2);
     telemetry.update();
@@ -45,12 +48,43 @@ public class HolonomicDrive extends OpMode {
 
   double chamberPos = robot.PIVOT_SENSERIGHT;
   void transfer(Gamepad gp) {
+    startTransfer = waitingForDrop = endTransfer = false; // cancel out all altTransfer things.
     // Slowly move the chamber using the dpad.
     if (gp.dpad_right)
       chamberPos += .01;
     else if (gp.dpad_left)
       chamberPos -= .01;
     chamberPos = FtcUtil.scale(chamberPos, robot.PIVOT_HITRIGHT, robot.PIVOT_SENSERIGHT);
+    robot.pivot(chamberPos);
+  }
+
+  boolean startTransfer = false;
+  boolean waitingForDrop = false;
+  boolean endTransfer = false;
+  long startWait;
+  void altTransfer(Gamepad gp) {
+    startTransfer = gp.a || startTransfer; // Pressing a starts the transfer.
+    if (startTransfer) { // if we're moving the ball,
+      if (chamberPos > robot.PIVOT_HITRIGHT) { // as long as the servo isn't at the limit,
+        chamberPos -= .01; // keep the transfer going.
+      } else {
+        startTransfer = false;
+        waitingForDrop = true; // move to the pause.
+        startWait = System.currentTimeMillis();
+      }
+    }
+    // Wait for 150ms, then move back.
+    if (waitingForDrop && System.currentTimeMillis() - startWait > 150) {
+      waitingForDrop = false;
+      endTransfer = true;
+    }
+    if (endTransfer) { // keep moving back until we've hit the other limit.
+      if (chamberPos < robot.PIVOT_SENSERIGHT)
+        chamberPos += .01;
+      else
+        endTransfer = startTransfer = waitingForDrop = false;
+    }
+
     robot.pivot(chamberPos);
   }
 
@@ -61,7 +95,10 @@ public class HolonomicDrive extends OpMode {
     // been pressed in the past, persist that state.
     isMoving = (gp.y || isMoving) && !gp.x;
     // if we're moving and we're transitioning from open to closed, stop moving
-    if (isMoving && !lastState && robot.catapultLoaded()) isMoving = false;
+    if (isMoving && !lastState && robot.catapultLoaded()) {
+      isMoving = false;
+//      startTransfer = true; // as soon as choo is in position, start transfer of next ball.
+    }
 
     if (isMoving)
       robot.runChoo(1);
