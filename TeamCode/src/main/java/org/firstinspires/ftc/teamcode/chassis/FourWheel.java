@@ -35,9 +35,9 @@ public abstract class FourWheel {
 
   Servo beacon;
 
-  DigitalChannel blueLights;
-  DigitalChannel redLights;
-  DigitalChannel greenLights;
+  public DigitalChannel blueLights;
+  public DigitalChannel redLights;
+  public DigitalChannel greenLights;
 
   public AnalogInput dist;
   public final double PIVOT_SENSELEFT = .45;
@@ -72,6 +72,14 @@ public abstract class FourWheel {
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
     ods = hwMap.opticalDistanceSensor.get("ods");
     dist=  hwMap.analogInput.get("distance");
+
+    // Lights
+    blueLights = hwMap.digitalChannel.get("blue");
+    blueLights.setMode(DigitalChannelController.Mode.OUTPUT);
+    redLights = hwMap.digitalChannel.get("red");
+    redLights.setMode(DigitalChannelController.Mode.OUTPUT);
+    greenLights = hwMap.digitalChannel.get("green");
+    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
   }
 
   public boolean isOnLine() {
@@ -142,6 +150,10 @@ public abstract class FourWheel {
   }
 
   public int hitBeacon(int color) throws InterruptedException {
+    // Look at both sides of the color sensor, and from that information, decide which side is
+    // "bluer" and which side is "redder", and determine which side to hit based off that.
+    // Red is 1, blue is -1. the "color" int flips the comparisons which changes which
+    // color gets hit.
     int redLeft, blueLeft, redRight, blueRight;
     this.colorSensor.enableLed(false);
     this.senseLeft();
@@ -155,7 +167,7 @@ public abstract class FourWheel {
     this.centerServo();
     Thread.sleep(500);
 
-    if (redLeft*color > redRight*color) {
+    if (redLeft*color > redRight*color) { // if one side is "redder", use that.
       this.hitLeft();
       return 1;
     }

@@ -33,7 +33,6 @@ public class HolonomicDrive extends OpMode {
     telemetry.update();
   }
 
-
   void pickup(Gamepad gp) {
     if (gp.right_trigger > .1)
       robot.runPickup(1);
@@ -110,6 +109,19 @@ public class HolonomicDrive extends OpMode {
     rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));
 
     robot.move(pow, angle, rot);
+  }
+
+  void lights(Gamepad gp) {
+    if (gp.dpad_up) {
+      robot.blueLights.setState(true);
+      robot.redLights.setState(false);
+      robot.greenLights.setState(false);
+    }
+    else if (gp.dpad_down) {
+      robot.blueLights.setState(false);
+      robot.redLights.setState(false);
+      robot.greenLights.setState(true);
+    }
   }
 
   void swivel(Gamepad gp) {
