@@ -8,4 +8,5 @@ public class Settings {
   int numShots = 1;
   boolean knockCapBall = true;
   boolean endOnCenter = true;
+  int delay = 0;
 }

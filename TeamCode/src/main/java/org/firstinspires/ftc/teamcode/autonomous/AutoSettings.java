@@ -13,6 +13,7 @@ import java.io.IOException;
  * Created by davis on 11/25/16.
  */
 public class AutoSettings extends LinearOpMode {
+  static final int DEBOUNCE_DELAY = 100;
 
   public void runOpMode() throws InterruptedException {
     Gson gson = new Gson();
@@ -24,6 +25,7 @@ public class AutoSettings extends LinearOpMode {
       settings = new Settings();
     }
     telemetry.addData("Score Potential", scorePotential(settings));
+    telemetry.addData("Delay (seconds)", settings.delay);
     telemetry.addData("Hit beacon 1", settings.beacon1);
     telemetry.addData("Hit beacon 2", settings.beacon2);
     telemetry.addData("Shoot how many particles", settings.numShots);
@@ -37,28 +39,43 @@ public class AutoSettings extends LinearOpMode {
       telemetry.addData("Score Potential", scorePotential(settings));
       switch (menu) {
         case 0:
+          telemetry.addData(">", "Starting delay");
+          telemetry.addData("delay", settings.delay);
+          telemetry.addData("a)", "continue");
+          if (gamepad1.dpad_up || gamepad1.dpad_down) {
+            settings.delay += gamepad1.dpad_up ? 1 : -1;
+            settings.delay = Math.max(settings.delay, 0); // can't have negative delay time
+            sleep(DEBOUNCE_DELAY);
+          }
+          if (gamepad1.a) {
+            ReadWriteFile.writeFile(sfile, gson.toJson(settings));
+            sleep(DEBOUNCE_DELAY);
+            menu++;
+          }
+          break;
+        case 1:
           telemetry.addData(">", "Hit Beacon 1?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
           if (gamepad1.a || gamepad1.b) {
             settings.beacon1 = gamepad1.a;
             ReadWriteFile.writeFile(sfile, gson.toJson(settings));
-            sleep(100);
+            sleep(DEBOUNCE_DELAY);
             menu++;
           }
           break;
-        case 1:
+        case 2:
           telemetry.addData(">", "Hit Beacon 2?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
           if (gamepad1.a || gamepad1.b) {
             settings.beacon2 = gamepad1.a;
             ReadWriteFile.writeFile(sfile, gson.toJson(settings));
-            sleep(100);
+            sleep(DEBOUNCE_DELAY);
             menu++;
           }
           break;
-        case 2:
+        case 3:
           telemetry.addData(">", "Shoot how many balls?");
           telemetry.addData("a)", "2");
           telemetry.addData("b)", "1");
@@ -66,29 +83,29 @@ public class AutoSettings extends LinearOpMode {
           if (gamepad1.a || gamepad1.b || gamepad1.x) {
             settings.numShots = gamepad1.a ? 2 : gamepad1.b ? 1 : 0;
             ReadWriteFile.writeFile(sfile, gson.toJson(settings));
-            sleep(100);
+            sleep(DEBOUNCE_DELAY);
             menu++;
           }
           break;
-        case 3:
+        case 4:
           telemetry.addData(">", "Knock off Cap Ball?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
           if (gamepad1.a || gamepad1.b) {
             settings.knockCapBall = gamepad1.a;
             ReadWriteFile.writeFile(sfile, gson.toJson(settings));
-            sleep(100);
+            sleep(DEBOUNCE_DELAY);
             menu++;
           }
           break;
-        case 4:
+        case 5:
           telemetry.addData(">", "End on center?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
           if (gamepad1.a || gamepad1.b) {
             settings.endOnCenter = gamepad1.a;
             ReadWriteFile.writeFile(sfile, gson.toJson(settings));
-            sleep(100);
+            sleep(DEBOUNCE_DELAY);
             menu++;
           }
           break;
