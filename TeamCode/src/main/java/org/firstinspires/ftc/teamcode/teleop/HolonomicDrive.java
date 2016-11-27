@@ -28,7 +28,7 @@ public class HolonomicDrive extends OpMode {
   public void loop() {
     drive(gamepad1);
     pickup(gamepad1);
-    if (gamepad2.right_bumper)
+    if (gamepad2.right_bumper) // manual override of ball transfer
       transfer(gamepad2);
     else
       altTransfer(gamepad2);
@@ -48,7 +48,7 @@ public class HolonomicDrive extends OpMode {
 
   double chamberPos = robot.PIVOT_SENSERIGHT;
   void transfer(Gamepad gp) {
-    startTransfer = waitingForDrop = endTransfer = false; // cancel out all altTransfer things.
+    transferState = 0; // cancel out all altTransfer things.
     // Slowly move the chamber using the dpad.
     if (gp.dpad_right)
       chamberPos += .01;
@@ -58,31 +58,35 @@ public class HolonomicDrive extends OpMode {
     robot.pivot(chamberPos);
   }
 
-  boolean startTransfer = false;
-  boolean waitingForDrop = false;
-  boolean endTransfer = false;
+  int transferState = 0;
   long startWait;
   void altTransfer(Gamepad gp) {
-    startTransfer = gp.a || startTransfer; // Pressing a starts the transfer.
-    if (startTransfer) { // if we're moving the ball,
-      if (chamberPos > robot.PIVOT_HITRIGHT) { // as long as the servo isn't at the limit,
-        chamberPos -= .01; // keep the transfer going.
-      } else {
-        startTransfer = false;
-        waitingForDrop = true; // move to the pause.
-        startWait = System.currentTimeMillis();
-      }
-    }
-    // Wait for 150ms, then move back.
-    if (waitingForDrop && System.currentTimeMillis() - startWait > 150) {
-      waitingForDrop = false;
-      endTransfer = true;
-    }
-    if (endTransfer) { // keep moving back until we've hit the other limit.
-      if (chamberPos < robot.PIVOT_SENSERIGHT)
-        chamberPos += .01;
-      else
-        endTransfer = startTransfer = waitingForDrop = false;
+
+    switch(transferState) {
+      case 0:
+        if (gp.y)
+          transferState = 1;
+        break;
+      case 1:
+        if (chamberPos > robot.PIVOT_HITRIGHT) { // as long as the servo isn't at the limit,
+          chamberPos -= .01; // keep the transfer going.
+        } else {
+          transferState = 2;
+          startWait = System.currentTimeMillis();
+        }
+        break;
+      case 2:
+        if (System.currentTimeMillis() - startWait > 150)
+          transferState = 3;
+        break;
+      case 3:
+        if (chamberPos < robot.PIVOT_SENSERIGHT)
+          chamberPos += .01;
+        else
+          transferState = 0;
+        break;
+      default:
+        transferState = 0;
     }
 
     robot.pivot(chamberPos);
@@ -97,7 +101,7 @@ public class HolonomicDrive extends OpMode {
     // if we're moving and we're transitioning from open to closed, stop moving
     if (isMoving && !lastState && robot.catapultLoaded()) {
       isMoving = false;
-//      startTransfer = true; // as soon as choo is in position, start transfer of next ball.
+//      transferState = 1; // as soon as choo is in position, start transfer of next ball.
     }
 
     if (isMoving)
