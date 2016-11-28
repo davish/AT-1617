@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
-@Autonomous(name="Vuforia Util", group="test")
-public class TestAlignment extends LinearOpMode{
+@Autonomous(name="Test Sensors", group="test")
+public class TestSensors extends LinearOpMode{
   public void runOpMode() throws InterruptedException {
     Vuforia vuforia = new Vuforia();
     Holonomic robot = new Mecanum();
