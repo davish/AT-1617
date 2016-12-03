@@ -28,10 +28,13 @@ public class TestAlignment extends LinearOpMode{
       robot.imu.update();
       telemetry.addData("Absolute Orientation", robot.imu.heading());
       telemetry.addData("Limit switch", robot.catapultLoaded());
-      telemetry.addData("Line", robot.ods.getLightDetected());
+      telemetry.addData("Line", robot.odsl.getLightDetected());
+      telemetry.addData("Line", robot.odsr.getLightDetected());
+
       telemetry.addData("Alignment", pos[1]);
       telemetry.addData("Distance", pos[2]);
-      telemetry.addData("Sonar Distance", robot.dist.getVoltage());
+      telemetry.addData("Sonar Distance", robot.distl.getVoltage());
+      telemetry.addData("Sonar Distance", robot.distr.getVoltage());
       telemetry.addData("Relative Orientation", heading);
       telemetry.update();
     }

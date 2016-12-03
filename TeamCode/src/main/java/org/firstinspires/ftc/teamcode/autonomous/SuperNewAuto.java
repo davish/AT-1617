@@ -91,7 +91,7 @@ public abstract class SuperNewAuto extends LinearOpMode {
 
     double dir = FtcUtil.sign(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]);
 
-    while (vuforia.getAlignment(FIRST_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]-(getDir() == 1 ? 40 : -100)) > 50 && robot.ods.getLightDetected() < .5   && opModeIsActive()) {
+    while (vuforia.getAlignment(FIRST_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]-(getDir() == 1 ? 40 : -100)) > 50 && robot.odsl.getLightDetected() < .5   && opModeIsActive()) {
       robot.imu.update();
       robot.move(1.0, Math.PI / 2 * dir, 0);
     }
