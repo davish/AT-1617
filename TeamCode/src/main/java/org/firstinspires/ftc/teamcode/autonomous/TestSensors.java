@@ -9,8 +9,8 @@ import org.firstinspires.ftc.teamcode.chassis.Holonomic;
 import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
-@Autonomous(name="Vuforia Util", group="test")
-public class TestAlignment extends LinearOpMode{
+@Autonomous(name="Test Sensors", group="test")
+public class TestSensors extends LinearOpMode{
   public void runOpMode() throws InterruptedException {
     Vuforia vuforia = new Vuforia();
     Holonomic robot = new Mecanum();
@@ -22,8 +22,8 @@ public class TestAlignment extends LinearOpMode{
 
     while (opModeIsActive()) {
       OpenGLMatrix loc = vuforia.getAlignment("gears");
-      float[] pos = vuforia.getPosition(loc);
-      float heading = vuforia.getHeading(loc); // heading is rotation around (y) axis.
+      float[] pos = Vuforia.getPosition(loc);
+      float heading = Vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
       robot.imu.update();
       telemetry.addData("Absolute Orientation", robot.imu.heading());

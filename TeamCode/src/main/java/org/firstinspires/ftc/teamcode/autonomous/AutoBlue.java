@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  * Created by davis on 11/17/16.
  */
 @Autonomous(name="Blue Auto", group="auto")
-public class AutoBlue extends SuperNewAuto{
+public class AutoBlue extends AutoV1 {
   double getDir() {
     return 1;
   }

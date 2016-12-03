@@ -37,6 +37,10 @@ public abstract class FourWheel {
 
   Servo beacon;
 
+  public DigitalChannel blueLights;
+  public DigitalChannel redLights;
+  public DigitalChannel greenLights;
+
   public AnalogInput distl;
   public AnalogInput distr;
 
@@ -75,7 +79,16 @@ public abstract class FourWheel {
     distl =  hwMap.analogInput.get("distancel");
     distr =  hwMap.analogInput.get("distancer");
 
+
+    // Lights
+    blueLights = hwMap.digitalChannel.get("blue");
+    blueLights.setMode(DigitalChannelController.Mode.OUTPUT);
+    redLights = hwMap.digitalChannel.get("red");
+    redLights.setMode(DigitalChannelController.Mode.OUTPUT);
+    greenLights = hwMap.digitalChannel.get("green");
+    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
   }
+
   public boolean isOnLinel() {
     return odsl.getLightDetected() > .5;
   }
@@ -150,6 +163,10 @@ public abstract class FourWheel {
   }
 
   public int hitBeacon(int color) throws InterruptedException {
+    // Look at both sides of the color sensor, and from that information, decide which side is
+    // "bluer" and which side is "redder", and determine which side to hit based off that.
+    // Red is 1, blue is -1. the "color" int flips the comparisons which changes which
+    // color gets hit.
     int redLeft, blueLeft, redRight, blueRight;
     this.colorSensor.enableLed(false);
     this.senseLeft();
@@ -163,7 +180,7 @@ public abstract class FourWheel {
     this.centerServo();
     Thread.sleep(500);
 
-    if (redLeft*color > redRight*color) {
+    if (redLeft*color > redRight*color) { // if one side is "redder", use that.
       this.hitLeft();
       return 1;
     }

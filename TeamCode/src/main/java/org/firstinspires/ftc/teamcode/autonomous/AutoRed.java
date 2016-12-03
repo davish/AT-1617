@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 
 @Autonomous(name="Red Auto", group="auto")
-public class AutoRed extends SuperNewAuto{
+public class AutoRed extends AutoV1 {
   double getDir() {
     return -1.0;
   }
