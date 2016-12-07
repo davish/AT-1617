@@ -30,7 +30,9 @@ public abstract class FourWheel {
   public ColorSensor colorSensor;
   public AnalogInput lineSensor;
   public Gyro imu;
-  public OpticalDistanceSensor ods;
+  public OpticalDistanceSensor odsl;
+  public OpticalDistanceSensor odsr;
+
   DigitalChannel chooLimit;
 
   public Servo beacon;
@@ -39,7 +41,9 @@ public abstract class FourWheel {
   public DigitalChannel redLights;
   public DigitalChannel greenLights;
 
-  public AnalogInput dist;
+  public AnalogInput distl;
+  public AnalogInput distr;
+
   public final double PIVOT_SENSELEFT = .45;
   public final double PIVOT_CENTER = .55;
   public final double PIVOT_SENSERIGHT = .65;
@@ -71,8 +75,13 @@ public abstract class FourWheel {
 
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
-    ods = hwMap.opticalDistanceSensor.get("ods");
+//    ods = hwMap.opticalDistanceSensor.get("ods");
 //    dist=  hwMap.analogInput.get("distance");
+    odsl = hwMap.opticalDistanceSensor.get("odsl");
+    odsr = hwMap.opticalDistanceSensor.get("odsr");
+    distl =  hwMap.analogInput.get("distancel");
+    distr =  hwMap.analogInput.get("distancer");
+
 
     // Lights
 //    blueLights = hwMap.digitalChannel.get("blue");
@@ -83,8 +92,11 @@ public abstract class FourWheel {
 //    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
   }
 
-  public boolean isOnLine() {
-    return ods.getLightDetected() > .5;
+  public boolean isOnLinel() {
+    return odsl.getLightDetected() > .5;
+  }
+  public boolean isOnLiner() {
+    return odsr.getLightDetected() > .5;
   }
 
   public void moveLeft(double pow) {
@@ -143,10 +155,13 @@ public abstract class FourWheel {
 
   public void lineFollow() throws InterruptedException
   {
-
-    if(!this.isOnLine())
+    if(!this.isOnLinel())
     {
       this.moveLeft(.5);
+    }
+    if(!this.isOnLiner())
+    {
+      this.moveRight(.5);
     }
     else{
       this.driveTank(.5, .5);
