@@ -77,10 +77,10 @@ public abstract class FourWheel {
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
 //    ods = hwMap.opticalDistanceSensor.get("ods");
 //    dist=  hwMap.analogInput.get("distance");
-    odsl = hwMap.opticalDistanceSensor.get("odsl");
-    odsr = hwMap.opticalDistanceSensor.get("odsr");
-    distl =  hwMap.analogInput.get("distancel");
-    distr =  hwMap.analogInput.get("distancer");
+//    odsl = hwMap.opticalDistanceSensor.get("odsl");
+//    odsr = hwMap.opticalDistanceSensor.get("odsr");
+//    distl =  hwMap.analogInput.get("distancel");
+//    distr =  hwMap.analogInput.get("distancer");
 
 
     // Lights
@@ -90,6 +90,7 @@ public abstract class FourWheel {
 //    redLights.setMode(DigitalChannelController.Mode.OUTPUT);
 //    greenLights = hwMap.digitalChannel.get("green");
 //    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
+    resetTicks();
   }
 
   public boolean isOnLinel() {
@@ -102,6 +103,14 @@ public abstract class FourWheel {
   public void moveLeft(double pow) {
     FL.setPower(pow);
     BL.setPower(pow);
+  }
+
+  int pos = 0;
+  public int getTicks() {
+    return BL.getCurrentPosition() - pos;
+  }
+  public void resetTicks() {
+    pos = BL.getCurrentPosition();
   }
 
   public void moveRight(double pow) {

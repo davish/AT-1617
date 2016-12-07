@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.google.gson.Gson;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
@@ -12,8 +13,9 @@ import java.io.IOException;
 /**
  * Created by davis on 11/25/16.
  */
+@Autonomous(name="Settings", group="Settings")
 public class AutoSettings extends LinearOpMode {
-  static final int DEBOUNCE_DELAY = 100;
+  static final int DEBOUNCE_DELAY = 200;
 
   public void runOpMode() throws InterruptedException {
     Gson gson = new Gson();
