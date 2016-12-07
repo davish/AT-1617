@@ -33,7 +33,7 @@ public abstract class FourWheel {
   public OpticalDistanceSensor ods;
   DigitalChannel chooLimit;
 
-  Servo beacon;
+  public Servo beacon;
 
   public DigitalChannel blueLights;
   public DigitalChannel redLights;
@@ -45,6 +45,7 @@ public abstract class FourWheel {
   public final double PIVOT_SENSERIGHT = .65;
   public final double PIVOT_HITLEFT = .73;
   public final double PIVOT_HITRIGHT = .38;
+  public final double PIVOT_LOADBALL = .53;
 
   public void init(HardwareMap ahwMap) {
     hwMap = ahwMap;
@@ -71,15 +72,15 @@ public abstract class FourWheel {
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
     ods = hwMap.opticalDistanceSensor.get("ods");
-    dist=  hwMap.analogInput.get("distance");
+//    dist=  hwMap.analogInput.get("distance");
 
     // Lights
-    blueLights = hwMap.digitalChannel.get("blue");
-    blueLights.setMode(DigitalChannelController.Mode.OUTPUT);
-    redLights = hwMap.digitalChannel.get("red");
-    redLights.setMode(DigitalChannelController.Mode.OUTPUT);
-    greenLights = hwMap.digitalChannel.get("green");
-    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
+//    blueLights = hwMap.digitalChannel.get("blue");
+//    blueLights.setMode(DigitalChannelController.Mode.OUTPUT);
+//    redLights = hwMap.digitalChannel.get("red");
+//    redLights.setMode(DigitalChannelController.Mode.OUTPUT);
+//    greenLights = hwMap.digitalChannel.get("green");
+//    greenLights.setMode(DigitalChannelController.Mode.OUTPUT);
   }
 
   public boolean isOnLine() {
@@ -123,6 +124,9 @@ public abstract class FourWheel {
   }
   public void centerServo() {
     pivot(PIVOT_CENTER);
+  }
+  public void loadingPos() {
+    pivot(PIVOT_LOADBALL);
   }
 
   public void runPickup(double pow) {

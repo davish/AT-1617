@@ -34,4 +34,8 @@ public class FtcUtil {
     else
       return 0.0;
   }
+
+  public static double arduinoScale(double val, double min1, double max1, double min2, double max2) {
+    return val / (max1 - min1) * (max2 - min2);
+  }
 }

@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 /**
  * Created by student on 11/22/16.
  */
-@Autonomous(name = "lineFollow") public class LineFollowerTest extends LinearOpMode {
+@Autonomous(name = "lineFollow 2") public class LineFollowerTest extends LinearOpMode {
 
     Mecanum robot = new Mecanum();
 

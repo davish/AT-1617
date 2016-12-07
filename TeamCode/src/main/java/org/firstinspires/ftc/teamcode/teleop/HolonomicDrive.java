@@ -27,20 +27,20 @@ public class HolonomicDrive extends OpMode {
 
   public void loop() {
     drive(gamepad1);
-    pickup(gamepad1);
+    pickup(gamepad1, gamepad2);
     if (gamepad2.right_bumper) // manual override of ball transfer
       transfer(gamepad2);
     else
       altTransfer(gamepad2);
     launch(gamepad1);
-    lights(gamepad2);
+//    lights(gamepad2);
     telemetry.update();
   }
 
-  void pickup(Gamepad gp) {
-    if (gp.right_trigger > .1)
+  void pickup(Gamepad gp, Gamepad gp2) {
+    if (gp.right_trigger > .1 || gp2.right_trigger > .1)
       robot.runPickup(1);
-    else if (gp.left_trigger > .1)
+    else if (gp.left_trigger > .1 || gp2.left_trigger > .1)
       robot.runPickup(-1);
     else
       robot.runPickup(0);
@@ -80,7 +80,7 @@ public class HolonomicDrive extends OpMode {
           transferState = 3;
         break;
       case 3:
-        if (chamberPos < robot.PIVOT_SENSERIGHT)
+        if (chamberPos < robot.PIVOT_LOADBALL)
           chamberPos += .01;
         else
           transferState = 0;
@@ -101,7 +101,7 @@ public class HolonomicDrive extends OpMode {
     // if we're moving and we're transitioning from open to closed, stop moving
     if (isMoving && !lastState && robot.catapultLoaded()) {
       isMoving = false;
-//      transferState = 1; // as soon as choo is in position, start transfer of next ball.
+      transferState = 1; // as soon as choo is in position, start transfer of next ball.
     }
 
     if (isMoving)
@@ -149,7 +149,7 @@ public class HolonomicDrive extends OpMode {
     }
 
     rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));
-
+//    rot = FtcUtil.scale(rot, -.3, .3);
     robot.move(pow, angle, rot);
   }
 
@@ -160,7 +160,7 @@ public class HolonomicDrive extends OpMode {
     double leftStrafe = FtcUtil.threshold(gp.left_stick_x);
     double rightStrafe = FtcUtil.threshold(gp.right_stick_x);
 
-    if (leftStrafe <= leftPow && rightStrafe <= rightPow)
+    if (Math.abs(leftStrafe) <= Math.abs(leftPow) && Math.abs(rightStrafe) <= Math.abs(rightPow))
       robot.driveTank(leftPow, rightPow);
     else if (rightStrafe > 0 && leftStrafe > 0)
       robot.move(Math.min(rightStrafe, leftStrafe), Math.PI/2, 0);
