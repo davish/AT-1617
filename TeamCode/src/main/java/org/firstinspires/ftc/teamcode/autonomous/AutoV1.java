@@ -72,8 +72,7 @@ public abstract class AutoV1 extends LinearOpMode {
         driveTicks(SPEED, CAP_BALL_TICKS);
       }
 
-      while (opModeIsActive())
-        robot.stopMotors();
+      stop();
     }
 
     robot.resetTicks();
