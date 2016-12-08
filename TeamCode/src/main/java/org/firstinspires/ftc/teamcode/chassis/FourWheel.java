@@ -68,7 +68,7 @@ public abstract class FourWheel {
     pickup = hwMap.dcMotor.get("pickup");
 
     beacon = hwMap.servo.get("beacon");
-    beacon.setPosition(PIVOT_CENTER);
+    beacon.setPosition(PIVOT_LOADBALL);
 
     chooLimit = hwMap.digitalChannel.get("choo limit");
     chooLimit.setMode(DigitalChannelController.Mode.INPUT);
