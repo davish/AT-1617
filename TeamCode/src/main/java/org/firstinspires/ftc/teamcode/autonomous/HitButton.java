@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.chassis.Holonomic;
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
 
 /**
  * Created by davis on 10/20/16.
@@ -12,7 +11,7 @@ import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 @Autonomous(name="Hit Red Button", group="test")
 public class HitButton extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
-    Holonomic robot = new Mecanum();
+    Orion robot = new Orion();
     robot.init(hardwareMap);
     waitForStart();
     robot.hitBeacon(1);

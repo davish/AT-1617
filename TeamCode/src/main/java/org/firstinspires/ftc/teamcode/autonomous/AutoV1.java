@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.util.ReadWriteFile;
 import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.ftc.teamcode.FtcUtil;
-import org.firstinspires.ftc.teamcode.chassis.Holonomic;
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
 import java.io.File;
@@ -19,7 +18,7 @@ import java.io.IOException;
  * Created by davis on 10/6/16.
  */
 public abstract class AutoV1 extends LinearOpMode {
-  Holonomic robot;
+  Orion robot;
 
   double SPEED = 0.4;
   double FAST_SPEED = 0.6;
@@ -41,7 +40,7 @@ public abstract class AutoV1 extends LinearOpMode {
     } catch (IOException e) {
       settings = new Settings();
     }
-    robot = new Mecanum();
+    robot = new Orion();
     robot.init(hardwareMap);
     Vuforia vuforia = new Vuforia();
     while (!robot.catapultLoaded())
@@ -55,6 +54,7 @@ public abstract class AutoV1 extends LinearOpMode {
     telemetry.addData("End on center", settings.endOnCenter);
     telemetry.update();
     telemetry.update();
+
     waitForStart();
     vuforia.activate();
     sleep(settings.delay * 1000);
@@ -240,9 +240,7 @@ public abstract class AutoV1 extends LinearOpMode {
         count++;
       }
     }
-
   }
-
 
   void transferParticle() throws InterruptedException{
     double chamberPos = robot.PIVOT_LOADBALL;
@@ -273,14 +271,11 @@ public abstract class AutoV1 extends LinearOpMode {
     robot.imu.update();
     double h = robot.imu.heading();
     long startTime = System.currentTimeMillis();
-
-    while (Math.abs(robot.getTicks()) < ticks && opModeIsActive()) {
+    long currentTime = startTime;
+    while (Math.abs(robot.getTicks()) < ticks && currentTime - startTime < timeout && opModeIsActive()) {
       robot.imu.update();
-      long currentTime = System.currentTimeMillis();
-      if (currentTime - startTime > timeout) {
-        break;
-      }
       robot.moveStraight(pow, 0, robot.imu.heading(), h);
+      currentTime = System.currentTimeMillis();
     }
     robot.stopMotors();
   }
