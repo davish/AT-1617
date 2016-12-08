@@ -5,7 +5,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
 import java.io.File;
@@ -15,10 +15,10 @@ import java.io.IOException;
  * Created by davis on 11/25/16.
  */
 public abstract class AutoBase extends LinearOpMode {
-  Mecanum robot;
+  Orion robot;
   void setup() throws InterruptedException{
     Gson gson = new Gson();
-    robot = new Mecanum();
+    robot = new Orion();
     File sfile = AppUtil.getInstance().getSettingsFile("auto_settings.json");
     Settings settings;
     try {

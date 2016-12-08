@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.FtcUtil;
-import org.firstinspires.ftc.teamcode.chassis.Holonomic;
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
 
 /**
  * Created by davis on 5/22/16.
@@ -17,7 +16,7 @@ import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 @TeleOp(name="Holonomic Drive", group="teleop")
 public class HolonomicDrive extends OpMode {
 
-  Holonomic robot = new Mecanum();
+  Orion robot = new Orion();
 
   public void init() {
     robot.init(hardwareMap);
@@ -149,7 +148,6 @@ public class HolonomicDrive extends OpMode {
     }
 
     rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));
-//    rot = FtcUtil.scale(rot, -.3, .3);
     telemetry.addData("Distance", robot.getTicks());
     robot.move(pow, angle, rot);
   }

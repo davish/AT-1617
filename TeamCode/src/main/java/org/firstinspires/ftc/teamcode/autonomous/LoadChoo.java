@@ -3,8 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.chassis.Holonomic;
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
 
 /**
  * Created by davis on 11/18/16.
@@ -14,7 +13,7 @@ import org.firstinspires.ftc.teamcode.chassis.Mecanum;
 public class LoadChoo extends LinearOpMode{
 
   public void runOpMode() throws InterruptedException {
-    Holonomic robot = new Mecanum();
+    Orion robot = new Orion();
     robot.init(hardwareMap);
     waitForStart();
     while (!robot.catapultLoaded())

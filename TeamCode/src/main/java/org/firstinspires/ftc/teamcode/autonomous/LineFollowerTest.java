@@ -3,14 +3,15 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import org.firstinspires.ftc.teamcode.chassis.Mecanum;
+import org.firstinspires.ftc.teamcode.chassis.Orion;
+
 
 /**
  * Created by student on 11/22/16.
  */
 @Autonomous(name = "lineFollow 2") public class LineFollowerTest extends LinearOpMode {
 
-    Mecanum robot = new Mecanum();
+    Orion robot = new Orion();
 
     public void runOpMode () throws InterruptedException
     {
