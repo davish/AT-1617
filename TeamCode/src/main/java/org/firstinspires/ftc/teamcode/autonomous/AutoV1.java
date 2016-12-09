@@ -20,8 +20,11 @@ import java.io.IOException;
 public abstract class AutoV1 extends LinearOpMode {
   Orion robot;
 
+  int SLEEP_TIME = 300;
+  int NUM_PUSHES = 1;
   double SPEED = 0.4;
-  double FAST_SPEED = 0.6;
+  double FAST_SPEED = 0.8;
+  double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.4;
 
   String FIRST_TARGET = getFirstTarget();
@@ -60,16 +63,16 @@ public abstract class AutoV1 extends LinearOpMode {
     sleep(settings.delay * 1000);
 
     if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
-      int FORWARD_TICKS = 900;
-      int CAP_BALL_TICKS = 1200;
+      int FORWARD_TICKS = 3200;
+      int CAP_BALL_TICKS = 1000;
 
-      driveTicks(SPEED, FORWARD_TICKS);
-      sleep(500);
+      driveTicks(-SPEED, FORWARD_TICKS);
+      sleep(SLEEP_TIME);
       shootParticles();
-      sleep(500);
+      sleep(SLEEP_TIME);
 
       if (settings.knockCapBall) {
-        driveTicks(SPEED, CAP_BALL_TICKS);
+        driveTicks(-SPEED, CAP_BALL_TICKS);
       }
 
       stop();
@@ -79,15 +82,15 @@ public abstract class AutoV1 extends LinearOpMode {
     while (Math.abs(robot.getTicks()) < 900 && opModeIsActive())
       robot.move(SPEED, 0, 0);
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
 
     // turn 55 degrees
     do {
       robot.imu.update();
       robot.move(0, 0, ROTATE_SPEED * getDir());
-    } while (Math.abs(robot.imu.heading()) < (getDir() == 1 ? 55 : 60) && opModeIsActive());
+    } while (Math.abs(robot.imu.heading()) < (getDir() == 1 ? 60 : 60) && opModeIsActive());
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
 
     // Move forward to get in range of vision targets
     robot.resetTicks();
@@ -104,7 +107,7 @@ public abstract class AutoV1 extends LinearOpMode {
       robot.moveStraight(FAST_SPEED, 0, robot.imu.heading(), target);
       idle();
     } while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive());
-    sleep(500);
+    sleep(SLEEP_TIME);
     // Keep moving until we're 70cm away from the first target
     while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 700 && opModeIsActive()) {
       robot.imu.update();
@@ -112,7 +115,7 @@ public abstract class AutoV1 extends LinearOpMode {
       idle();
     }
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
 
     // Turn until we're 90 degrees away from how we started.
     do {
@@ -121,7 +124,7 @@ public abstract class AutoV1 extends LinearOpMode {
     } while (Math.abs(robot.imu.heading()) < (getDir() == 1 ? 86 : 75) && opModeIsActive());
     robot.stopMotors();
 
-    sleep(500);
+    sleep(SLEEP_TIME);
     // Get current heading for PID strafing
     robot.imu.update();
     double h = robot.imu.heading();
@@ -133,10 +136,10 @@ public abstract class AutoV1 extends LinearOpMode {
     // Strafe sideways until we're lined up with the vision target
     while (vuforia.getAlignment(FIRST_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1] + 40) > 50) {
       robot.imu.update();
-      robot.move(FAST_SPEED, Math.PI / 2 * dir, 0);
+      robot.move(STRAFE_SPEED, Math.PI / 2 * dir, 0);
     }
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
 
     // Make sure we can see the vision guide before we start moving
     while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive())
@@ -149,9 +152,9 @@ public abstract class AutoV1 extends LinearOpMode {
     }
     robot.stopMotors();
     robot.centerServo();
-    sleep(500);
+    sleep(SLEEP_TIME);
 
-//    // Load catapult, and shoot
+    // Load catapult, and shoot
     shootParticles();
 
     // move until we're 22.5cm away from the target
@@ -159,27 +162,26 @@ public abstract class AutoV1 extends LinearOpMode {
       robot.moveStraight(SPEED, 0, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
     }
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
     // Check both sides of beacon, put the right paddle forward.
     int a = robot.hitBeacon(-1 * (int) getDir());
 
-    sleep(1000);
+    sleep(SLEEP_TIME);
     // Go forwards and hit the beacon twice to make sure the button is pressed
     int count = 0;
     if (a != 0) {
-      while (opModeIsActive() && count < 2) {
+      while (opModeIsActive() && count < NUM_PUSHES) {
         robot.move(2 * SPEED / 3, 0, 0);
         sleep(700);
         robot.stopMotors();
-        sleep(250);
+        sleep(200);
         robot.move(2 * SPEED / 3, Math.PI, 0);
         sleep(700);
         robot.stopMotors();
-        sleep(250);
+        sleep(200);
         count++;
       }
     }
-    sleep(500);
     robot.imu.update();
     h = robot.imu.heading();
 
@@ -197,45 +199,48 @@ public abstract class AutoV1 extends LinearOpMode {
       while (opModeIsActive())
         robot.stopMotors();
 
+    robot.centerServo();
     robot.imu.resetHeading();
-    do {
+    rotateDegs(-ROTATE_SPEED * getDir(), getDir() == 1 ? 90: 85);
+    sleep(SLEEP_TIME);
+    driveTicks(FAST_SPEED, 2400);
+    sleep(SLEEP_TIME);
+    robot.imu.resetHeading();
+    rotateDegs(ROTATE_SPEED*getDir(), 90);
+    sleep(SLEEP_TIME);
+    driveTicks(SPEED, 400);
+    sleep(SLEEP_TIME);
+    while ((vuforia.getAlignment(SECOND_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1] + (getDir() == 1 ? 40 : -40)) > 50) && opModeIsActive()) {
       robot.imu.update();
-      robot.move(0, 0, -ROTATE_SPEED * getDir());
-    } while (Math.abs(robot.imu.heading()) < 90 && opModeIsActive());
-    robot.stopMotors();
-    while (opModeIsActive())
-      robot.stopMotors();
-
-    while (opModeIsActive() && (vuforia.getAlignment(SECOND_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1] - (getDir() == 1 ? 40 : -20)) > 50)) {
-      robot.imu.update();
-      robot.move(FAST_SPEED, Math.PI / 2 * dir, 0);
+      robot.move(STRAFE_SPEED, Math.PI / 2 * dir, 0);
     }
 
     // Make sure we can see the second vision guide
     while (vuforia.getAlignment(SECOND_TARGET) == null && opModeIsActive())
       ;
 
-    // Align with vision target and move until we're 22.5cm away
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[2]) > 225 && opModeIsActive()) {
+    sleep(SLEEP_TIME);
+
+    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[2]) > 360 && opModeIsActive()) {
       robot.moveStraight(SPEED, 0, Vuforia.getHeading(vuforia.getAlignment(SECOND_TARGET)));
     }
     robot.stopMotors();
-    sleep(500);
+    sleep(SLEEP_TIME);
     // Sense second beacon color, put right paddle forward.
     a = robot.hitBeacon(-1 * (int) getDir());
     sleep(1000);
     count = 0;
     // Hit beacon.
     if (a != 0) {
-      while (opModeIsActive() && count < 2) {
-        robot.move(1 * SPEED / 3, 0, 0);
-        sleep(500);
+      while (opModeIsActive() && count < NUM_PUSHES) {
+        robot.move(2 * SPEED / 3, 0, 0);
+        sleep(700);
         robot.stopMotors();
-        sleep(250);
-        robot.move(1 * SPEED / 3, Math.PI, 0);
-        sleep(500);
+        sleep(200);
+        robot.move(2 * SPEED / 3, Math.PI, 0);
+        sleep(700);
         robot.stopMotors();
-        sleep(250);
+        sleep(200);
         count++;
       }
     }
@@ -266,6 +271,7 @@ public abstract class AutoV1 extends LinearOpMode {
   }
 
   void driveTicks(double pow, int ticks, int timeout) {
+    double angle = pow > 0 ? 0 : Math.PI;
     robot.resetTicks();
     robot.imu.update();
     double h = robot.imu.heading();
@@ -273,7 +279,7 @@ public abstract class AutoV1 extends LinearOpMode {
     long currentTime = startTime;
     while (Math.abs(robot.getTicks()) < ticks && currentTime - startTime < timeout && opModeIsActive()) {
       robot.imu.update();
-      robot.moveStraight(pow, 0, robot.imu.heading(), h);
+      robot.moveStraight(Math.abs(pow), angle, robot.imu.heading(), h);
       currentTime = System.currentTimeMillis();
     }
     robot.stopMotors();
@@ -294,13 +300,13 @@ public abstract class AutoV1 extends LinearOpMode {
   void shootParticles() throws InterruptedException {
     if (settings.numShots > 0) {
       fireParticle();
-      sleep(500);
+      sleep(SLEEP_TIME);
     }
     if (settings.numShots > 1) {
       transferParticle();
-      sleep(500);
+      sleep(SLEEP_TIME);
       fireParticle();
-      sleep(500);
+      sleep(SLEEP_TIME);
     }
   }
 }

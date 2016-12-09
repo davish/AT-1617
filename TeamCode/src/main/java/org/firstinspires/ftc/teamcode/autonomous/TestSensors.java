@@ -20,7 +20,7 @@ public class TestSensors extends LinearOpMode{
     vuforia.activate();
 
     while (opModeIsActive()) {
-      OpenGLMatrix loc = vuforia.getAlignment("gears");
+      OpenGLMatrix loc = vuforia.getAlignment("wheels");
       float[] pos = Vuforia.getPosition(loc);
       float heading = Vuforia.getHeading(loc); // heading is rotation around (y) axis.
 
