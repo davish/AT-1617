@@ -67,7 +67,7 @@ public abstract class AutoV1 extends LinearOpMode {
       int CAP_BALL_TICKS = 1000;
 
       driveTicks(-SPEED, FORWARD_TICKS);
-      sleep(SLEEP_TIME);
+      sleep(SLEEP_TIME*2);
       shootParticles();
       sleep(SLEEP_TIME);
 
@@ -144,18 +144,21 @@ public abstract class AutoV1 extends LinearOpMode {
     // Make sure we can see the vision guide before we start moving
     while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive())
       ;
-    // Move backwards to align for shooting particle
-    while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) < 650 && opModeIsActive()) {
-      robot.imu.update();
-      robot.moveStraight(2 * SPEED / 3, Math.PI, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
-      idle();
-    }
-    robot.stopMotors();
-    robot.centerServo();
-    sleep(SLEEP_TIME);
 
-    // Load catapult, and shoot
-    shootParticles();
+    if (settings.numShots > 0) {
+      // Move backwards to align for shooting particle
+      while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) < 650 && opModeIsActive()) {
+        robot.imu.update();
+        robot.moveStraight(2 * SPEED / 3, Math.PI, Vuforia.getHeading(vuforia.getAlignment(FIRST_TARGET)));
+        idle();
+      }
+      robot.stopMotors();
+      robot.centerServo();
+      sleep(SLEEP_TIME);
+
+      // Load catapult, and shoot
+      shootParticles();
+    }
 
     // move until we're 22.5cm away from the target
     while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 360 && opModeIsActive()) {
@@ -201,16 +204,16 @@ public abstract class AutoV1 extends LinearOpMode {
 
     robot.centerServo();
     robot.imu.resetHeading();
-    rotateDegs(-ROTATE_SPEED * getDir(), getDir() == 1 ? 90: 85);
+    boolean b = rotateDegs(-ROTATE_SPEED * getDir(), getDir() == 1 ? 90 : 85);
     sleep(SLEEP_TIME);
     driveTicks(FAST_SPEED, 2400);
     sleep(SLEEP_TIME);
     robot.imu.resetHeading();
-    rotateDegs(ROTATE_SPEED*getDir(), 90);
+    rotateDegs(ROTATE_SPEED * getDir(), 90);
     sleep(SLEEP_TIME);
-    driveTicks(SPEED, 400);
+    driveTicks(SPEED, b ? 400 : 200);
     sleep(SLEEP_TIME);
-    while ((vuforia.getAlignment(SECOND_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1] + (getDir() == 1 ? 40 : -40)) > 50) && opModeIsActive()) {
+    while ((vuforia.getAlignment(SECOND_TARGET) == null || Math.abs(Vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1] + (getDir() == 1 ? 40 : 0)) > 50) && opModeIsActive()) {
       robot.imu.update();
       robot.move(STRAFE_SPEED, Math.PI / 2 * dir, 0);
     }
@@ -218,6 +221,11 @@ public abstract class AutoV1 extends LinearOpMode {
     // Make sure we can see the second vision guide
     while (vuforia.getAlignment(SECOND_TARGET) == null && opModeIsActive())
       ;
+
+    while (Math.abs(vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1]) > 5) {
+      robot.moveStraight(0, 0, vuforia.getPosition(vuforia.getAlignment(SECOND_TARGET))[1]);
+    }
+    robot.stopMotors();
 
     sleep(SLEEP_TIME);
 
@@ -289,12 +297,30 @@ public abstract class AutoV1 extends LinearOpMode {
     driveTicks(pow, ticks, 30000);
   }
 
-  void rotateDegs(double pow, double degs) {
+  boolean rotateDegs(double pow, double degs) {
+    double prevHeading = 366;
+    boolean b = false;
+    robot.resetTicks();
     do {
-      robot.imu.update();
       robot.move(0, 0, pow);
+      robot.imu.update();
+      telemetry.addData("degrees", robot.imu.heading());
+      telemetry.update();
+      if (prevHeading == robot.imu.heading()) {
+        b = true;
+        break;
+      }
+      prevHeading = robot.imu.heading();
     } while (Math.abs(robot.imu.heading()) < degs && opModeIsActive());
+
+    while (b && Math.abs(robot.getTicks()) < 1400 && opModeIsActive()) {
+      robot.move(0, 0, pow);
+      telemetry.addData("ticks", robot.getTicks());
+      telemetry.update();
+    }
+
     robot.stopMotors();
+    return !b;
   }
 
   void shootParticles() throws InterruptedException {

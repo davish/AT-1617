@@ -40,7 +40,7 @@ public class Gyro {
       return -h; // in order to line up with Vuforia alignment, invert the heading measurement.
     }
     else
-      return 0.0;
+      return -366;
   }
 
   public void resetHeading() {

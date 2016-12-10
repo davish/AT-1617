@@ -154,7 +154,6 @@ public class HolonomicDrive extends OpMode {
     }
 //    rot = FtcUtil.scale(rot, -.3, .3);
 
-    rot = FtcUtil.threshold(rotate, FtcUtil.sign(rotate));
     telemetry.addData("Distance", robot.getTicks());
     robot.move(pow, angle, rot);
   }
