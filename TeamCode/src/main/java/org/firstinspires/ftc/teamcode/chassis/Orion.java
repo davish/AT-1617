@@ -262,7 +262,7 @@ public class Orion {
   }
 
   double getKp() {
-    return -0.04;
+    return -0.02;
   }
   double getKi() {
     return 0.0;
