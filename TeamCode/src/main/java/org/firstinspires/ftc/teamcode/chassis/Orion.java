@@ -208,7 +208,14 @@ public class Orion {
 
   }
 
-  double integral = 0.0; // Accumulation of error over time. Used in PID controller.
+  public boolean seesRed() {
+    return this.colorSensor.red() > this.colorSensor.blue();
+  }
+  public boolean seesBlue() {
+    return this.colorSensor.blue() > this.colorSensor.red();
+  }
+
+    double integral = 0.0; // Accumulation of error over time. Used in PID controller.
   double lastError = 0.0;
 
   /**

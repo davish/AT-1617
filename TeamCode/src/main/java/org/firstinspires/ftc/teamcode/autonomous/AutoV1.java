@@ -1,13 +1,10 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.google.gson.Gson;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
-import org.firstinspires.ftc.robotcore.external.matrices.OpenGLMatrix;
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
-import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.chassis.Orion;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
@@ -81,19 +78,11 @@ public abstract class AutoV1 extends LinearOpMode {
       stop();
     }
 
-    robot.resetTicks();
-    while (Math.abs(robot.getTicks()) < 900 && opModeIsActive())
-      robot.move(SPEED, 0, 0);
-    robot.stopMotors();
+    driveTicks(SPEED, 900);
     sleep(SLEEP_TIME);
 
     // turn 55 degrees
-    do {
-      robot.imu.update();
-      robot.move(0, 0, ROTATE_SPEED * getDir());
-    } while (Math.abs(robot.imu.heading()) < (getDir() == 1 ? 55 : 55) && opModeIsActive());
-    robot.stopMotors();
-    sleep(SLEEP_TIME);
+    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 55 : 55);
 
     // Move forward to get in range of vision targets
     robot.resetTicks();
@@ -111,6 +100,7 @@ public abstract class AutoV1 extends LinearOpMode {
       idle();
     } while (vuforia.getAlignment(FIRST_TARGET) == null && opModeIsActive());
     sleep(SLEEP_TIME);
+
     // Keep moving until we're 70cm away from the first target
     while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[2]) > 700 && opModeIsActive()) {
       robot.imu.update();
@@ -121,19 +111,11 @@ public abstract class AutoV1 extends LinearOpMode {
     sleep(SLEEP_TIME);
 
     // Turn until we're 90 degrees away from how we started.
-    do {
-      robot.imu.update();
-      robot.move(0, 0, ROTATE_SPEED * getDir());
-    } while (Math.abs(robot.imu.heading()) < (getDir() == 1 ? 86 : 75) && opModeIsActive());
-    robot.stopMotors();
-
+    rotateDegs(ROTATE_SPEED * getDir(), (getDir() == 1 ? 86 : 75) - 55);
     sleep(SLEEP_TIME);
     // Get current heading for PID strafing
     robot.imu.update();
     double h = robot.imu.heading();
-
-    // get our position relative to the vision target (are we on left/right side)
-//    double dir = FtcUtil.sign(Vuforia.getPosition(vuforia.getAlignment(FIRST_TARGET))[1]);
     double dir = getDir();
     telemetry.addData("Dir", dir);
     telemetry.update();
@@ -280,24 +262,62 @@ public abstract class AutoV1 extends LinearOpMode {
     robot.runChoo(0);
   }
 
-  void moveVuforia(double pow, double angle, double threshold, double offset, String target) {
-    int i = -1;
-    if (angle == Math.PI || angle == 0) {
-      i = 2;
-    } else if (Math.abs(angle) == Math.PI/2) {
-      i = 1;
-    }
+  void moveUntilVuforia(double pow, double angle, double dist, double offset, String target) {
 
+  }
+
+  /**
+   * Move around while orthogonal with a Vuforia vision target.
+   *
+   * When moving forwards and backwards, `offset` is zero since you're moving until you're a
+   * certain distance away.
+   *
+   * When moving sideways, `threshold` is the margin of error that you're accepting, and `offset`
+   * is the phone camera's offset from the center of the robot. When sideways moving, this function
+   * basically aligns with the vision guide.
+   *
+   * @param pow Motor power
+   * @param angle direction to move in
+   * @param threshold distance in mm away from target to move until
+   * @param offset distance
+   * @param target string identifier of the vision target to use
+   */
+  void moveOrthogonalVuforia(double pow, double angle, double threshold, double offset, String target) {
+    int i = -1;
+    // use distance away for alignment if moving forwards/backwards
+    if (angle == Math.PI || angle == 0) i = 2;
+    // use position side/to/side relative to vision guide if moving side-to-side
+    else if (Math.abs(angle) == Math.PI/2) i = 1;
+
+    robot.imu.update();
+    double h = robot.imu.heading();
     while (Math.abs(Vuforia.getPosition(vuforia.getAlignment(target))[i] - offset) > threshold && opModeIsActive()) {
-      robot.moveStraight(pow, angle, Vuforia.getHeading(vuforia.getAlignment(target)));
+      robot.imu.heading();
+      robot.moveStraight(
+              pow, angle,
+              Vuforia.getHeading(vuforia.getAlignment(target)));
     }
     robot.stopMotors();
   }
 
-  void moveVuforia(double pow, double angle, double threshold, String target) {
-    moveVuforia(pow, angle, threshold, 0, target);
+  /**
+   * Overload of moveOrthogonalVuforia when no offset is necessary.
+   *
+   * @param pow motor power
+   * @param angle direction to move in
+   * @param threshold move until you're `threshold` away
+   * @param target vision target to use.
+   */
+  void moveOrthogonalVuforia(double pow, double angle, double threshold, String target) {
+    moveOrthogonalVuforia(pow, angle, threshold, 0, target);
   }
 
+  /**
+   *
+   * @param pow power
+   * @param ticks number of ticks forward
+   * @param timeout seconds before you stop moving if encoders don't finish
+   */
   void driveTicks(double pow, int ticks, int timeout) {
     double angle = pow > 0 ? 0 : Math.PI;
     robot.resetTicks();
@@ -317,30 +337,34 @@ public abstract class AutoV1 extends LinearOpMode {
     driveTicks(pow, ticks, 30000);
   }
 
-  boolean rotateDegs(double pow, double degs) {
+  boolean rotateDegs(double pow, double degs, int fallbackTicks) {
     double prevHeading = 366;
     boolean b = false;
     robot.resetTicks();
     do {
-      robot.move(0, 0, pow);
       robot.imu.update();
-      telemetry.addData("degrees", robot.imu.heading());
-      telemetry.update();
-      if (prevHeading == robot.imu.heading()) {
-        b = true;
-        break;
-      }
-      prevHeading = robot.imu.heading();
+      robot.move(0, 0, ROTATE_SPEED * getDir());
+
+//      telemetry.addData("degrees", robot.imu.heading());
+//      telemetry.update();
+//      if (prevHeading == robot.imu.heading()) {
+//        b = true;
+//        break;
+//      }
+//      prevHeading = robot.imu.heading();
     } while (Math.abs(robot.imu.heading()) < degs && opModeIsActive());
 
-    while (b && Math.abs(robot.getTicks()) < 1400 && opModeIsActive()) {
-      robot.move(0, 0, pow);
-      telemetry.addData("ticks", robot.getTicks());
-      telemetry.update();
-    }
+//    while (b && Math.abs(robot.getTicks()) < fallbackTicks && opModeIsActive()) {
+//      robot.move(0, 0, pow);
+//      telemetry.addData("ticks", robot.getTicks());
+//      telemetry.update();
+//    }
 
     robot.stopMotors();
     return !b;
+  }
+  boolean rotateDegs(double pow, double degs) {
+    return rotateDegs(pow, degs, 0);
   }
 
   void shootParticles() throws InterruptedException {
@@ -354,5 +378,26 @@ public abstract class AutoV1 extends LinearOpMode {
       fireParticle();
       sleep(SLEEP_TIME);
     }
+  }
+
+  public int getBeacon (int color) throws InterruptedException {
+
+    int redLeft, blueLeft;
+    robot.colorSensor.enableLed(false);
+    redLeft = robot.colorSensor.red();
+    blueLeft = robot.colorSensor.blue();
+
+    Thread.sleep(500);
+
+    if(redLeft > blueLeft)
+    {
+
+    }
+    else if(redLeft < blueLeft)
+    {
+
+    }
+
+    return 0;
   }
 }
