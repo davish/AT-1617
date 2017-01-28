@@ -41,6 +41,7 @@ public class DiagonalTest extends AutoBlue{
     telemetry.addData("End on center", settings.endOnCenter);
     telemetry.update();
     telemetry.update();
+
     waitForStart();
 
     driveTicks(-power, 1250);
@@ -50,16 +51,33 @@ public class DiagonalTest extends AutoBlue{
     sleep(500);
     driveTicks(power, 1000);
     rotateDegs(power, 60);
-    while(!robot.isOnLinel()){
+    while(!robot.isOnLinel() && opModeIsActive()){
       driveTicks(power, 350);
     }
-    if(robot.isOnLinel()) {
-     driveTicks(power, 800); // ?
-      rotateDegs(power, 90);
-
-
-
+    robot.stopMotors();
+    rotateDegs(power, 70);
+    long t = System.currentTimeMillis();
+    robot.imu.update();
+    double h = robot.imu.heading();
+    while (System.currentTimeMillis() - t < 1000) {
+      robot.imu.update();
+      robot.moveStraight(power, Math.PI / 2, robot.imu.heading(), h);
     }
+    robot.stopMotors();
+    sleep(500);
+    while (System.currentTimeMillis() - t < 100) {
+      robot.imu.update();
+      robot.moveStraight(power, -Math.PI/2, robot.imu.heading(), h);
+    }
+    robot.stopMotors();
+
+    sleep(500);
+    alignWithLine();
+    sleep(500);
+
+    pushButton((int) getDir());
+
+
 
   }
 }

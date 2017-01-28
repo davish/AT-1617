@@ -380,24 +380,45 @@ public abstract class AutoV1 extends LinearOpMode {
     }
   }
 
-  public int getBeacon (int color) throws InterruptedException {
+  public int pushButton (int color) throws InterruptedException {
 
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
     redLeft = robot.colorSensor.red();
     blueLeft = robot.colorSensor.blue();
+    int hit = 0;
 
-    Thread.sleep(500);
-
-    if(redLeft > blueLeft)
-    {
-
-    }
-    else if(redLeft < blueLeft)
-    {
-
+    sleep(250);
+    if(redLeft*color > blueLeft*color) {
+      robot.pressButton();
+      hit = 1;
+      sleep(500);
     }
 
-    return 0;
+    driveTicks(SPEED/2, 300);
+    sleep(500);
+
+    redLeft = robot.colorSensor.red();
+    blueLeft = robot.colorSensor.blue();
+    sleep(250);
+
+    if(redLeft*color > blueLeft*color && hit==0) {
+      robot.pressButton();
+      hit = -1;
+      sleep(500);
+    }
+    return hit;
+  }
+  void alignWithLine() throws InterruptedException{
+    while (!robot.isOnLinel()) {
+      robot.moveRight(-SPEED);
+    }
+    robot.stopMotors();
+    sleep(250);
+    while (!robot.isOnLiner()) {
+      robot.moveLeft(-SPEED);
+    }
+    robot.stopMotors();
+
   }
 }
