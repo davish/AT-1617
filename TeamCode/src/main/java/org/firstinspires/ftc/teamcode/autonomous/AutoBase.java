@@ -22,7 +22,7 @@ public abstract class AutoBase extends LinearOpMode {
 
   int SLEEP_TIME = 300;
   int NUM_PUSHES = 1;
-  double SPEED = 0.4;
+  double SPEED = 0.3;
   double FAST_SPEED = 0.8;
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.4;
@@ -119,6 +119,7 @@ public abstract class AutoBase extends LinearOpMode {
     double prevHeading = 366;
     boolean b = false;
     robot.resetTicks();
+    robot.imu.resetHeading();
     do {
       robot.imu.update();
       robot.move(0, 0, ROTATE_SPEED * getDir());
@@ -168,12 +169,12 @@ public abstract class AutoBase extends LinearOpMode {
 
     sleep(250);
     if(redLeft*color > blueLeft*color) {
-      robot.pressButton();
+      robot.push();
       hit = 1;
       sleep(500);
     }
 
-    driveTicks(SPEED / 2, 300);
+    driveTicks(SPEED / 2, 290);
     if (hit==0) {
       sleep(500);
 
@@ -182,7 +183,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(250);
 
       if (redLeft * color > blueLeft * color) {
-        robot.pressButton();
+        robot.push();
         hit = -1;
         sleep(500);
       }

@@ -13,8 +13,9 @@ public class HitButton extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     Orion robot = new Orion();
     robot.init(hardwareMap);
-    waitForStart();
-    robot.hitBeacon(1);
-    sleep(1000);
+//    waitForStart();
+    robot.push();
+//    robot.hitBeacon(1);
+//    sleep(1000);
   }
 }

@@ -21,11 +21,11 @@ import org.firstinspires.ftc.teamcode.chassis.Orion;
 
         waitForStart();
 
-        if((robot.distl.getVoltage() > .5) && (robot.distr.getVoltage() > .5)) {
-            while (opModeIsActive()) {
-                robot.lineFollow();
-            }
-        }
+//        if((robot.distl.getVoltage() > .5) && (robot.distr.getVoltage() > .5)) {
+//            while (opModeIsActive()) {
+//                robot.lineFollow();
+//            }
+//        }
 
 
     }

@@ -17,7 +17,7 @@ import java.io.IOException;
  */
 @Autonomous(name="Diagonal", group="tests")
 public class AutoV2 extends AutoBase{
-  double power = .4;
+  double power = .3;
   int color = 0;
   double getDir() {
     return 1;
@@ -26,25 +26,33 @@ public class AutoV2 extends AutoBase{
 
     driveTicks(-power, 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
-    shootParticles();
+//    shootParticles();
     rotateDegs(power, 110);
     sleep(SLEEP_TIME);
-    driveTicks(power, 1000);
-    rotateDegs(power, 60);
-    while(!robot.isOnLinel() && opModeIsActive()){
-      driveTicks(power, 350);
+    driveTicks(power, 2300);
+    sleep(SLEEP_TIME);
+    rotateDegs(power, 45);
+    sleep(SLEEP_TIME);
+//    alignWithLine();
+//    sleep(SLEEP_TIME);
+    robot.imu.update();
+    double h = robot.imu.heading();
+    while (robot.getDistanceAway() > 15 && opModeIsActive()) {
+      robot.imu.update();
+      robot.moveStraight(.8, Math.PI/2, robot.imu.heading(), h);
     }
     robot.stopMotors();
-    rotateDegs(power, 70);
-    sleep(SLEEP_TIME);
-    alignWithLine();
-    sleep(SLEEP_TIME);
-    while (robot.getDistanceAway() > 10) {
-      robot.move(1.0, Math.PI/2, 0);
+    sleep(SLEEP_TIME*2);
+    while (!robot.isOnLinel() && opModeIsActive()) {
+      robot.move(power/2, Math.PI, 0);
     }
     robot.stopMotors();
     sleep(SLEEP_TIME);
+    driveTicks(power/2, 150);
+    pushButton(1);
+//    driveTicks(power, 2000);
+//    driveTicks(-power/2, 400);
+//    robot.push();
 
-    pushButton((int) getDir());
   }
 }

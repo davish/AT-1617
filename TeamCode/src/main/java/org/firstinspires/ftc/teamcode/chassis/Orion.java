@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.chassis;
 import com.qualcomm.hardware.adafruit.BNO055IMU;
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cRangeSensor;
 import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
@@ -38,6 +39,7 @@ public class Orion {
   DigitalChannel chooLimit;
 
   public Servo beacon;
+  Servo pusher;
 
   public DigitalChannel blueLights;
   public DigitalChannel redLights;
@@ -74,12 +76,13 @@ public class Orion {
 
     chooLimit = hwMap.digitalChannel.get("choo limit");
     chooLimit.setMode(DigitalChannelController.Mode.INPUT);
-
+    pusher = hwMap.servo.get("pusher");
+    pusher.setPosition(.520); // in is > 500, out is < 520.
     colorSensor = hwMap.colorSensor.get("mr");
     imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
     dist = hwMap.get(ModernRoboticsI2cRangeSensor.class, "dist");
 
-//    ods = hwMap.opticalDistanceSensor.get("ods");
+    odsl = hwMap.opticalDistanceSensor.get("ods");
 //    odsl = hwMap.opticalDistanceSensor.get("odsl");
 //    odsr = hwMap.opticalDistanceSensor.get("odsr");
 //    distl =  hwMap.analogInput.get("distancel");
@@ -101,6 +104,27 @@ public class Orion {
   }
   public boolean isOnLiner() {
     return odsr.getLightDetected() > .5;
+  }
+
+  public void pressButton() {}
+  public void pushOut() {
+    pusher.setPosition(0);
+  }
+  public void pushIn() {
+    pusher.setPosition(1);
+  }
+  public void pushNo() {
+    pusher.setPosition(.520);
+  }
+
+  public void push() throws InterruptedException{
+    pushOut();
+    Thread.sleep(1000);
+    pushNo();
+    Thread.sleep(200);
+    pushIn();
+    Thread.sleep(1000);
+    pushNo();
   }
 
   public void moveLeft(double pow) {
@@ -220,9 +244,6 @@ public class Orion {
   }
   public boolean seesBlue() {
     return this.colorSensor.blue() > this.colorSensor.red();
-  }
-  public void pressButton() {
-
   }
 
     double integral = 0.0; // Accumulation of error over time. Used in PID controller.
