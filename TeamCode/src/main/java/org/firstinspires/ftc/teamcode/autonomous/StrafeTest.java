@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.chassis.Orion;
@@ -9,6 +10,7 @@ import org.firstinspires.ftc.teamcode.chassis.Orion;
 /**
  * Created by student on 11/22/16.
  */
+@Disabled
  @Autonomous(name = "lineFollow") public class StrafeTest extends LinearOpMode {
 
     Orion robot = new Orion();

@@ -15,7 +15,6 @@ public class LoadChoo extends LinearOpMode{
   public void runOpMode() throws InterruptedException {
     Orion robot = new Orion();
     robot.init(hardwareMap);
-    waitForStart();
     while (!robot.catapultLoaded())
       robot.runChoo(1);
     robot.runChoo(0);

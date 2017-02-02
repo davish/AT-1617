@@ -8,7 +8,7 @@ import org.firstinspires.ftc.teamcode.chassis.Orion;
 /**
  * Created by davis on 10/20/16.
  */
-@Autonomous(name="Hit Red Button", group="test")
+@Autonomous(name="Hit Button", group="test")
 public class HitButton extends LinearOpMode {
   public void runOpMode() throws InterruptedException {
     Orion robot = new Orion();

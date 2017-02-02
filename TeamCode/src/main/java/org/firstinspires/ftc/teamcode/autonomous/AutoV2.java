@@ -15,7 +15,7 @@ import java.io.IOException;
 /**
  * Created by davis on 1/6/17.
  */
-@Autonomous(name="Diagonal", group="tests")
+@Autonomous(name="Red Auto v2", group="tests")
 public class AutoV2 extends AutoBase{
   double power = .3;
   int color = 0;
@@ -23,7 +23,6 @@ public class AutoV2 extends AutoBase{
     return 1;
   }
   public void run() throws InterruptedException {
-
     driveTicks(-power, 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
 //    shootParticles();
