@@ -27,15 +27,14 @@ public class AutoV2 extends AutoBase{
     driveTicks(-power, 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
 //    shootParticles();
-    rotateDegs(power, 110);
+    rotateDegs(power, 110); // rotate and move towards beacon
     sleep(SLEEP_TIME);
     driveTicks(power, 2300);
     sleep(SLEEP_TIME);
-    rotateDegs(power, 45);
+    rotateDegs(power, 45); // rotate into alignment with wall
     sleep(SLEEP_TIME);
-//    alignWithLine();
-//    sleep(SLEEP_TIME);
-    robot.imu.update();
+
+    robot.imu.update(); // strafe until we're within pushing range
     double h = robot.imu.heading();
     while (robot.getDistanceAway() > 15 && opModeIsActive()) {
       robot.imu.update();
@@ -43,16 +42,27 @@ public class AutoV2 extends AutoBase{
     }
     robot.stopMotors();
     sleep(SLEEP_TIME*2);
+    // move backwards until we're aligned with the line.
     while (!robot.isOnLinel() && opModeIsActive()) {
       robot.move(power/2, Math.PI, 0);
     }
     robot.stopMotors();
-    sleep(SLEEP_TIME);
+    sleep(SLEEP_TIME*3);
+    // drive forward to align with beacon, then push the proper button
     driveTicks(power/2, 150);
-    pushButton(1);
-//    driveTicks(power, 2000);
-//    driveTicks(-power/2, 400);
-//    robot.push();
+    pushButton((int)getDir()); // code to push beacon
+    sleep(SLEEP_TIME);
 
+    if (settings.beacon2) {
+      driveTicks(power, 1800); // go with encoders fast until we're close to the line, then
+      while (!robot.isOnLinel() && opModeIsActive()) {
+        robot.move(power / 2, 0, 0);
+      }
+      robot.stopMotors();
+      sleep(SLEEP_TIME);
+      driveTicks(power/2, 150);
+      sleep(SLEEP_TIME);
+      pushButton((int) getDir());
+    }
   }
 }

@@ -185,7 +185,6 @@ public abstract class AutoBase extends LinearOpMode {
       if (redLeft * color > blueLeft * color) {
         robot.push();
         hit = -1;
-        sleep(500);
       }
     }
     return hit;
