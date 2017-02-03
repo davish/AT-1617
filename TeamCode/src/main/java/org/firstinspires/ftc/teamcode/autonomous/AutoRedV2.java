@@ -16,7 +16,7 @@ import java.io.IOException;
  * Created by davis on 1/6/17.
  */
 @Autonomous(name="Red Auto v2", group="tests")
-public class AutoV2 extends AutoBase{
+public class AutoRedV2 extends AutoBase{
   double power = .3;
   int color = 0;
   double getDir() {
@@ -56,12 +56,29 @@ public class AutoV2 extends AutoBase{
       driveTicks(power, 1800); // go with encoders fast until we're close to the line, then
       while (!robot.isOnLinel() && opModeIsActive()) {
         robot.move(power / 2, 0, 0);
+
+
       }
       robot.stopMotors();
       sleep(SLEEP_TIME);
       driveTicks(power/2, 150);
       sleep(SLEEP_TIME);
       pushButton((int) getDir());
+
+      //cap ball
+      if(settings.knockCapBall)
+      {
+        rotateDegs(power, 150);
+        driveTicks(power, 2500); //figure out how many ticks
+      }
+
     }
+    else if (settings.knockCapBall){
+      rotateDegs(power, 90);
+      driveTicks(power, 2000);
+      rotateDegs(power, 85);
+    }
+
+
   }
 }
