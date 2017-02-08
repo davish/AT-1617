@@ -27,6 +27,9 @@ public abstract class AutoBase extends LinearOpMode {
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.4;
 
+  static final double FORWARD = 0;
+  static final double BACKWARD = Math.PI;
+
 
   void setup() throws InterruptedException{
     Gson gson = new Gson();
@@ -107,6 +110,9 @@ public abstract class AutoBase extends LinearOpMode {
       robot.imu.update();
       robot.moveStraight(Math.abs(pow), angle, robot.imu.heading(), h);
       currentTime = System.currentTimeMillis();
+      telemetry.addData("Target", ticks);
+      telemetry.addData("Current", robot.getTicks());
+      telemetry.update();
     }
     robot.stopMotors();
   }
@@ -163,8 +169,10 @@ public abstract class AutoBase extends LinearOpMode {
 
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
-    redLeft = robot.colorSensor.red();
-    blueLeft = robot.colorSensor.blue();
+//    redLeft = robot.colorSensor.red();
+//    blueLeft = robot.colorSensor.blue();
+    redLeft = 1;
+    blueLeft = 0;
     int hit = 0;
 
     sleep(250);
@@ -200,5 +208,48 @@ public abstract class AutoBase extends LinearOpMode {
     }
     robot.stopMotors();
 
+  }
+
+  /**
+   * Move until range sensor reads less than the given distance
+   * @param dist distance threshold in centimeters
+   * @param pow power to move with
+   * @param angle angle to move at
+   * @throws InterruptedException
+     */
+  void moveUntilCloserThan(double dist, double pow, double angle) {
+    robot.imu.update();
+    double h = robot.imu.heading();
+    while (robot.getDistanceAway() > dist && opModeIsActive()) {
+      robot.imu.update();
+      robot.moveStraight(pow, angle, robot.imu.heading(), h);
+    }
+    robot.stopMotors();
+  }
+
+  /**
+   * Move in direction that range senor can see (right, with respect to nom) until range sensor
+   * reads less than the given distance
+   * @param dist distance threshold in centimeters
+   * @param pow approximate motor power
+     */
+  void moveUntilCloserThan(double dist, double pow) {
+    moveUntilCloserThan(dist, pow, Math.PI/2);
+  }
+
+  /**
+   * Move robot until it senses a white line.
+   * @param pow speed to move at
+   * @param angle angle to move at.
+     */
+  void moveUntilOnLine(double pow, double angle) {
+    while (!robot.isOnLinel() && opModeIsActive()) {
+      robot.move(pow, angle, 0);
+    }
+    robot.stopMotors();
+  }
+  void print(String s) {
+    telemetry.addData(">", s);
+    telemetry.update();
   }
 }

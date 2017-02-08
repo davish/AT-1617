@@ -35,6 +35,8 @@ public class TestSensors extends LinearOpMode{
       telemetry.addData("Alignment", pos[1]);
       telemetry.addData("Distance", pos[2]);
       telemetry.addData("Sonar Distance", robot.getDistanceAway());
+      telemetry.addData("Raw Ultrasonic", robot.dist.rawUltrasonic());
+      telemetry.addData("New Ultrasonic", robot.dist2.getVoltage());
       telemetry.addData("Red", robot.colorSensor.red());
       telemetry.addData("Blue", robot.colorSensor.blue());
 //      telemetry.addData("Sonar Distance", robot.distr.getVoltage());

@@ -46,6 +46,7 @@ public class Orion {
   public DigitalChannel greenLights;
 
   public ModernRoboticsI2cRangeSensor dist;
+  public AnalogInput dist2;
 
   public final double PIVOT_SENSELEFT = .45;
   public final double PIVOT_CENTER = .55;
@@ -68,6 +69,7 @@ public class Orion {
 
     choo = hwMap.dcMotor.get("choo");
     choo.setDirection(DcMotor.Direction.REVERSE);
+    dist2 = hwMap.analogInput.get("dist2");
 
     pickup = hwMap.dcMotor.get("pickup");
 
@@ -83,6 +85,7 @@ public class Orion {
     dist = hwMap.get(ModernRoboticsI2cRangeSensor.class, "dist");
 
     odsl = hwMap.opticalDistanceSensor.get("ods");
+    encoderMotor = BR;
 //    odsl = hwMap.opticalDistanceSensor.get("odsl");
 //    odsr = hwMap.opticalDistanceSensor.get("odsr");
 //    distl =  hwMap.analogInput.get("distancel");
@@ -352,12 +355,13 @@ public class Orion {
 
   }
 
+  DcMotor encoderMotor;
   int pos = 0;
   public int getTicks() {
-    return BL.getCurrentPosition() - pos;
+    return encoderMotor.getCurrentPosition() - pos;
   }
   public void resetTicks() {
-    pos = BL.getCurrentPosition();
+    pos = encoderMotor.getCurrentPosition();
   }
 
   public double getPhoneOffset() {

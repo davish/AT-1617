@@ -23,6 +23,7 @@ public class AutoRedV2 extends AutoBase{
     return 1;
   }
   public void run() throws InterruptedException {
+    robot.colorSensor.enableLed(false);
     driveTicks(-power, 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
 //    shootParticles();
@@ -32,36 +33,29 @@ public class AutoRedV2 extends AutoBase{
     sleep(SLEEP_TIME);
     rotateDegs(power, 45); // rotate into alignment with wall
     sleep(SLEEP_TIME);
-
-    robot.imu.update(); // strafe until we're within pushing range
-    double h = robot.imu.heading();
-    while (robot.getDistanceAway() > 15 && opModeIsActive()) {
-      robot.imu.update();
-      robot.moveStraight(.8, Math.PI/2, robot.imu.heading(), h);
-    }
-    robot.stopMotors();
+    print("strafe");
+    moveUntilCloserThan(15, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME*2);
     // move backwards until we're aligned with the line.
-    while (!robot.isOnLinel() && opModeIsActive()) {
-      robot.move(power/2, Math.PI, 0);
-    }
-    robot.stopMotors();
+    print("move backwards");
+    moveUntilOnLine(power/2, BACKWARD);
     sleep(SLEEP_TIME*3);
     // drive forward to align with beacon, then push the proper button
-    driveTicks(power/2, 150);
+    print("drive forwards");
+    driveTicks(power/2, 200);
     pushButton((int)getDir()); // code to push beacon
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(power, 1800); // go with encoders fast until we're close to the line, then
-      while (!robot.isOnLinel() && opModeIsActive()) {
-        robot.move(power / 2, 0, 0);
-
-
-      }
-      robot.stopMotors();
+      driveTicks(power, 1800); // go with encoders fast until we're approximately to the line, then
+      moveUntilOnLine(power/2, FORWARD); // stop when we see the line,
+      sleep(SLEEP_TIME*2);
+//      moveUntilCloserThan(20, .8); // make sure we're still in range to push
+      sleep(SLEEP_TIME*2);
+      // because of slop we're going to overshoot the line, so move backwards until we see the line again.
+      moveUntilOnLine(power/2, BACKWARD);
       sleep(SLEEP_TIME);
-      driveTicks(power/2, 150);
+      driveTicks(power/2, 200); // move to align with beacon for first hit
       sleep(SLEEP_TIME);
       pushButton((int) getDir());
 
@@ -78,7 +72,5 @@ public class AutoRedV2 extends AutoBase{
       driveTicks(power, 2000);
       rotateDegs(power, 85);
     }
-
-
   }
 }
