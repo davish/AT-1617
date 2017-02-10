@@ -37,6 +37,7 @@ public class NewDrive extends OpMode {
   void pickup(Gamepad gp, Gamepad gp2) {
     if (gp.right_trigger > .1 || gp2.right_trigger > .1)
       robot.runPickup(1);
+
     else if (gp.left_trigger > .1 || gp2.left_trigger > .1)
       robot.runPickup(-1);
     else

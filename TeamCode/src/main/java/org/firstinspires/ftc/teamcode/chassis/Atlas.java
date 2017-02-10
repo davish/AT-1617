@@ -34,6 +34,7 @@ public class Atlas {
 
         pickup = hwMap.dcMotor.get("pickup");
         choo = hwMap.dcMotor.get("choo");
+        lift = hwMap.dcMotor.get("lift");
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -99,6 +100,15 @@ public class Atlas {
         BR.setPower(br);
 
     }
+
+    void moveLeft() {
+        drive(-1,1,1,-1);
+    }
+
+    void moveRight() {
+
+    }
+
     public void runChoo(double pow) {
         choo.setPower(pow);
     }
