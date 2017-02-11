@@ -19,7 +19,7 @@ public class Atlas {
 
     DcMotor choo;
     DcMotor pickup;
-    DcMotor lift;
+    public DcMotor lift;
 
     Servo transfer;
     Servo pusher;
@@ -35,6 +35,7 @@ public class Atlas {
         pickup = hwMap.dcMotor.get("pickup");
         choo = hwMap.dcMotor.get("choo");
         lift = hwMap.dcMotor.get("lift");
+        transfer = hwMap.servo.get("transfer");
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -108,6 +109,7 @@ public class Atlas {
     void moveRight() {
 
     }
+    public void transervo(double chamberpos) { transfer.setPosition(chamberpos); }
 
     public void runChoo(double pow) {
         choo.setPower(pow);

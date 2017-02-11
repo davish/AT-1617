@@ -30,9 +30,28 @@ public class NewDrive extends OpMode {
     drive(gamepad1);
     pickup(gamepad1, gamepad2);
     launch(gamepad1);
+    transfer(gamepad1);
+
+    if (gamepad1.left_bumper)
+      robot.lift.setPower(1);
+    else if (gamepad1.right_bumper)
+      robot.lift.setPower(-1);
+    else
+      robot.lift.setPower(0);
 
     telemetry.update();
   }
+  double chamberPos = .5;
+  void transfer (Gamepad gp)
+  {
+      // Slowly move the chamber using the dpad.
+      if (gp.a)
+        chamberPos += .01;
+      else if (gp.b)
+        chamberPos -= .01;
+      chamberPos = FtcUtil.scale(chamberPos, 0, 1);
+      robot.transervo(chamberPos);
+    }
 
   void pickup(Gamepad gp, Gamepad gp2) {
     if (gp.right_trigger > .1 || gp2.right_trigger > .1)
