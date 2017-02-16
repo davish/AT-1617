@@ -31,16 +31,20 @@ public class NewDrive extends OpMode {
     pickup(gamepad1, gamepad2);
     launch(gamepad1);
     transfer(gamepad1);
-
-    if (gamepad1.left_bumper)
-      robot.lift.setPower(1);
-    else if (gamepad1.right_bumper)
-      robot.lift.setPower(-1);
-    else
-      robot.lift.setPower(0);
+    lift(gamepad1);
 
     telemetry.update();
   }
+
+  void lift(Gamepad gp) {
+    if (gp.left_bumper)
+      robot.lift.setPower(1);
+    else if (gp.right_bumper)
+      robot.lift.setPower(-1);
+    else
+      robot.lift.setPower(0);
+  }
+
   double chamberPos = .5;
   void transfer (Gamepad gp)
   {
@@ -92,15 +96,15 @@ public class NewDrive extends OpMode {
     } else if (Math.abs(forward) > Math.abs(strafe)) { // If forward is greater than sideways,
       pow = .8; // power is 80% forward
       if (forward > 0) // Go forwards if stick is pushed up
-        angle = 0;
-      else // go backwards if stick is pushed down
         angle = Math.PI;
+      else // go backwards if stick is pushed down
+        angle = 0;
     } else { // if sideways movement is the strongest input,
       pow = 1; // 100% power.
       if (strafe > 0) // go right
-        angle = Math.PI/2;
-      else // go left
         angle = -Math.PI/2;
+      else // go left
+        angle = Math.PI/2;
     }
 
     // SLOW MODE
