@@ -2,6 +2,8 @@ package org.firstinspires.ftc.teamcode.chassis;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.DigitalChannel;
+import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,6 +26,8 @@ public class Atlas {
     Servo transfer;
     Servo pusher;
 
+    DigitalChannel chooLimit;
+
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
@@ -37,9 +41,18 @@ public class Atlas {
         lift = hwMap.dcMotor.get("lift");
         transfer = hwMap.servo.get("transfer");
 
+        chooLimit = hwMap.digitalChannel.get("choo limit");
+        chooLimit.setMode(DigitalChannelController.Mode.INPUT);
+
+
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
     }
+
+    public boolean catapultLoaded() {
+        return chooLimit.getState();
+    }
+
 
     /**
      * Drive in a certain direction with a mecanum chassis

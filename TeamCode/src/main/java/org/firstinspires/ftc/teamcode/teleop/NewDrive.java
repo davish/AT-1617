@@ -67,16 +67,22 @@ public class NewDrive extends OpMode {
       robot.runPickup(0);
   }
 
-
   boolean lastState = false;
   boolean isMoving = false;
   void launch(Gamepad gp) {
     // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
     // been pressed in the past, persist that state.
-    if (gp.y)
+    isMoving = (gp.y || isMoving) && !gp.x;
+    // if we're moving and we're transitioning from open to closed, stop moving
+    if (isMoving && !lastState && robot.catapultLoaded()) {
+      isMoving = false;
+    }
+
+    if (isMoving)
       robot.runChoo(1);
     else
       robot.runChoo(0);
+    lastState = robot.catapultLoaded();
   }
 
   void drive(Gamepad gp) {
