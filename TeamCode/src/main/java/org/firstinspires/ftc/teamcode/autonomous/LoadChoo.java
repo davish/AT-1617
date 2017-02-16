@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
+import org.firstinspires.ftc.teamcode.chassis.Atlas;
 import org.firstinspires.ftc.teamcode.chassis.Orion;
 
 /**
@@ -13,7 +14,7 @@ import org.firstinspires.ftc.teamcode.chassis.Orion;
 public class LoadChoo extends LinearOpMode{
 
   public void runOpMode() throws InterruptedException {
-    Orion robot = new Orion();
+    Atlas robot = new Atlas();
     robot.init(hardwareMap);
     while (!robot.catapultLoaded())
       robot.runChoo(1);
