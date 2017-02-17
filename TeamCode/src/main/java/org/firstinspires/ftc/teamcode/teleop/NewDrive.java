@@ -50,9 +50,9 @@ public class NewDrive extends OpMode {
   {
       // Slowly move the chamber using the dpad.
       if (gp.a)
-        chamberPos += .01;
+        chamberPos += .05;
       else if (gp.b)
-        chamberPos -= .01;
+        chamberPos -= .05;
       chamberPos = FtcUtil.scale(chamberPos, 0, 1);
       robot.transervo(chamberPos);
     }
