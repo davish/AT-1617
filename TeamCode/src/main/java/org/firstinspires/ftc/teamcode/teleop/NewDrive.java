@@ -30,9 +30,13 @@ public class NewDrive extends OpMode {
     drive(gamepad1);
     pickup(gamepad1, gamepad2);
     launch(gamepad1);
-    transfer(gamepad1);
+    if (gamepad1.right_bumper) // manual override of ball transfer
+      transfer(gamepad1);
+    else
+      altTransfer(gamepad1);
     lift(gamepad1);
 
+    telemetry.addData("servo", chamberPos);
     telemetry.update();
   }
 
@@ -46,16 +50,59 @@ public class NewDrive extends OpMode {
   }
 
   double chamberPos = .5;
-  void transfer (Gamepad gp)
-  {
+  void transfer (Gamepad gp) {
       // Slowly move the chamber using the dpad.
       if (gp.a)
-        chamberPos += .05;
+        chamberPos += STEP_SIZE;
       else if (gp.b)
-        chamberPos -= .05;
+        chamberPos -= STEP_SIZE;
       chamberPos = FtcUtil.scale(chamberPos, 0, 1);
       robot.transervo(chamberPos);
     }
+
+
+
+  int transferState = 0;
+  long startWait;
+  static final double UP_POSITION = 0;
+  static final double DOWN_POSITION = 1;
+  static final double STEP_SIZE = .02;
+  static final int DELAY_TIME = 150;
+
+  void altTransfer(Gamepad gp) {
+
+    switch(transferState) {
+      case 0:
+        if (gp.b)
+          transferState = 1;
+        break;
+      case 1:
+        // might have to switch to (chamberPos < UP_POSITION)
+        if (chamberPos > UP_POSITION) { // as long as the servo isn't at the limit,
+          chamberPos -= STEP_SIZE; // keep the transfer going.
+        } else {
+          transferState = 2;
+          startWait = System.currentTimeMillis();
+        }
+        break;
+      case 2:
+        if (System.currentTimeMillis() - startWait > DELAY_TIME)
+          transferState = 3;
+        break;
+      case 3:
+        // might have to switch to (chamberPos > DOWN_POSITION
+        if (chamberPos < DOWN_POSITION)
+          chamberPos += STEP_SIZE;
+        else
+          transferState = 0;
+        break;
+      default:
+        transferState = 0;
+    }
+
+    robot.transervo(chamberPos);
+  }
+
 
   void pickup(Gamepad gp, Gamepad gp2) {
     if (gp.right_trigger > .1 || gp2.right_trigger > .1)
