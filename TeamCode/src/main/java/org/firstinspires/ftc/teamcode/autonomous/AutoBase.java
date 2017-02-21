@@ -174,7 +174,6 @@ public abstract class AutoBase extends LinearOpMode {
   }
 
   public int pushButton (int color) throws InterruptedException {
-
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
 //    redLeft = robot.colorSensor.red();
@@ -204,6 +203,16 @@ public abstract class AutoBase extends LinearOpMode {
       }
     }
     return hit;
+  }
+
+  void approachBeacon() {
+    print("finding line...");
+    moveUntilOnLine(SPEED/2, getDir() == 1 ? BACKWARD: FORWARD);
+    print("line found.");
+    sleep(SLEEP_TIME*3);
+    // drive forward to align with beacon, then push the proper button
+    print("drive forwards");
+    driveTicks(SPEED/2*getDir(), 200);
   }
 
   /**

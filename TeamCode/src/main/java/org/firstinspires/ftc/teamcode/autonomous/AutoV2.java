@@ -9,7 +9,7 @@ public abstract class AutoV2 extends AutoBase{
     driveTicks(-SPEED * getDir(), 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
     shootParticles();
-    rotateDegs(SPEED, getDir() == 1 ? 110: 70); // rotate and move towards beacon
+    rotateDegs(SPEED, getDir() == 1 ? 110 : 70); // rotate and move towards beacon
     sleep(SLEEP_TIME);
     driveTicks(SPEED * getDir(), 2300);
     sleep(SLEEP_TIME);
@@ -18,24 +18,16 @@ public abstract class AutoV2 extends AutoBase{
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME * 2);
-    // move backwards until we're aligned with the line.
-    print("move backwards");
-    moveUntilOnLine(SPEED/2, getDir() == 1 ? BACKWARD: FORWARD);
-    sleep(SLEEP_TIME*3);
-    // drive forward to align with beacon, then push the proper button
-    print("drive forwards");
-    driveTicks(SPEED/2*getDir(), 200);
-    pushButton((int)getDir()); // code to push beacon
+    approachBeacon();
+    sleep(SLEEP_TIME);
+    pushButton((int)getDir());
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(SPEED, 1800); // go with encoders fast until we're approximately to the line, then
+      driveTicks(FAST_SPEED, 1800); // go with encoders fast until we're approximately to the line, then
       moveUntilOnLine(SPEED / 2, getDir() == 1 ? FORWARD: BACKWARD); // stop when we see the line,
       sleep(SLEEP_TIME*2);
-      // because of slop we're going to overshoot the line, so move backwards until we see the line again.
-      moveUntilOnLine(SPEED/2, getDir() == 1 ? BACKWARD: FORWARD);
-      sleep(SLEEP_TIME);
-      driveTicks(SPEED/2*getDir(), 200); // move to align with beacon for first hit
+      approachBeacon();
       sleep(SLEEP_TIME);
       pushButton((int) getDir());
     }
