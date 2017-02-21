@@ -17,9 +17,8 @@ import java.io.IOException;
  */
 @Autonomous(name="Red Auto v2", group="tests")
 public class AutoRedV2 extends AutoBase{
-  int color = 0;
   double getDir() {
-    return -1;
+    return 1;
   }
   public void run() throws InterruptedException {
     robot.colorSensor.enableLed(false);
@@ -49,7 +48,6 @@ public class AutoRedV2 extends AutoBase{
       driveTicks(SPEED, 1800); // go with encoders fast until we're approximately to the line, then
       moveUntilOnLine(SPEED/2, FORWARD); // stop when we see the line,
       sleep(SLEEP_TIME*2);
-//      moveUntilCloserThan(20, .8); // make sure we're still in range to push
       sleep(SLEEP_TIME*2);
       // because of slop we're going to overshoot the line, so move backwards until we see the line again.
       moveUntilOnLine(SPEED/2, BACKWARD);
@@ -57,19 +55,6 @@ public class AutoRedV2 extends AutoBase{
       driveTicks(SPEED/2, 200); // move to align with beacon for first hit
       sleep(SLEEP_TIME);
       pushButton((int) getDir());
-
-      //cap ball
-      if(settings.knockCapBall)
-      {
-        rotateDegs(SPEED, 150);
-        driveTicks(SPEED, 2500); //figure out how many ticks
-      }
-
-    }
-    else if (settings.knockCapBall){
-      rotateDegs(SPEED, 90);
-      driveTicks(SPEED, 2000);
-      rotateDegs(SPEED, 85);
     }
   }
 }
