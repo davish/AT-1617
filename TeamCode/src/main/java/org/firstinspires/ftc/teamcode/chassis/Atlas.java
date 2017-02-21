@@ -52,7 +52,7 @@ public class Atlas {
         lift = hwMap.dcMotor.get("lift");
         transfer = hwMap.servo.get("transfer");
 
-        transfer.setPosition(.5);
+        transfer.setPosition(0);
 
         chooLimit = hwMap.digitalChannel.get("choo limit");
         chooLimit.setMode(DigitalChannelController.Mode.INPUT);
