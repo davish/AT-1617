@@ -18,15 +18,13 @@ public class TestSensors extends LinearOpMode{
     waitForStart();
 
     while (opModeIsActive()) {
+      robot.imu.update();
       telemetry.addData("Limit switch", robot.catapultLoaded());
-//
-//      robot.imu.update();
-//      telemetry.addData("Absolute Orientation", robot.imu.heading());
-//      telemetry.addData("Line", robot.odsl.getLightDetected());
-//
-//      telemetry.addData("Red", robot.colorSensor.red());
-//      telemetry.addData("Blue", robot.colorSensor.blue());
-////      telemetry.addData("Sonar Distance", robot.distr.getVoltage());
+      telemetry.addData("Heading", robot.imu.heading());
+      telemetry.addData("Left Line", robot.isOnLinel());
+      telemetry.addData("Distance", robot.getDistance());
+      telemetry.addData("Red", robot.colorSensor.red());
+      telemetry.addData("Blue", robot.colorSensor.blue());
       telemetry.update();
     }
   }
