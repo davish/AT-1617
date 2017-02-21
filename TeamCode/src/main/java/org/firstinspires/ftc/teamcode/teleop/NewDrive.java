@@ -67,7 +67,7 @@ public class NewDrive extends OpMode {
   static final double UP_POSITION = 0;
   static final double DOWN_POSITION = .5;
   static final double STEP_SIZE = .02;
-  static final int DELAY_TIME = 50;
+  static final int DELAY_TIME = 75;
 
   void altTransfer(Gamepad gp) {
 
