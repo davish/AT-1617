@@ -7,6 +7,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
+import org.firstinspires.ftc.teamcode.chassis.Atlas;
 import org.firstinspires.ftc.teamcode.chassis.Orion;
 import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
@@ -17,7 +18,7 @@ import java.io.IOException;
  * Created by davis on 11/25/16.
  */
 public abstract class AutoBase extends LinearOpMode {
-  Orion robot;
+  Atlas robot;
   Settings settings;
 
   int SLEEP_TIME = 300;
@@ -26,6 +27,8 @@ public abstract class AutoBase extends LinearOpMode {
   double FAST_SPEED = 0.8;
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.4;
+
+  double WALL_DISTANCE = .2;
 
   static final double FORWARD = 0;
   static final double BACKWARD = Math.PI;
@@ -39,7 +42,7 @@ public abstract class AutoBase extends LinearOpMode {
     } catch (IOException e) {
       settings = new Settings();
     }
-    robot = new Orion();
+    robot = new Atlas();
     robot.init(hardwareMap);
     while (!robot.catapultLoaded())
       robot.runChoo(1);
@@ -69,17 +72,22 @@ public abstract class AutoBase extends LinearOpMode {
   abstract double getDir();
 
 
+  static final double UP_POSITION = 0;
+  static final double DOWN_POSITION = 1;
+  static final double STEP_SIZE = .02;
+  static final int DELAY_TIME = 150;
+
   void transferParticle() throws InterruptedException{
-    double chamberPos = robot.PIVOT_LOADBALL;
-    while (opModeIsActive() && chamberPos > robot.PIVOT_HITRIGHT) {
-      chamberPos -= .01;
-      robot.pivot(chamberPos);
+    double chamberPos = .5;
+    while (opModeIsActive() && chamberPos > UP_POSITION) {
+      chamberPos -= STEP_SIZE;
+      robot.transervo(chamberPos);
       idle();
     }
-    sleep(150);
-    while (opModeIsActive() && chamberPos < robot.PIVOT_LOADBALL) {
-      chamberPos += .01;
-      robot.pivot(chamberPos);
+    sleep(DELAY_TIME);
+    while (opModeIsActive() && chamberPos < DOWN_POSITION) {
+      chamberPos += STEP_SIZE;
+      robot.transervo(chamberPos);
       idle();
     }
   }
@@ -95,7 +103,7 @@ public abstract class AutoBase extends LinearOpMode {
 
   /**
    *
-   * @param pow power
+   * @param pow SPEED
    * @param ticks number of ticks forward
    * @param timeout seconds before you stop moving if encoders don't finish
    */
@@ -197,30 +205,18 @@ public abstract class AutoBase extends LinearOpMode {
     }
     return hit;
   }
-  void alignWithLine() throws InterruptedException{
-    while (!robot.isOnLinel()) {
-      robot.moveRight(-SPEED);
-    }
-    robot.stopMotors();
-    sleep(250);
-    while (!robot.isOnLiner()) {
-      robot.moveLeft(-SPEED);
-    }
-    robot.stopMotors();
-
-  }
 
   /**
    * Move until range sensor reads less than the given distance
    * @param dist distance threshold in centimeters
-   * @param pow power to move with
+   * @param pow SPEED to move with
    * @param angle angle to move at
    * @throws InterruptedException
      */
   void moveUntilCloserThan(double dist, double pow, double angle) {
     robot.imu.update();
     double h = robot.imu.heading();
-    while (robot.getDistanceAway() > dist && opModeIsActive()) {
+    while (robot.getDistance() > dist && opModeIsActive()) {
       robot.imu.update();
       robot.moveStraight(pow, angle, robot.imu.heading(), h);
     }
@@ -231,7 +227,7 @@ public abstract class AutoBase extends LinearOpMode {
    * Move in direction that range senor can see (right, with respect to nom) until range sensor
    * reads less than the given distance
    * @param dist distance threshold in centimeters
-   * @param pow approximate motor power
+   * @param pow approximate motor SPEED
      */
   void moveUntilCloserThan(double dist, double pow) {
     moveUntilCloserThan(dist, pow, Math.PI/2);

@@ -7,20 +7,19 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
  */
 @Autonomous(name="Blue Auto v2", group="tests")
 public class AutoBlueV2 extends AutoBase {
-        double power = -.3;
         int color = 0;
         double getDir() {
             return 1;
         }
         public void run() throws InterruptedException {
-            driveTicks(-power, 1250); // drive forward to shoot
+            driveTicks(-SPEED, 1250); // drive forward to shoot
             sleep(SLEEP_TIME);
 //    shootParticles();
-            rotateDegs(power, 70); // rotate and move towards beacon
+            rotateDegs(SPEED, 70); // rotate and move towards beacon
             sleep(SLEEP_TIME);
-            driveTicks(power, 2200);
+            driveTicks(SPEED, 2200);
             sleep(SLEEP_TIME);
-            rotateDegs(power, 45); // rotate into alignment with wall
+            rotateDegs(SPEED, 45); // rotate into alignment with wall
             sleep(SLEEP_TIME);
 
             robot.imu.update(); // strafe until we're within pushing range
@@ -33,12 +32,12 @@ public class AutoBlueV2 extends AutoBase {
             sleep(SLEEP_TIME*2);
             // move backwards until we're aligned with the line.
             while (!robot.isOnLinel() && opModeIsActive()) {
-                robot.move(power/2, Math.PI, 0);
+                robot.move(SPEED /2, Math.PI, 0);
             }
             robot.stopMotors();
             sleep(SLEEP_TIME*3);
             // drive forward to align with beacon, then push the proper button
-            driveTicks(power/2, 150);
+            driveTicks(SPEED /2, 150);
             pushButton((int)getDir()); // code to push beacon
             sleep(SLEEP_TIME);
 
@@ -50,7 +49,7 @@ public class AutoBlueV2 extends AutoBase {
                     robot.moveStraight(.8, Math.PI/2, robot.imu.heading(), h);
                 }
                 robot.stopMotors();
-                driveTicks(power, 1200); // go with encoders fast until we're close to the line, then
+                driveTicks(SPEED, 1200); // go with encoders fast until we're close to the line, then
                 robot.imu.update();
                 h = robot.imu.heading();
                 while (robot.getDistanceAway() >15 && opModeIsActive()) {
@@ -59,26 +58,26 @@ public class AutoBlueV2 extends AutoBase {
                 }
 
                 while (!robot.isOnLinel() && opModeIsActive()) {
-                    robot.move(power / 2, 0, 0);
+                    robot.move(SPEED / 2, 0, 0);
                 }
                 robot.stopMotors();
                 sleep(SLEEP_TIME);
-                driveTicks(power/2, 150);
+                driveTicks(SPEED /2, 150);
                 sleep(SLEEP_TIME);
                 pushButton((int) getDir());
 
                 //cap ball
                 if(settings.knockCapBall)
                 {
-                    rotateDegs(power, 150);
-                    driveTicks(power, 2500); //figure out how many ticks
+                    rotateDegs(SPEED, 150);
+                    driveTicks(SPEED, 2500); //figure out how many ticks
                 }
 
             }
             else if (settings.knockCapBall){
-                rotateDegs(power, 90);
-                driveTicks(power, 2000);
-                rotateDegs(power, 85);
+                rotateDegs(SPEED, 90);
+                driveTicks(SPEED, 2000);
+                rotateDegs(SPEED, 85);
             }
 
 

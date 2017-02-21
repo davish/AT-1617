@@ -1,13 +1,18 @@
 package org.firstinspires.ftc.teamcode.chassis;
 
+import com.qualcomm.hardware.adafruit.BNO055IMU;
+import com.qualcomm.robotcore.hardware.AnalogInput;
+import com.qualcomm.robotcore.hardware.ColorSensor;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
 import com.qualcomm.robotcore.hardware.DigitalChannelController;
 import com.qualcomm.robotcore.hardware.HardwareMap;
+import com.qualcomm.robotcore.hardware.OpticalDistanceSensor;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.FtcUtil;
+import org.firstinspires.ftc.teamcode.sensors.Gyro;
 
 /**
  * Created by student on 2/3/17.
@@ -28,6 +33,12 @@ public class Atlas {
 
     DigitalChannel chooLimit;
 
+    AnalogInput dist;
+    OpticalDistanceSensor ods;
+    public Gyro imu;
+
+    public ColorSensor colorSensor;
+
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 
@@ -46,6 +57,10 @@ public class Atlas {
         chooLimit = hwMap.digitalChannel.get("choo limit");
         chooLimit.setMode(DigitalChannelController.Mode.INPUT);
 
+        dist = hwMap.analogInput.get("dist");
+        ods = hwMap.opticalDistanceSensor.get("ods");
+        imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+        colorSensor = hwMap.colorSensor.get("mr");
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -55,6 +70,13 @@ public class Atlas {
         return chooLimit.getState();
     }
 
+
+    public double getDistance() {
+        return dist.getVoltage();
+    }
+    public boolean isOnLinel() {
+        return ods.getLightDetected() > .5;
+    }
 
     /**
      * Drive in a certain direction with a mecanum chassis
@@ -118,16 +140,79 @@ public class Atlas {
     }
 
     void moveLeft() {
-        drive(-1,1,1,-1);
+        drive(-1, 1, 1, -1);
     }
 
     void moveRight() {
 
     }
+
+    public void stopMotors() {
+        drive(0, 0, 0, 0);
+    }
+
     public void transervo(double chamberpos) { transfer.setPosition(chamberpos); }
 
     public void runChoo(double pow) {
         choo.setPower(pow);
+    }
+
+    double integral = 0.0; // Accumulation of error over time. Used in PID controller.
+    double lastError = 0.0;
+    /**
+     * Use PID in order to move directly in the desired angle, without rotation.
+     * @param pow Motor power (approximate speed)
+     * @param angle Desired angle
+     * @param actual Orientation/rotation measurement
+     * @param target Desired orientation/rotation
+     */
+    public void moveStraight(double pow, double angle, double actual, double target) {
+        double error = actual - target;
+        integral += error;
+
+        double change = (error - lastError);
+        lastError = error;
+
+        double PID = getKp()*error + getKi()*integral + getKd()*change;
+
+        double rot = FtcUtil.motorScale(PID);
+        this.move(pow, angle, rot);
+    }
+
+    /**
+     * Use PID to move without rotation, when the target angle is 0.
+     */
+    public void moveStraight(double pow, double angle, double actual) {
+        this.moveStraight(pow, angle, actual, 0);
+    }
+
+    double getKp() {
+        return -0.02;
+    }
+    double getKi() {
+        return 0.0;
+    }
+    double getKd() {
+        return 0.0;
+    }
+
+    public void pushOut() {
+        pusher.setPosition(0);
+    }
+    public void pushIn() {
+        pusher.setPosition(1);
+    }
+    public void pushStop() {
+        pusher.setPosition(.520);
+    }
+    public void push() throws InterruptedException{
+        pushOut();
+        Thread.sleep(1000);
+        pushStop();
+        Thread.sleep(200);
+        pushIn();
+        Thread.sleep(1000);
+        pushStop();
     }
 
 }

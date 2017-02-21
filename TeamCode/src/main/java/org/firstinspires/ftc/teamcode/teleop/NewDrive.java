@@ -123,6 +123,7 @@ public class NewDrive extends OpMode {
     // if we're moving and we're transitioning from open to closed, stop moving
     if (isMoving && !lastState && robot.catapultLoaded()) {
       isMoving = false;
+      transferState = 1;
     }
 
     if (isMoving)

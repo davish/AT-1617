@@ -272,7 +272,7 @@ public abstract class AutoV1 extends LinearOpMode {
    * is the phone camera's offset from the center of the robot. When sideways moving, this function
    * basically aligns with the vision guide.
    *
-   * @param pow Motor power
+   * @param pow Motor SPEED
    * @param angle direction to move in
    * @param threshold distance in mm away from target to move until
    * @param offset distance
@@ -299,7 +299,7 @@ public abstract class AutoV1 extends LinearOpMode {
   /**
    * Overload of moveOrthogonalVuforia when no offset is necessary.
    *
-   * @param pow motor power
+   * @param pow motor SPEED
    * @param angle direction to move in
    * @param threshold move until you're `threshold` away
    * @param target vision target to use.
@@ -310,7 +310,7 @@ public abstract class AutoV1 extends LinearOpMode {
 
   /**
    *
-   * @param pow power
+   * @param pow SPEED
    * @param ticks number of ticks forward
    * @param timeout seconds before you stop moving if encoders don't finish
    */
