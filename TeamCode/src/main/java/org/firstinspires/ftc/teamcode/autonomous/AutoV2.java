@@ -4,6 +4,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
  * Created by davis on 2/21/17.
  */
 public abstract class AutoV2 extends AutoBase{
+  double WALL_DISTANCE = 7;
   public void run() throws InterruptedException {
     robot.colorSensor.enableLed(false);
     driveTicks(-SPEED, 1250); // drive forward to shoot

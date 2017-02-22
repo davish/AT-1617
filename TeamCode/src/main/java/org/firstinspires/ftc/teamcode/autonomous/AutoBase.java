@@ -28,7 +28,7 @@ public abstract class AutoBase extends LinearOpMode {
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.4;
 
-  double WALL_DISTANCE = .2;
+
 
   static final double FORWARD = 0;
   static final double BACKWARD = Math.PI;
@@ -72,8 +72,6 @@ public abstract class AutoBase extends LinearOpMode {
   abstract double getDir();
 
 
-
-
   void transferParticle() throws InterruptedException{
     double chamberPos = robot.DOWN_POSITION;
     while (opModeIsActive() && chamberPos > robot.UP_POSITION) {
@@ -98,14 +96,7 @@ public abstract class AutoBase extends LinearOpMode {
     robot.runChoo(0);
   }
 
-  /**
-   *
-   * @param pow SPEED
-   * @param ticks number of ticks forward
-   * @param timeout seconds before you stop moving if encoders don't finish
-   */
-  void driveTicks(double pow, int ticks, int timeout) {
-    double angle = pow > 0 ? 0 : Math.PI;
+  void moveTicks(double pow, double angle, int ticks, int timeout) {
     robot.resetTicks();
     robot.imu.update();
     double h = robot.imu.heading();
@@ -122,6 +113,21 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
   }
 
+  /**
+   *
+   * @param pow SPEED
+   * @param ticks number of ticks forward
+   * @param timeout seconds before you stop moving if encoders don't finish
+   */
+  void driveTicks(double pow, int ticks, int timeout) {
+    double angle = pow > 0 ? 0 : Math.PI;
+    moveTicks(pow, angle, ticks, timeout);
+  }
+
+  void moveTicks(double pow, double angle, int ticks) {
+    moveTicks(pow, angle, ticks, 30000);
+  }
+
   void driveTicks(double pow, int ticks) {
     driveTicks(pow, ticks, 30000);
   }
@@ -133,7 +139,7 @@ public abstract class AutoBase extends LinearOpMode {
     robot.imu.resetHeading();
     do {
       robot.imu.update();
-      robot.move(0, 0, ROTATE_SPEED * getDir());
+      robot.move(0, 0, pow);
 
 //      telemetry.addData("degrees", robot.imu.heading());
 //      telemetry.update();
@@ -219,7 +225,7 @@ public abstract class AutoBase extends LinearOpMode {
    * @param angle angle to move at
    * @throws InterruptedException
      */
-  void moveUntilCloserThan(double dist, double pow, double angle) throws InterruptedException{
+  void moveUntilCloserThan(double dist, double pow, double angle) {
     robot.imu.update();
     double h = robot.imu.heading();
     while (robot.getDistance() > dist && opModeIsActive()) {
@@ -235,7 +241,7 @@ public abstract class AutoBase extends LinearOpMode {
    * @param dist distance threshold in centimeters
    * @param pow approximate motor SPEED
      */
-  void moveUntilCloserThan(double dist, double pow) throws InterruptedException {
+  void moveUntilCloserThan(double dist, double pow) {
     moveUntilCloserThan(dist, pow, Math.PI/2);
   }
 

@@ -33,7 +33,7 @@ public class Atlas {
 
     DigitalChannel chooLimit;
 
-    public DigitalChannel dist;
+    AnalogInput dist;
     OpticalDistanceSensor ods;
     public Gyro imu;
 
@@ -59,14 +59,16 @@ public class Atlas {
         pusher = hwMap.servo.get("pusher");
 
         transfer.setPosition(0);
+        pushStop();
 
         chooLimit = hwMap.digitalChannel.get("choo limit");
         chooLimit.setMode(DigitalChannelController.Mode.INPUT);
 
-        dist = hwMap.digitalChannel.get("dist");
+        dist = hwMap.analogInput.get("dist");
         ods = hwMap.opticalDistanceSensor.get("ods");
         imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
         colorSensor = hwMap.colorSensor.get("mr");
+        colorSensor.enableLed(false);
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -77,19 +79,8 @@ public class Atlas {
     }
 
 
-    public double getDistance() throws InterruptedException{
-        dist.setMode(DigitalChannelController.Mode.OUTPUT);
-        dist.setState(false);
-        Thread.sleep(0, 2000);
-        dist.setState(true);
-        Thread.sleep(0, 5000);
-        dist.setState(false);
-        dist.setMode(DigitalChannelController.Mode.INPUT);
-        long m = System.nanoTime();
-        while (dist.getState())
-            ;
-
-        return (System.nanoTime() - m) / 1000;
+    public double getDistance() {
+        return dist.getVoltage() * 98;
     }
     public boolean isOnLinel() {
         return ods.getLightDetected() > .5;
