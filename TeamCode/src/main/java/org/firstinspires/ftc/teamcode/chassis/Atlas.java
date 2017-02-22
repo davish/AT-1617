@@ -39,6 +39,11 @@ public class Atlas {
 
     public ColorSensor colorSensor;
 
+    public final double UP_POSITION = 0;
+    public final double DOWN_POSITION = .5;
+    public final double STEP_SIZE = .02;
+    public final int DELAY_TIME = 75;
+
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
 

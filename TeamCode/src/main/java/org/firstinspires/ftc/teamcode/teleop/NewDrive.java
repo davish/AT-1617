@@ -68,9 +68,9 @@ public class NewDrive extends OpMode {
   void transfer (Gamepad gp) {
       // Slowly move the chamber using the dpad.
       if (gp.a)
-        chamberPos += STEP_SIZE;
+        chamberPos += robot.STEP_SIZE;
       else if (gp.b)
-        chamberPos -= STEP_SIZE;
+        chamberPos -= robot.STEP_SIZE;
       chamberPos = FtcUtil.scale(chamberPos, 0, 1);
       robot.transervo(chamberPos);
     }
@@ -79,13 +79,7 @@ public class NewDrive extends OpMode {
 
   int transferState = 0;
   long startWait;
-  static final double UP_POSITION = 0;
-  static final double DOWN_POSITION = .5;
-  static final double STEP_SIZE = .02;
-  static final int DELAY_TIME = 75;
-
   void altTransfer(Gamepad gp) {
-
     switch(transferState) {
       case 0:
         if (gp.b)
@@ -93,21 +87,21 @@ public class NewDrive extends OpMode {
         break;
       case 1:
         // might have to switch to (chamberPos < UP_POSITION)
-        if (chamberPos > UP_POSITION) { // as long as the servo isn't at the limit,
-          chamberPos -= STEP_SIZE; // keep the transfer going.
+        if (chamberPos > robot.UP_POSITION) { // as long as the servo isn't at the limit,
+          chamberPos -= robot.STEP_SIZE; // keep the transfer going.
         } else {
           transferState = 2;
           startWait = System.currentTimeMillis();
         }
         break;
       case 2:
-        if (System.currentTimeMillis() - startWait > DELAY_TIME)
+        if (System.currentTimeMillis() - startWait > robot.DELAY_TIME)
           transferState = 3;
         break;
       case 3:
         // might have to switch to (chamberPos > DOWN_POSITION
-        if (chamberPos < DOWN_POSITION)
-          chamberPos += STEP_SIZE;
+        if (chamberPos < robot.DOWN_POSITION)
+          chamberPos += robot.STEP_SIZE;
         else
           transferState = 0;
         break;

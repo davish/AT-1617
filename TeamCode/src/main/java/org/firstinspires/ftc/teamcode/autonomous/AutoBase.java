@@ -72,21 +72,18 @@ public abstract class AutoBase extends LinearOpMode {
   abstract double getDir();
 
 
-  static final double UP_POSITION = 0;
-  static final double DOWN_POSITION = 1;
-  static final double STEP_SIZE = .02;
-  static final int DELAY_TIME = 150;
+
 
   void transferParticle() throws InterruptedException{
-    double chamberPos = .5;
-    while (opModeIsActive() && chamberPos > UP_POSITION) {
-      chamberPos -= STEP_SIZE;
+    double chamberPos = robot.DOWN_POSITION;
+    while (opModeIsActive() && chamberPos > robot.UP_POSITION) {
+      chamberPos -= robot.STEP_SIZE;
       robot.transervo(chamberPos);
       idle();
     }
-    sleep(DELAY_TIME);
-    while (opModeIsActive() && chamberPos < DOWN_POSITION) {
-      chamberPos += STEP_SIZE;
+    sleep(robot.DELAY_TIME);
+    while (opModeIsActive() && chamberPos < robot.DOWN_POSITION) {
+      chamberPos += robot.STEP_SIZE;
       robot.transervo(chamberPos);
       idle();
     }
