@@ -222,7 +222,7 @@ public abstract class AutoBase extends LinearOpMode {
    * @param angle angle to move at
    * @throws InterruptedException
      */
-  void moveUntilCloserThan(double dist, double pow, double angle) {
+  void moveUntilCloserThan(double dist, double pow, double angle) throws InterruptedException{
     robot.imu.update();
     double h = robot.imu.heading();
     while (robot.getDistance() > dist && opModeIsActive()) {
@@ -238,7 +238,7 @@ public abstract class AutoBase extends LinearOpMode {
    * @param dist distance threshold in centimeters
    * @param pow approximate motor SPEED
      */
-  void moveUntilCloserThan(double dist, double pow) {
+  void moveUntilCloserThan(double dist, double pow) throws InterruptedException {
     moveUntilCloserThan(dist, pow, Math.PI/2);
   }
 

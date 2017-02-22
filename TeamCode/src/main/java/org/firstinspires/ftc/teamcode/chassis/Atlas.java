@@ -33,7 +33,7 @@ public class Atlas {
 
     DigitalChannel chooLimit;
 
-    AnalogInput dist;
+    public DigitalChannel dist;
     OpticalDistanceSensor ods;
     public Gyro imu;
 
@@ -51,13 +51,14 @@ public class Atlas {
         choo = hwMap.dcMotor.get("choo");
         lift = hwMap.dcMotor.get("lift");
         transfer = hwMap.servo.get("transfer");
+        pusher = hwMap.servo.get("pusher");
 
         transfer.setPosition(0);
 
         chooLimit = hwMap.digitalChannel.get("choo limit");
         chooLimit.setMode(DigitalChannelController.Mode.INPUT);
 
-        dist = hwMap.analogInput.get("dist");
+        dist = hwMap.digitalChannel.get("dist");
         ods = hwMap.opticalDistanceSensor.get("ods");
         imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
         colorSensor = hwMap.colorSensor.get("mr");
@@ -71,8 +72,19 @@ public class Atlas {
     }
 
 
-    public double getDistance() {
-        return dist.getVoltage();
+    public double getDistance() throws InterruptedException{
+        dist.setMode(DigitalChannelController.Mode.OUTPUT);
+        dist.setState(false);
+        Thread.sleep(0, 2000);
+        dist.setState(true);
+        Thread.sleep(0, 5000);
+        dist.setState(false);
+        dist.setMode(DigitalChannelController.Mode.INPUT);
+        long m = System.nanoTime();
+        while (dist.getState())
+            ;
+
+        return (System.nanoTime() - m) / 1000;
     }
     public boolean isOnLinel() {
         return ods.getLightDetected() > .5;
@@ -85,7 +97,7 @@ public class Atlas {
      * @param rot speed of rotation
      */
     public void move(double pow, double angle, double rot) {
-        pow = FtcUtil.motorScale(pow);
+//        pow = FtcUtil.motorScale(pow);
         rot = FtcUtil.motorScale(rot);
 
         // Adding PI/4 ensures that 0 degrees is straight ahead

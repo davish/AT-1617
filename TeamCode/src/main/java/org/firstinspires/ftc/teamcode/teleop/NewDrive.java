@@ -28,16 +28,31 @@ public class NewDrive extends OpMode {
 
   public void loop() {
     drive(gamepad1);
-    pickup(gamepad1, gamepad2);
+    pickup(gamepad2);
     launch(gamepad1);
-    if (gamepad1.right_bumper) // manual override of ball transfer
-      transfer(gamepad1);
+    if (gamepad2.right_bumper) // manual override of ball transfer
+      transfer(gamepad2);
     else
-      altTransfer(gamepad1);
-    lift(gamepad1);
+      altTransfer(gamepad2);
+    lift(gamepad2);
+
+
 
     telemetry.addData("servo", chamberPos);
     telemetry.update();
+  }
+
+  void boop(Gamepad gp) {
+    double d = gp.left_stick_y;
+    if (d > .1) {
+      robot.pushOut();
+    }
+    else if (d < -.1) {
+      robot.pushIn();
+    }
+    else {
+      robot.pushStop();
+    }
   }
 
   void lift(Gamepad gp) {
@@ -104,11 +119,11 @@ public class NewDrive extends OpMode {
   }
 
 
-  void pickup(Gamepad gp, Gamepad gp2) {
-    if (gp.right_trigger > .1 || gp2.right_trigger > .1)
+  void pickup(Gamepad gp) {
+    if (gp.right_trigger > .1)
       robot.runPickup(1);
 
-    else if (gp.left_trigger > .1 || gp2.left_trigger > .1)
+    else if (gp.left_trigger > .1)
       robot.runPickup(-1);
     else
       robot.runPickup(0);
@@ -133,6 +148,8 @@ public class NewDrive extends OpMode {
     lastState = robot.catapultLoaded();
   }
 
+  double mult = 1;
+  long timeSince = -1;
   void drive(Gamepad gp) {
     double rot;
     double angle;
@@ -148,7 +165,7 @@ public class NewDrive extends OpMode {
       pow = 0; // power is 0.
       angle = 0;
     } else if (Math.abs(forward) > Math.abs(strafe)) { // If forward is greater than sideways,
-      pow = .8; // power is 80% forward
+      pow = 1; // power is 80% forward
       if (forward > 0) // Go forwards if stick is pushed up
         angle = Math.PI;
       else // go backwards if stick is pushed down
@@ -171,13 +188,22 @@ public class NewDrive extends OpMode {
       angle = 0;
       pow = .5;
     } else if(gp.dpad_left) {
-      rot = -.3;
+      rot = -.5;
     } else if(gp.dpad_right) {
-      rot = .3;
+      rot = .5;
     }
 //    rot = FtcUtil.scale(rot, -.3, .3);
 
+    if (gp.right_trigger > .5 && pow > 0) {
+      if (timeSince == -1)
+        timeSince = System.currentTimeMillis();
+      mult = Math.max(mult - .2 * (System.currentTimeMillis() - timeSince)/1000, 0);
+    } else {
+      mult = 1;
+      timeSince = -1;
+    }
+    telemetry.addData("mult", mult);
     telemetry.addData("Distance", robot.getTicks());
-    robot.move(pow, angle, rot);
+    robot.move(pow*mult, angle, rot);
   }
 }
