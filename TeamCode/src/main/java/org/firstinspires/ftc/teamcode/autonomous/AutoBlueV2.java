@@ -1,12 +1,15 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 
 /**
  * Created by student on 2/3/17.
  */
+@Disabled
 @Autonomous(name="Blue Auto v2", group="tests")
 public class AutoBlueV2 extends AutoBase {
+  double WALL_DISTANCE = 7;
   double getDir() {
     return 1;
   }

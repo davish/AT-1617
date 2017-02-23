@@ -30,11 +30,12 @@ public class NewDrive extends OpMode {
     drive(gamepad1);
     pickup(gamepad2);
     launch(gamepad1);
-    if (gamepad2.right_bumper) // manual override of ball transfer
+    if (gamepad2.x) // manual override of ball transfer
       transfer(gamepad2);
     else
       altTransfer(gamepad2);
     lift(gamepad2);
+//    boop(gamepad2);
 
 
 
@@ -66,15 +67,14 @@ public class NewDrive extends OpMode {
 
   double chamberPos = .5;
   void transfer (Gamepad gp) {
-      // Slowly move the chamber using the dpad.
-      if (gp.a)
-        chamberPos += robot.STEP_SIZE;
-      else if (gp.b)
-        chamberPos -= robot.STEP_SIZE;
-      chamberPos = FtcUtil.scale(chamberPos, 0, 1);
-      robot.transervo(chamberPos);
-    }
-
+    // Slowly move the chamber using the dpad.
+    if (gp.a)
+      chamberPos += robot.STEP_SIZE;
+    else if (gp.b)
+      chamberPos -= robot.STEP_SIZE;
+    chamberPos = FtcUtil.scale(chamberPos, 0, 1);
+    robot.transervo(chamberPos);
+  }
 
 
   int transferState = 0;

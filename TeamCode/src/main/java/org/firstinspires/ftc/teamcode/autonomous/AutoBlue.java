@@ -6,11 +6,10 @@ import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 /**
  * Created by davis on 11/17/16.
  */
-@Disabled
 @Autonomous(name="Blue Auto", group="auto")
-public class AutoBlue extends AutoV1 {
+public class AutoBlue extends AutoV2 {
   double getDir() {
-    return 1;
+    return -1;
   }
 
   String getFirstTarget() {

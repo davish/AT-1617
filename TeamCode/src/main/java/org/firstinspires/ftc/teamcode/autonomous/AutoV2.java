@@ -7,17 +7,37 @@ public abstract class AutoV2 extends AutoBase{
   double WALL_DISTANCE = 7;
   public void run() throws InterruptedException {
     robot.colorSensor.enableLed(false);
+
+    if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
+      int FORWARD_TICKS = 3000;
+      int CAP_BALL_TICKS = 1000;
+      driveTicks(-SPEED, FORWARD_TICKS);
+      sleep(SLEEP_TIME*2);
+      shootParticles();
+      sleep(SLEEP_TIME);
+
+      if (settings.knockCapBall) {
+        robot.runPickup(1);
+        sleep(700);
+        robot.runPickup(0);
+        driveTicks(-SPEED, CAP_BALL_TICKS);
+      }
+
+      stop();
+      return;
+    }
+
     driveTicks(-SPEED, 1250); // drive forward to shoot
     sleep(SLEEP_TIME);
 
     shootParticles();
-    rotateDegs(SPEED, getDir() == 1 ? 110 : 70); // rotate and move towards beacon
+    rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 70); // rotate and move towards beacon
     sleep(SLEEP_TIME);
 
-    driveTicks(SPEED * getDir(), 2300);
+    driveTicks(SPEED * getDir(), 2400);
     sleep(SLEEP_TIME);
 
-    rotateDegs(SPEED, 45); // rotate into alignment with wall
+    rotateDegs(ROTATE_SPEED, 45); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
     print("strafe");

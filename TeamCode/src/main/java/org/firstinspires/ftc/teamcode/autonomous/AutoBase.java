@@ -23,10 +23,10 @@ public abstract class AutoBase extends LinearOpMode {
 
   int SLEEP_TIME = 300;
   int NUM_PUSHES = 1;
-  double SPEED = 0.3;
+  double SPEED = -0.3;
   double FAST_SPEED = 0.8;
   double STRAFE_SPEED = 0.6;
-  double ROTATE_SPEED = 0.4;
+  double ROTATE_SPEED = 0.5;
 
 
 
@@ -170,7 +170,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
     if (settings.numShots > 1) {
       transferParticle();
-      sleep(SLEEP_TIME);
+      sleep(SLEEP_TIME*2);
       fireParticle();
       sleep(SLEEP_TIME);
     }
@@ -179,15 +179,25 @@ public abstract class AutoBase extends LinearOpMode {
   public int pushButton (int color) throws InterruptedException {
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
-//    redLeft = robot.colorSensor.red();
-//    blueLeft = robot.colorSensor.blue();
-    redLeft = 1;
-    blueLeft = 0;
+    redLeft = robot.colorSensor.red();
+    blueLeft = robot.colorSensor.blue();
+//    redLeft = 1;
+//    blueLeft = 0;
     int hit = 0;
 
     sleep(250);
     if(redLeft*color > blueLeft*color) {
-      robot.push();
+      robot.pushOut();
+      sleep(1000);
+      robot.pushStop();
+      sleep(200);
+      moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
+      sleep(200);
+      robot.pushIn();
+      sleep(1000);
+      robot.pushStop();
+
+//      robot.push();
       hit = 1;
       sleep(500);
     }
@@ -201,7 +211,15 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(250);
 
       if (redLeft * color > blueLeft * color) {
-        robot.push();
+        robot.pushOut();
+        sleep(1000);
+        robot.pushStop();
+        sleep(200);
+        moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
+        sleep(200);
+        robot.pushIn();
+        sleep(1000);
+        robot.pushStop();
         hit = -1;
       }
     }
@@ -210,6 +228,7 @@ public abstract class AutoBase extends LinearOpMode {
 
   void approachBeacon() {
     print("finding line...");
+    driveTicks(SPEED*getDir(), 300);
     moveUntilOnLine(SPEED/2, getDir() == 1 ? BACKWARD: FORWARD);
     print("line found.");
     sleep(SLEEP_TIME*3);
@@ -242,7 +261,7 @@ public abstract class AutoBase extends LinearOpMode {
    * @param pow approximate motor SPEED
      */
   void moveUntilCloserThan(double dist, double pow) {
-    moveUntilCloserThan(dist, pow, Math.PI/2);
+    moveUntilCloserThan(dist, pow, -Math.PI/2);
   }
 
   /**

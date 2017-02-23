@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.google.gson.Gson;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
@@ -13,10 +14,13 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by davis on 1/6/17.
+ * Created by
+ * davis on 1/6/17.
  */
+@Disabled
 @Autonomous(name="Red Auto v2", group="tests")
 public class AutoRedV2 extends AutoBase{
+  double WALL_DISTANCE = 7;
   double getDir() {
     return 1;
   }

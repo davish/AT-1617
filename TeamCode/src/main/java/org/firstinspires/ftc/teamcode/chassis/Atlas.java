@@ -42,7 +42,7 @@ public class Atlas {
     public final double UP_POSITION = 0;
     public final double DOWN_POSITION = .5;
     public final double STEP_SIZE = .02;
-    public final int DELAY_TIME = 75;
+    public final int DELAY_TIME = 60;
 
     public void init(HardwareMap ahwMap) {
         hwMap = ahwMap;
@@ -54,11 +54,12 @@ public class Atlas {
 
         pickup = hwMap.dcMotor.get("pickup");
         choo = hwMap.dcMotor.get("choo");
+        choo.setDirection(DcMotorSimple.Direction.REVERSE);
         lift = hwMap.dcMotor.get("lift");
         transfer = hwMap.servo.get("transfer");
         pusher = hwMap.servo.get("pusher");
 
-        transfer.setPosition(0);
+        transfer.setPosition(DOWN_POSITION);
         pushStop();
 
         chooLimit = hwMap.digitalChannel.get("choo limit");
@@ -130,10 +131,10 @@ public class Atlas {
 
     int pos = 0;
     public int getTicks() {
-        return BL.getCurrentPosition() - pos;
+        return BR.getCurrentPosition() - pos;
     }
     public void resetTicks() {
-        pos = BL.getCurrentPosition();
+        pos = BR.getCurrentPosition();
     }
     public void runPickup(double pow) {
         pickup.setPower(pow);
