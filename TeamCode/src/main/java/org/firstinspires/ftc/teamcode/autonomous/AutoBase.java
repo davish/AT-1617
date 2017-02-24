@@ -24,7 +24,7 @@ public abstract class AutoBase extends LinearOpMode {
   int SLEEP_TIME = 300;
   int NUM_PUSHES = 1;
   double SPEED = -0.3;
-  double FAST_SPEED = 0.8;
+  double FAST_SPEED = -0.8;
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.5;
 
@@ -187,22 +187,14 @@ public abstract class AutoBase extends LinearOpMode {
 
     sleep(250);
     if(redLeft*color > blueLeft*color) {
-      robot.pushOut();
-      sleep(1000);
-      robot.pushStop();
-      sleep(200);
-      moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
-      sleep(200);
-      robot.pushIn();
-      sleep(1000);
-      robot.pushStop();
+      push();
 
 //      robot.push();
       hit = 1;
       sleep(500);
     }
 
-    driveTicks(SPEED / 2, 290);
+    driveTicks(SPEED / 2*getDir(), 290);
     if (hit==0) {
       sleep(500);
 
@@ -211,30 +203,45 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(250);
 
       if (redLeft * color > blueLeft * color) {
-        robot.pushOut();
-        sleep(1000);
-        robot.pushStop();
-        sleep(200);
-        moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
-        sleep(200);
-        robot.pushIn();
-        sleep(1000);
-        robot.pushStop();
+        push();
         hit = -1;
       }
     }
     return hit;
   }
 
+  void push() {
+    robot.pushOut();
+    sleep(1000);
+    robot.pushStop();
+    sleep(200);
+    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
+    sleep(200);
+    robot.pushIn();
+    sleep(1000);
+    robot.pushStop();
+    moveTicks(STRAFE_SPEED, Math.PI / 2, 200, 3000);
+  }
+
   void approachBeacon() {
-    print("finding line...");
-    driveTicks(SPEED*getDir(), 300);
-    moveUntilOnLine(SPEED/2, getDir() == 1 ? BACKWARD: FORWARD);
-    print("line found.");
-    sleep(SLEEP_TIME*3);
-    // drive forward to align with beacon, then push the proper button
-    print("drive forwards");
-    driveTicks(SPEED/2*getDir(), 200);
+    if (getDir() > 0) {
+      telemetry.addData("YO", getDir());
+      print("going forward...");
+      driveTicks(SPEED * getDir(), 300);
+      robot.stopMotors();
+      sleep(SLEEP_TIME);
+      print("finding line...");
+      moveUntilOnLine(SPEED / 2, BACKWARD);
+      print("line found.");
+      sleep(SLEEP_TIME * 3);
+      // drive forward to align with beacon, then push the proper button
+      print("drive forwards");
+      driveTicks(SPEED / 2 * getDir(), 200);
+    } else if (getDir() < 0) {
+      moveUntilOnLine(SPEED / 2, BACKWARD);
+      sleep(SLEEP_TIME);
+      driveTicks(SPEED, 400);
+    }
   }
 
   /**

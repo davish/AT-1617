@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 /**
  * Created by davis on 9/13/16.
  */
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -13,6 +14,7 @@ import org.firstinspires.ftc.teamcode.chassis.Orion;
 /**
  * Created by davis on 5/22/16.
  */
+@Disabled
 @TeleOp(name="Holonomic Drive", group="teleop")
 public class HolonomicDrive extends OpMode {
 

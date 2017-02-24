@@ -27,17 +27,18 @@ public abstract class AutoV2 extends AutoBase{
       return;
     }
 
-    driveTicks(-SPEED, 1250); // drive forward to shoot
+    driveTicks(-SPEED, 1000); // drive 1250 forward to shoot
     sleep(SLEEP_TIME);
-
     shootParticles();
-    rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 70); // rotate and move towards beacon
+    driveTicks(-SPEED, 250);
+    sleep(SLEEP_TIME);
+    rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 45); // rotate and move towards beacon
     sleep(SLEEP_TIME);
 
     driveTicks(SPEED * getDir(), 2400);
     sleep(SLEEP_TIME);
 
-    rotateDegs(ROTATE_SPEED, 45); // rotate into alignment with wall
+    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 40); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
     print("strafe");
@@ -50,7 +51,7 @@ public abstract class AutoV2 extends AutoBase{
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(FAST_SPEED, 1800); // go with encoders fast until we're approximately to the line, then
+      driveTicks(FAST_SPEED*getDir(), 1800); // go with encoders fast until we're approximately to the line, then
       moveUntilOnLine(SPEED / 2, getDir() == 1 ? FORWARD: BACKWARD); // stop when we see the line,
       sleep(SLEEP_TIME*2);
 

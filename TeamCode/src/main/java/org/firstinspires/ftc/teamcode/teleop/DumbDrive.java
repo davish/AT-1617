@@ -9,6 +9,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 /**
  * Created by davis on 1/30/17.
  */
+@Disabled
 @TeleOp(name="drive")
 public class DumbDrive extends OpMode{
 

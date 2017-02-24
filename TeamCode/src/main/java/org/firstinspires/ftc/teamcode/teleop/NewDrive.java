@@ -44,11 +44,13 @@ public class NewDrive extends OpMode {
   }
 
   void boop(Gamepad gp) {
-    double d = gp.left_stick_y;
-    if (d > .1) {
+    boolean go_out = gp.right_bumper;
+    boolean go_in = gp.left_bumper;
+
+    if (go_out) {
       robot.pushOut();
     }
-    else if (d < -.1) {
+    else if (go_in) {
       robot.pushIn();
     }
     else {
@@ -57,9 +59,15 @@ public class NewDrive extends OpMode {
   }
 
   void lift(Gamepad gp) {
-    if (gp.left_bumper)
+    boolean go_up = gp.left_stick_y > .1 && gp.right_stick_y > .1;
+    boolean go_down = gp.left_stick_y < -.1 && gp.right_stick_y < -.1;
+
+    telemetry.addData("left stick", gp.left_stick_y);
+    telemetry.addData("right stick", gp.right_stick_y);
+
+    if (go_up)
       robot.lift.setPower(1);
-    else if (gp.right_bumper)
+    else if (go_down)
       robot.lift.setPower(-1);
     else
       robot.lift.setPower(0);
