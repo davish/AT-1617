@@ -21,7 +21,7 @@ public class NewDrive extends OpMode {
   Atlas robot = new Atlas();
 
   public void init() {
-    robot.init(hardwareMap);
+    robot.init(hardwareMap, false);
     telemetry.addData(">", "Initialization complete.");
     telemetry.update();
   }
@@ -29,11 +29,9 @@ public class NewDrive extends OpMode {
   public void loop() {
     drive(gamepad1);
     pickup(gamepad2);
-    launch(gamepad1);
-    if (gamepad2.x) // manual override of ball transfer
-      transfer(gamepad2);
-    else
-      altTransfer(gamepad2);
+    launch(gamepad1, gamepad2);
+
+    transfer(gamepad2);
     lift(gamepad2);
 //    boop(gamepad2);
 
@@ -73,21 +71,35 @@ public class NewDrive extends OpMode {
       robot.lift.setPower(0);
   }
 
+  void transfer(Gamepad gp) {
+    if (!gp.x)
+      transferMain(gp);
+    else
+      transferOverride(gp);
+  }
+
+  void launch(Gamepad gp, Gamepad gp2) {
+    if (!gp2.a)
+      launchMain(gp);
+    else {
+      launchOverride(gp2);
+    }
+  }
+
   double chamberPos = .5;
-  void transfer (Gamepad gp) {
+  void transferOverride(Gamepad gp) {
     // Slowly move the chamber using the dpad.
-    if (gp.a)
+    if (gp.dpad_down)
       chamberPos += robot.STEP_SIZE;
-    else if (gp.b)
+    else if (gp.dpad_up)
       chamberPos -= robot.STEP_SIZE;
     chamberPos = FtcUtil.scale(chamberPos, 0, 1);
     robot.transervo(chamberPos);
   }
 
-
   int transferState = 0;
   long startWait;
-  void altTransfer(Gamepad gp) {
+  void transferMain(Gamepad gp) {
     switch(transferState) {
       case 0:
         if (gp.b)
@@ -120,7 +132,6 @@ public class NewDrive extends OpMode {
     robot.transervo(chamberPos);
   }
 
-
   void pickup(Gamepad gp) {
     if (gp.right_trigger > .1)
       robot.runPickup(1);
@@ -133,7 +144,7 @@ public class NewDrive extends OpMode {
 
   boolean lastState = false;
   boolean isMoving = false;
-  void launch(Gamepad gp) {
+  void launchMain(Gamepad gp) {
     // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
     // been pressed in the past, persist that state.
     isMoving = (gp.y || isMoving) && !gp.x;
@@ -148,6 +159,12 @@ public class NewDrive extends OpMode {
     else
       robot.runChoo(0);
     lastState = robot.catapultLoaded();
+  }
+
+  void launchOverride(Gamepad gp) {
+    double throttle = gp.left_stick_x*.5;
+    isMoving = false;
+    robot.runChoo(Math.abs(FtcUtil.threshold(throttle)));
   }
 
   double mult = 1;
@@ -204,7 +221,7 @@ public class NewDrive extends OpMode {
       mult = 1;
       timeSince = -1;
     }
-    telemetry.addData("mult", mult);
+//    telemetry.addData("mult", mult);
     telemetry.addData("Distance", robot.getTicks());
     robot.move(pow*mult, angle, rot);
   }

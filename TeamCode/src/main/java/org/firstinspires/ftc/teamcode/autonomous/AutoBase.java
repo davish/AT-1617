@@ -169,10 +169,12 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
     }
     if (settings.numShots > 1) {
-      transferParticle();
-      sleep(SLEEP_TIME*2);
+//      transferParticle();
+      robot.transervo(robot.UP_POSITION);
+      sleep(SLEEP_TIME*4);
       fireParticle();
       sleep(SLEEP_TIME);
+      robot.transervo(robot.DOWN_POSITION);
     }
   }
 
@@ -181,6 +183,7 @@ public abstract class AutoBase extends LinearOpMode {
     robot.colorSensor.enableLed(false);
     redLeft = robot.colorSensor.red();
     blueLeft = robot.colorSensor.blue();
+    print("Red:" + redLeft + ", Blue: " + blueLeft);
 //    redLeft = 1;
 //    blueLeft = 0;
     int hit = 0;
@@ -194,12 +197,13 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(500);
     }
 
-    driveTicks(SPEED / 2*getDir(), 290);
+    driveTicks(SPEED / 2 * getDir(), 290);
     if (hit==0) {
       sleep(500);
 
       redLeft = robot.colorSensor.red();
       blueLeft = robot.colorSensor.blue();
+      print("Red:" + redLeft + ", Blue: " + blueLeft);
       sleep(250);
 
       if (redLeft * color > blueLeft * color) {
@@ -225,7 +229,6 @@ public abstract class AutoBase extends LinearOpMode {
 
   void approachBeacon() {
     if (getDir() > 0) {
-      telemetry.addData("YO", getDir());
       print("going forward...");
       driveTicks(SPEED * getDir(), 300);
       robot.stopMotors();

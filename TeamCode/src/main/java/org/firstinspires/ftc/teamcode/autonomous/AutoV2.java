@@ -9,7 +9,7 @@ public abstract class AutoV2 extends AutoBase{
     robot.colorSensor.enableLed(false);
 
     if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
-      int FORWARD_TICKS = 3000;
+      int FORWARD_TICKS = 2700;
       int CAP_BALL_TICKS = 1000;
       driveTicks(-SPEED, FORWARD_TICKS);
       sleep(SLEEP_TIME*2);
@@ -17,9 +17,6 @@ public abstract class AutoV2 extends AutoBase{
       sleep(SLEEP_TIME);
 
       if (settings.knockCapBall) {
-        robot.runPickup(1);
-        sleep(700);
-        robot.runPickup(0);
         driveTicks(-SPEED, CAP_BALL_TICKS);
       }
 
@@ -38,7 +35,7 @@ public abstract class AutoV2 extends AutoBase{
     driveTicks(SPEED * getDir(), 2400);
     sleep(SLEEP_TIME);
 
-    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 40); // rotate into alignment with wall
+    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 47 : 40); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
     print("strafe");
@@ -51,10 +48,7 @@ public abstract class AutoV2 extends AutoBase{
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(FAST_SPEED*getDir(), 1800); // go with encoders fast until we're approximately to the line, then
-      moveUntilOnLine(SPEED / 2, getDir() == 1 ? FORWARD: BACKWARD); // stop when we see the line,
-      sleep(SLEEP_TIME*2);
-
+      driveTicks(FAST_SPEED*getDir(), 2200); // go with encoders fast until we're past the line, then approach beacon normally.
       approachBeacon();
       sleep(SLEEP_TIME);
       pushButton((int) getDir());

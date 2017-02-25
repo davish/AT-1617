@@ -18,7 +18,6 @@ public class TestSensors extends LinearOpMode{
     telemetry.addData(">", "Init complete");
     telemetry.update();
     waitForStart();
-  int i = 0;
     while (opModeIsActive()) {
       robot.imu.update();
       telemetry.addData("Limit switch", robot.catapultLoaded());

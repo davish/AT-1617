@@ -42,9 +42,9 @@ public class Atlas {
     public final double UP_POSITION = .1;
     public final double DOWN_POSITION = .5;
     public final double STEP_SIZE = .02;
-    public final int DELAY_TIME = 75;
+    public final int DELAY_TIME = 95;
 
-    public void init(HardwareMap ahwMap) {
+    public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
 
         FL = hwMap.dcMotor.get("FL");
@@ -67,12 +67,19 @@ public class Atlas {
 
         dist = hwMap.analogInput.get("dist");
         ods = hwMap.opticalDistanceSensor.get("ods");
-        imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+        if (initSensors) {
+            imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
+        }
+
         colorSensor = hwMap.colorSensor.get("mr");
         colorSensor.enableLed(false);
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
+    }
+
+    public void init(HardwareMap ahwMap) {
+        init(ahwMap, true);
     }
 
     public boolean catapultLoaded() {
