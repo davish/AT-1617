@@ -219,12 +219,12 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(1000);
     robot.pushStop();
     sleep(200);
-    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 3000);
+    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 1000);
     sleep(200);
     robot.pushIn();
     sleep(1000);
     robot.pushStop();
-    moveTicks(STRAFE_SPEED, Math.PI / 2, 200, 3000);
+    moveTicks(STRAFE_SPEED, Math.PI / 2, 200, 1000);
   }
 
   void approachBeacon() {

@@ -9,17 +9,18 @@ public abstract class AutoV2 extends AutoBase{
     robot.colorSensor.enableLed(false);
 
     if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
-      int FORWARD_TICKS = 2700;
-      int CAP_BALL_TICKS = 1000;
+      int FORWARD_TICKS = 2500;
+      int CAP_BALL_TICKS = 1200;
       driveTicks(-SPEED, FORWARD_TICKS);
       sleep(SLEEP_TIME*2);
       shootParticles();
+      robot.runPickup(-1);
       sleep(SLEEP_TIME);
 
       if (settings.knockCapBall) {
         driveTicks(-SPEED, CAP_BALL_TICKS);
       }
-
+      robot.runPickup(0);
       stop();
       return;
     }
@@ -39,12 +40,14 @@ public abstract class AutoV2 extends AutoBase{
     sleep(SLEEP_TIME);
 
     print("strafe");
+    robot.runPickup(-1);
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME * 2);
 
     approachBeacon();
     sleep(SLEEP_TIME);
     pushButton((int)getDir());
+    robot.runPickup(0);
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
