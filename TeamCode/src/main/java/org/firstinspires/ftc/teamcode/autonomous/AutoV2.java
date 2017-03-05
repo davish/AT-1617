@@ -40,14 +40,12 @@ public abstract class AutoV2 extends AutoBase{
     sleep(SLEEP_TIME);
 
     print("strafe");
-    robot.runPickup(-1);
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
-    sleep(SLEEP_TIME * 2);
+    sleep(SLEEP_TIME);
 
     approachBeacon();
     sleep(SLEEP_TIME);
     pushButton((int)getDir());
-    robot.runPickup(0);
     sleep(SLEEP_TIME);
 
     if (settings.beacon2) {

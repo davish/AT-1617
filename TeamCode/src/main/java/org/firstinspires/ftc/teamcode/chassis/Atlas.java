@@ -39,10 +39,10 @@ public class Atlas {
 
     public ColorSensor colorSensor;
 
-    public final double UP_POSITION = .1;
-    public final double DOWN_POSITION = .5;
-    public final double STEP_SIZE = .02;
-    public final int DELAY_TIME = 95;
+    public final double LOAD_POSITION = .0;
+    public final double REST_POSITION = .6;
+    public final double STEP_SIZE = .015;
+    public final int DELAY_TIME = 150;
 
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
@@ -59,7 +59,7 @@ public class Atlas {
         transfer = hwMap.servo.get("transfer");
         pusher = hwMap.servo.get("pusher");
 
-        transfer.setPosition(DOWN_POSITION);
+        transfer.setPosition(REST_POSITION);
         pushStop();
 
         chooLimit = hwMap.digitalChannel.get("choo limit");
@@ -83,7 +83,7 @@ public class Atlas {
     }
 
     public boolean catapultLoaded() {
-        return chooLimit.getState();
+        return !chooLimit.getState();
     }
 
 
@@ -223,11 +223,11 @@ public class Atlas {
     }
     public void push() throws InterruptedException{
         pushOut();
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         pushStop();
         Thread.sleep(200);
         pushIn();
-        Thread.sleep(1000);
+        Thread.sleep(1500);
         pushStop();
     }
 

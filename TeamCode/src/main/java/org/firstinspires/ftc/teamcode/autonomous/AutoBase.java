@@ -1,15 +1,11 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
-import android.test.InstrumentationTestRunner;
-
 import com.google.gson.Gson;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
 import org.firstinspires.ftc.teamcode.chassis.Atlas;
-import org.firstinspires.ftc.teamcode.chassis.Orion;
-import org.firstinspires.ftc.teamcode.sensors.Vuforia;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,7 +19,7 @@ public abstract class AutoBase extends LinearOpMode {
 
   int SLEEP_TIME = 300;
   int NUM_PUSHES = 1;
-  double SPEED = -0.3;
+  double SPEED = -0.3; // -.3 definitely works, trying faster speed.
   double FAST_SPEED = -0.8;
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.5;
@@ -73,14 +69,14 @@ public abstract class AutoBase extends LinearOpMode {
 
 
   void transferParticle() throws InterruptedException{
-    double chamberPos = robot.DOWN_POSITION;
-    while (opModeIsActive() && chamberPos > robot.UP_POSITION) {
+    double chamberPos = robot.REST_POSITION;
+    while (opModeIsActive() && chamberPos > robot.LOAD_POSITION) {
       chamberPos -= robot.STEP_SIZE;
       robot.transervo(chamberPos);
       idle();
     }
     sleep(robot.DELAY_TIME);
-    while (opModeIsActive() && chamberPos < robot.DOWN_POSITION) {
+    while (opModeIsActive() && chamberPos < robot.REST_POSITION) {
       chamberPos += robot.STEP_SIZE;
       robot.transervo(chamberPos);
       idle();
@@ -169,12 +165,10 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
     }
     if (settings.numShots > 1) {
-//      transferParticle();
-      robot.transervo(robot.UP_POSITION);
-      sleep(SLEEP_TIME*4);
+      transferParticle();
+      sleep(SLEEP_TIME*2);
       fireParticle();
-      sleep(SLEEP_TIME);
-      robot.transervo(robot.DOWN_POSITION);
+
     }
   }
 
@@ -191,13 +185,11 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(250);
     if(redLeft*color > blueLeft*color) {
       push();
-
-//      robot.push();
       hit = 1;
       sleep(500);
     }
 
-    driveTicks(SPEED / 2 * getDir(), 290);
+    driveTicks(hit == 0 ? SPEED / 2 * getDir() : SPEED * getDir(), 290);
     if (hit==0) {
       sleep(500);
 
@@ -216,15 +208,15 @@ public abstract class AutoBase extends LinearOpMode {
 
   void push() {
     robot.pushOut();
-    sleep(1000);
+    sleep(1500);
     robot.pushStop();
-    sleep(200);
-    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 1000);
+//    sleep(200);
+    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 500);
     sleep(200);
     robot.pushIn();
-    sleep(1000);
+    sleep(1500);
     robot.pushStop();
-    moveTicks(STRAFE_SPEED, Math.PI / 2, 200, 1000);
+    moveTicks(STRAFE_SPEED, Math.PI / 2, 300, 500);
   }
 
   void approachBeacon() {

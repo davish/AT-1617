@@ -10,7 +10,6 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.chassis.Atlas;
-import org.firstinspires.ftc.teamcode.chassis.Orion;
 
 /**
  * Created by davis on 5/22/16.
@@ -86,7 +85,7 @@ public class NewDrive extends OpMode {
     }
   }
 
-  double chamberPos = .5;
+  double chamberPos = robot.REST_POSITION;
   void transferOverride(Gamepad gp) {
     // Slowly move the chamber using the dpad.
     if (gp.dpad_down)
@@ -106,8 +105,8 @@ public class NewDrive extends OpMode {
           transferState = 1;
         break;
       case 1:
-        // might have to switch to (chamberPos < UP_POSITION)
-        if (chamberPos > robot.UP_POSITION) { // as long as the servo isn't at the limit,
+        // might have to switch to (chamberPos < LOAD_POSITION)
+        if (chamberPos > robot.LOAD_POSITION) { // as long as the servo isn't at the limit,
           chamberPos -= robot.STEP_SIZE; // keep the transfer going.
         } else {
           transferState = 2;
@@ -119,8 +118,8 @@ public class NewDrive extends OpMode {
           transferState = 3;
         break;
       case 3:
-        // might have to switch to (chamberPos > DOWN_POSITION
-        if (chamberPos < robot.DOWN_POSITION)
+        // might have to switch to (chamberPos > REST_POSITION
+        if (chamberPos < robot.REST_POSITION)
           chamberPos += robot.STEP_SIZE;
         else
           transferState = 0;
