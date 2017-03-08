@@ -40,9 +40,9 @@ public class Atlas {
     public ColorSensor colorSensor;
 
     public final double LOAD_POSITION = .0;
-    public final double REST_POSITION = .6;
-    public final double STEP_SIZE = .015;
-    public final int DELAY_TIME = 150;
+    public final double REST_POSITION = .5;
+    public final double STEP_SIZE = .02;
+    public final int DELAY_TIME = 100;
 
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;

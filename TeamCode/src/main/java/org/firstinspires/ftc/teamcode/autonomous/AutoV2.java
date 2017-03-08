@@ -25,7 +25,7 @@ public abstract class AutoV2 extends AutoBase{
       return;
     }
 
-    driveTicks(-SPEED, 1000); // drive 1250 forward to shoot
+    driveTicks(-FAST_SPEED, 1000); // drive 1250 forward to shoot
     sleep(SLEEP_TIME);
     shootParticles();
     driveTicks(-SPEED, 250);
@@ -33,7 +33,7 @@ public abstract class AutoV2 extends AutoBase{
     rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 45); // rotate and move towards beacon
     sleep(SLEEP_TIME);
 
-    driveTicks(SPEED * getDir(), 2400);
+    driveTicks(FAST_SPEED * getDir(), 2400);
     sleep(SLEEP_TIME);
 
     rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 47 : 40); // rotate into alignment with wall

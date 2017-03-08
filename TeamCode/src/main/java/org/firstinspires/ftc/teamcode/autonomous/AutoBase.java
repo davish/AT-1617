@@ -19,7 +19,7 @@ public abstract class AutoBase extends LinearOpMode {
 
   int SLEEP_TIME = 300;
   int NUM_PUSHES = 1;
-  double SPEED = -0.3; // -.3 definitely works, trying faster speed.
+  double SPEED = -0.4; // -.3 definitely works, trying faster speed.
   double FAST_SPEED = -0.8;
   double STRAFE_SPEED = 0.6;
   double ROTATE_SPEED = 0.5;
@@ -162,7 +162,7 @@ public abstract class AutoBase extends LinearOpMode {
   void shootParticles() throws InterruptedException {
     if (settings.numShots > 0) {
       fireParticle();
-      sleep(SLEEP_TIME);
+//      sleep(SLEEP_TIME);
     }
     if (settings.numShots > 1) {
       transferParticle();
