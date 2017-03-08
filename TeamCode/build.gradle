@@ -18,4 +18,5 @@ android {
         // Prevent OutOfMemory with MultiDex during the build phase
         javaMaxHeapSize "2g"
     }
+    buildToolsVersion '25.0.0'
 }
