@@ -34,6 +34,8 @@ public class Atlas {
     DigitalChannel chooLimit;
 
     AnalogInput dist;
+    AnalogInput distF;
+    AnalogInput distB;
     OpticalDistanceSensor ods;
     public Gyro imu;
 
@@ -66,6 +68,8 @@ public class Atlas {
         chooLimit.setMode(DigitalChannelController.Mode.INPUT);
 
         dist = hwMap.analogInput.get("dist");
+        distF = hwMap.analogInput.get("distF");
+        distB = hwMap.analogInput.get("distB");
         ods = hwMap.opticalDistanceSensor.get("ods");
         if (initSensors) {
             imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
@@ -90,6 +94,15 @@ public class Atlas {
     public double getDistance() {
         return dist.getVoltage() * 98;
     }
+
+    public double getFrontDistance() {
+        return distF.getVoltage() * 98;
+    }
+
+    public double getBackDistance() {
+        return distB.getVoltage() * 98;
+    }
+
     public boolean isOnLinel() {
         return ods.getLightDetected() > .5;
     }

@@ -5,10 +5,12 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ReadWriteFile;
 
 import org.firstinspires.ftc.robotcore.internal.AppUtil;
+import org.firstinspires.ftc.teamcode.FtcUtil;
 import org.firstinspires.ftc.teamcode.chassis.Atlas;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InterruptedIOException;
 
 /**
  * Created by davis on 11/25/16.
@@ -170,6 +172,17 @@ public abstract class AutoBase extends LinearOpMode {
       fireParticle();
 
     }
+  }
+
+  void alignWithWall() throws InterruptedException {
+    double frontDist;
+    double backDist;
+    do {
+      frontDist = robot.getFrontDistance();
+      backDist = robot.getBackDistance();
+      robot.move(0, 0, SPEED * FtcUtil.sign(frontDist - backDist));
+    } while (Math.abs(frontDist - backDist) > 1);
+    robot.stopMotors();
   }
 
   public int pushButton (int color) throws InterruptedException {
