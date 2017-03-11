@@ -37,6 +37,7 @@ public class Atlas {
     AnalogInput distF;
     AnalogInput distB;
     OpticalDistanceSensor ods;
+    OpticalDistanceSensor odsr;
     public Gyro imu;
 
     public ColorSensor colorSensor;
@@ -71,6 +72,7 @@ public class Atlas {
         distF = hwMap.analogInput.get("distF");
         distB = hwMap.analogInput.get("distB");
         ods = hwMap.opticalDistanceSensor.get("ods");
+        odsr = hwMap.opticalDistanceSensor.get("odsr");
         if (initSensors) {
             imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
         }
@@ -105,6 +107,9 @@ public class Atlas {
 
     public boolean isOnLinel() {
         return ods.getLightDetected() > .5;
+    }
+    public boolean isOnLiner() {
+        return odsr.getLightDetected() > .5;
     }
 
     /**
@@ -160,7 +165,7 @@ public class Atlas {
         pickup.setPower(pow);
     }
 
-    public void drive(float fl, float bl, float fr, float br) {
+    public void drive(double fl, double bl, double fr, double br) {
         FL.setPower(fl);
         BL.setPower(bl);
         FR.setPower(fr);

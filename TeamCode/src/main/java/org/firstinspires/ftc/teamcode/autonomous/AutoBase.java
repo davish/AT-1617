@@ -180,8 +180,27 @@ public abstract class AutoBase extends LinearOpMode {
     do {
       frontDist = robot.getFrontDistance();
       backDist = robot.getBackDistance();
-      robot.move(0, 0, SPEED * FtcUtil.sign(frontDist - backDist));
-    } while (Math.abs(frontDist - backDist) > 1);
+      robot.move(0, 0, ROTATE_SPEED * FtcUtil.sign(frontDist - backDist));
+      telemetry.addData("front", frontDist);
+      telemetry.addData("back", backDist);
+      telemetry.update();
+    } while (Math.abs(frontDist - backDist) > 1.0 && opModeIsActive());
+    robot.stopMotors();
+  }
+
+  void alignWithLine() throws InterruptedException {
+    double dir = -1;
+//    while (!(robot.isOnLinel() && robot.isOnLiner()) && opModeIsActive()) {
+//
+//    }
+
+    while (!robot.isOnLinel() && opModeIsActive()) {
+      robot.drive(SPEED*dir, SPEED*dir, 0, 0);
+    }
+    while  (!robot.isOnLiner() && opModeIsActive()) {
+      robot.drive(0, 0, SPEED*dir, SPEED*dir);
+    }
+
     robot.stopMotors();
   }
 
@@ -226,7 +245,7 @@ public abstract class AutoBase extends LinearOpMode {
     moveTicks(STRAFE_SPEED, -Math.PI / 2, 500, 500);
     sleep(200);
     robot.pushIn();
-    moveTicks(STRAFE_SPEED, Math.PI / 2, 250, 500);
+    moveTicks(STRAFE_SPEED, Math.PI / 2, 700, 1000);
     sleep(1500);
     robot.pushStop();
   }

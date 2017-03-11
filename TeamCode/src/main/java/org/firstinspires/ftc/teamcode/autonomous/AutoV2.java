@@ -39,6 +39,8 @@ public abstract class AutoV2 extends AutoBase{
     rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 42); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
+    alignWithWall();
+
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME);
@@ -54,9 +56,8 @@ public abstract class AutoV2 extends AutoBase{
       sleep(SLEEP_TIME);
       pushButton((int) getDir(), true);
       if (settings.knockCapBall) {
-        robot.drive(1, 0, 0, 1);
-        sleep(3000);
-        robot.stopMotors();
+        rotateDegs(-ROTATE_SPEED * getDir(), 30);
+        driveTicks(-FAST_SPEED * getDir(), 3250);
       }
     }
   }
