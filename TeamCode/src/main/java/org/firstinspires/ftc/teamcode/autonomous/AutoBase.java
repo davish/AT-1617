@@ -32,6 +32,10 @@ public abstract class AutoBase extends LinearOpMode {
   static final double BACKWARD = Math.PI;
 
 
+  /**
+   * Initialize the robot, load settings, and display current settings on driver station.
+   * @throws InterruptedException
+   */
   void setup() throws InterruptedException{
     Gson gson = new Gson();
     File sfile = AppUtil.getInstance().getSettingsFile("auto_settings.json");
@@ -42,7 +46,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
     robot = new Atlas();
     robot.init(hardwareMap);
-    while (!robot.catapultLoaded())
+    while (!robot.catapultLoaded()) // load catapult as part of initialization.
       robot.runChoo(1);
     robot.runChoo(0);
     telemetry.addData("Delay (seconds)", settings.delay);
@@ -55,6 +59,10 @@ public abstract class AutoBase extends LinearOpMode {
     telemetry.update();
   }
 
+  /**
+   * Code for specific autonomous program goes here.
+   * @throws InterruptedException
+   */
   abstract void run() throws InterruptedException;
 
   public void runOpMode() throws InterruptedException{
@@ -62,14 +70,27 @@ public abstract class AutoBase extends LinearOpMode {
     waitForStart();
     telemetry.addData(">", settings.delay + " second delay");
     telemetry.update();
-    sleep(settings.delay*1000);
+    sleep(settings.delay*1000); // delay running OpMode as much as the settings app tells you to.
     telemetry.update();
     run();
   }
 
+  /**
+   * Get the alliance for the current OpMode. useful for changing direction of turns etc.
+   * depending on which side of the field we're on.
+   * @return 1 for red, -1 for blue.
+   */
   abstract double getDir();
 
 
+  /**
+   * Transfer a particle from the transfer ramp into the catapult.
+   * Takes advantage of servo positions that are set in the Atlas class.
+   * To change speed of transfer for both Autonomous and TeleOp, change values in
+   * Atlas.
+   *
+   * @throws InterruptedException
+   */
   void transferParticle() throws InterruptedException{
     double chamberPos = robot.REST_POSITION;
     while (opModeIsActive() && chamberPos > robot.LOAD_POSITION) {
@@ -84,22 +105,36 @@ public abstract class AutoBase extends LinearOpMode {
       idle();
     }
   }
+
+  /**
+   * Shoot a particle.
+   * @throws InterruptedException
+   */
   void fireParticle() throws InterruptedException {
-    while (!robot.catapultLoaded() && opModeIsActive())
+    while (!robot.catapultLoaded() && opModeIsActive()) // load the catapult
       robot.runChoo(1);
-    while (robot.catapultLoaded() && opModeIsActive())
+    while (robot.catapultLoaded() && opModeIsActive()) // run catapult until limit switch has been opened (i.e. ball has been launched)
       robot.runChoo(1);
-    while (!robot.catapultLoaded() && opModeIsActive())
+    while (!robot.catapultLoaded() && opModeIsActive()) // load the catapult for next shot.
       robot.runChoo(1);
-    robot.runChoo(0);
+    robot.runChoo(0); // stop the catapult.
   }
 
+  /**
+   * Moves the robot in a straight line using the IMU, for a specified number of encoder ticks.
+   *
+   * @param pow motor power
+   * @param angle angle to move at
+   * @param ticks number of ticks to move
+   * @param timeout milliseconds to move before stopping
+   */
   void moveTicks(double pow, double angle, int ticks, int timeout) {
     robot.resetTicks();
     robot.imu.update();
     double h = robot.imu.heading();
     long startTime = System.currentTimeMillis();
     long currentTime = startTime;
+    // While we still have ticks to drive AND we haven't exceeded the time limit, move in the specified direction.
     while (Math.abs(robot.getTicks()) < ticks && currentTime - startTime < timeout && opModeIsActive()) {
       robot.imu.update();
       robot.moveStraight(Math.abs(pow), angle, robot.imu.heading(), h);
@@ -112,7 +147,7 @@ public abstract class AutoBase extends LinearOpMode {
   }
 
   /**
-   *
+   * Drive forward or backward a specified number of encoder ticks.
    * @param pow SPEED
    * @param ticks number of ticks forward
    * @param timeout seconds before you stop moving if encoders don't finish
@@ -122,14 +157,33 @@ public abstract class AutoBase extends LinearOpMode {
     moveTicks(pow, angle, ticks, timeout);
   }
 
+  /**
+   * Moves the robot in a straight line using the IMU, for a specified number of encoder ticks.
+   *
+   * @param pow motor power
+   * @param angle angle to move at
+   * @param ticks number of ticks to move
+   */
   void moveTicks(double pow, double angle, int ticks) {
     moveTicks(pow, angle, ticks, 30000);
   }
 
+  /**
+   * Drive forward or backward a specified number of encoder ticks.
+   * @param pow SPEED
+   * @param ticks number of ticks forward
+   */
   void driveTicks(double pow, int ticks) {
     driveTicks(pow, ticks, 30000);
   }
 
+  /**
+   * Rotate a specified number of degrees using the IMU
+   * @param pow motor power
+   * @param degs degrees to turn
+   * @param fallbackTicks encoder ticks to fall back on if IMU fails
+   * @return true if fallback was engaged.
+   */
   boolean rotateDegs(double pow, double degs, int fallbackTicks) {
     double prevHeading = 366;
     boolean b = false;
@@ -157,23 +211,39 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
     return !b;
   }
+
+  /**
+   * Rotate a specified number of degrees using the IMU
+   * @param pow motor power
+   * @param degs degrees to turn
+   * @return
+   */
   boolean rotateDegs(double pow, double degs) {
     return rotateDegs(pow, degs, 0);
   }
 
+  /**
+   * Shoot particles, depending on the values set in the settings file.
+   * @throws InterruptedException
+   */
   void shootParticles() throws InterruptedException {
-    if (settings.numShots > 0) {
+    if (settings.numShots > 0) { // shoot first particle if settings has us do that.
       fireParticle();
 //      sleep(SLEEP_TIME);
     }
-    if (settings.numShots > 1) {
-      transferParticle();
-      sleep(SLEEP_TIME);
-      fireParticle();
+    if (settings.numShots > 1) { // if settings calls for a second particle,
+      transferParticle(); // transfer it to catapult,
+      sleep(SLEEP_TIME); // let the ball settle,
+      fireParticle(); // shoot again.
 
     }
   }
 
+  /**
+   * Rotate until the two distance sensors return readings within 1 inch of each other,
+   * which means the robot is aligned parallel to the wall.
+   * @throws InterruptedException
+   */
   void alignWithWall() throws InterruptedException {
     double frontDist;
     double backDist;
@@ -188,11 +258,13 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
   }
 
+  /**
+   * Move each side of the robot independently to align perpendicular to the line on the mat.
+   * [Still in testing, DOESN'T WORK]
+   * @throws InterruptedException
+   */
   void alignWithLine() throws InterruptedException {
     double dir = -1;
-//    while (!(robot.isOnLinel() && robot.isOnLiner()) && opModeIsActive()) {
-//
-//    }
 
     while (!robot.isOnLinel() && opModeIsActive()) {
       robot.drive(SPEED*dir, SPEED*dir, 0, 0);
@@ -204,14 +276,19 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
   }
 
+  /**
+   * Sense the colors for each side of the beacon and push the correct one.
+   * @param color 1 if red, -1 if blue.
+   * @param second false if first beacon, true if second beacon. The robot pushes into the beacon differently depending on which beacon it is.
+   * @return
+   * @throws InterruptedException
+   */
   public int pushButton (int color, boolean second) throws InterruptedException {
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
     redLeft = robot.colorSensor.red();
     blueLeft = robot.colorSensor.blue();
     print("Red:" + redLeft + ", Blue: " + blueLeft);
-//    redLeft = 1;
-//    blueLeft = 0;
     int hit = 0;
     if(redLeft*color > blueLeft*color) {
       if (second) pushSecond();
@@ -220,7 +297,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(500);
     }
 
-    if (hit==0) {
+    if (hit==0) { // if we didn't hit the first side, drive forward and sense the next side.
       driveTicks(SPEED / 2 * getDir(), 290);
       sleep(500);
 
@@ -237,6 +314,12 @@ public abstract class AutoBase extends LinearOpMode {
     return hit;
   }
 
+  /**
+   * Procecure for hitting the first beacon.
+   * 1) Push out button hitter
+   * 2) Strafe into beacon
+   * 3) Retract button hitter and strafe away from beacon to align for second beacon.
+   */
   void pushFirst() {
     robot.pushOut();
     sleep(2000);
@@ -246,10 +329,16 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(200);
     robot.pushIn();
     moveTicks(STRAFE_SPEED, Math.PI / 2, 700, 1000);
-    sleep(1500);
+    sleep(1000);
     robot.pushStop();
   }
 
+  /**
+   * Procedure for hitting the second beacon.
+   * 1) Push out button hitter
+   * 2) Strafe into beacon
+   * 3) Move backwards slightly in preparation for possibly knocking off cap ball.
+   */
   void pushSecond() {
     robot.pushOut();
     sleep(2000);
@@ -264,6 +353,12 @@ public abstract class AutoBase extends LinearOpMode {
 //    moveTicks(STRAFE_SPEED, Math.PI / 2, 500, 500);
   }
 
+  /**
+   * Procedure for approaching beacon.
+   * 1) Make sure line sensors are on proper side of line
+   * 2) Align on the line in front of the beacon
+   * 3) Drive a number of ticks to line up with first side of beacon.
+   */
   void approachBeacon() {
     if (getDir() > 0) {
       print("going forward...");
@@ -274,7 +369,7 @@ public abstract class AutoBase extends LinearOpMode {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       print("line found.");
       sleep(SLEEP_TIME);
-      // drive forward to align with beacon, then push the proper button
+      // drive forward to align with beacon
       print("drive forwards");
       driveTicks(SPEED / 2 * getDir(), 200);
     } else if (getDir() < 0) {

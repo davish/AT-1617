@@ -33,15 +33,18 @@ public class Atlas {
 
     DigitalChannel chooLimit;
 
-    AnalogInput dist;
-    AnalogInput distF;
-    AnalogInput distB;
-    OpticalDistanceSensor ods;
-    OpticalDistanceSensor odsr;
+    AnalogInput dist; // center ultrasonic sensor (currently unplugged to avoid sonic interference)
+    AnalogInput distF; // front ultrasonic sensor
+    AnalogInput distB; // rear ultrasonic sensor
+    OpticalDistanceSensor ods; // left line sensor
+    OpticalDistanceSensor odsr; // right line sensor
     public Gyro imu;
 
     public ColorSensor colorSensor;
 
+    /*
+     * Values for transfer. Adjust these to change speed of transfer/servo positions in both telop and auto.
+     */
     public final double LOAD_POSITION = .0;
     public final double REST_POSITION = .5;
     public final double STEP_SIZE = .02;
@@ -73,12 +76,12 @@ public class Atlas {
         distB = hwMap.analogInput.get("distB");
         ods = hwMap.opticalDistanceSensor.get("ods");
         odsr = hwMap.opticalDistanceSensor.get("odsr");
-        if (initSensors) {
+        if (initSensors) { // initializing the gyro takes time, so only intialize it if we need it.
             imu = new Gyro(hwMap.get(BNO055IMU.class, "imu"));
         }
 
         colorSensor = hwMap.colorSensor.get("mr");
-        colorSensor.enableLed(false);
+        colorSensor.enableLed(false); // turn off LED on color sensor so it can see the light emitted by the beacons.
 
         FL.setDirection(DcMotorSimple.Direction.REVERSE);
         BL.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -88,26 +91,50 @@ public class Atlas {
         init(ahwMap, true);
     }
 
+    /**
+     *
+     * @return true if the limit switch is in contact with the catapult.
+     */
     public boolean catapultLoaded() {
         return !chooLimit.getState();
     }
 
-
+    /**
+     * Aggregate sensor data from both ultrasonic sensors to get the distance away from the wall.
+     * @return Approximate distance from the wall in inches.
+     */
     public double getDistance() {
         return (getFrontDistance() + getBackDistance())/2;
     }
 
+    /**
+     *
+     * @return Distance in inches from front sensor to wall.
+     */
     public double getFrontDistance() {
         return distF.getVoltage() * 98;
     }
 
+    /**
+     *
+     * @return Distance in inches from back sensor to wall.
+     */
     public double getBackDistance() {
         return distB.getVoltage() * 98;
     }
 
+    /**
+     *
+     * @return True if left line sensor reads above a set brightness threshold.
+     */
     public boolean isOnLinel() {
         return ods.getLightDetected() > .5;
     }
+
+    /**
+     *
+     * @return True if right line sensor reads above a set brightness threshold.
+     */
     public boolean isOnLiner() {
         return odsr.getLightDetected() > .5;
     }
@@ -155,9 +182,18 @@ public class Atlas {
     }
 
     int pos = 0;
+
+    /**
+     * Get encoder ticks driven.
+     * @return encoder ticks
+     */
     public int getTicks() {
         return BR.getCurrentPosition() - pos;
     }
+
+    /**
+     * Reset encoder ticks for next movement.
+     */
     public void resetTicks() {
         pos = BR.getCurrentPosition();
     }
@@ -219,6 +255,9 @@ public class Atlas {
         this.moveStraight(pow, angle, actual, 0);
     }
 
+    /*
+     * Constant values for PID.
+     */
     double getKp() {
         return -0.02;
     }

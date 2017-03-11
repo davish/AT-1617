@@ -8,13 +8,18 @@ public abstract class AutoV2 extends AutoBase{
   public void run() throws InterruptedException {
     robot.colorSensor.enableLed(false);
 
+    /*
+     * ALTERNATIVE AUTONOMOUS PROGRAM:
+     * If no beacon is set to be hit, run this autonomous program from the corner of the field,
+     * With the robot lined up to shoot in the vortex when it moves forward.
+     */
     if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
       int FORWARD_TICKS = 2500;
       int CAP_BALL_TICKS = 1200;
       driveTicks(-SPEED, FORWARD_TICKS);
       sleep(SLEEP_TIME*2);
       shootParticles();
-      robot.runPickup(-1);
+      robot.runPickup(-1); // brush cap ball out of the way by running nom backwards.
       sleep(SLEEP_TIME);
 
       if (settings.knockCapBall) {
@@ -28,18 +33,18 @@ public abstract class AutoV2 extends AutoBase{
     driveTicks(-FAST_SPEED, 1000); // drive 1250 forward to shoot
     sleep(SLEEP_TIME);
     shootParticles();
-    driveTicks(-SPEED, 250);
+    driveTicks(-SPEED, 250); // drive forward some more to align with old shooting
     sleep(SLEEP_TIME);
     rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 45); // rotate and move towards beacon
     sleep(SLEEP_TIME);
 
-    driveTicks(FAST_SPEED * getDir(), 2400);
+    driveTicks(FAST_SPEED * getDir(), 2400); // sprint towards beacon
     sleep(SLEEP_TIME);
 
     rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 42); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
-    alignWithWall();
+    alignWithWall(); // align using ultrasonic sensors
 
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
@@ -50,7 +55,9 @@ public abstract class AutoV2 extends AutoBase{
 //    sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490); // go with encoders fast until we're past the line, then approach beacon normally.
+      // go with encoders fast until we're past the line, then approach beacon normally.
+      // Depending on what side of the button was hit, use different encoder values.
+      driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
       approachBeacon();
       sleep(SLEEP_TIME);

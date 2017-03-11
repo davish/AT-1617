@@ -57,9 +57,6 @@ public class NewDrive extends OpMode {
     boolean go_up = gp.left_stick_y > .1 && gp.right_stick_y > .1;
     boolean go_down = gp.left_stick_y < -.1 && gp.right_stick_y < -.1;
 
-    telemetry.addData("left stick", gp.left_stick_y);
-    telemetry.addData("right stick", gp.right_stick_y);
-
     if (go_up)
       robot.lift.setPower(1);
     else if (go_down)
@@ -103,7 +100,6 @@ public class NewDrive extends OpMode {
           transferState = 1;
         break;
       case 1:
-        // might have to switch to (chamberPos < LOAD_POSITION)
         if (chamberPos > robot.LOAD_POSITION) { // as long as the servo isn't at the limit,
           chamberPos -= robot.STEP_SIZE; // keep the transfer going.
         } else {
@@ -116,7 +112,6 @@ public class NewDrive extends OpMode {
           transferState = 3;
         break;
       case 3:
-        // might have to switch to (chamberPos > REST_POSITION
         if (chamberPos < robot.REST_POSITION)
           chamberPos += robot.STEP_SIZE;
         else
@@ -158,6 +153,10 @@ public class NewDrive extends OpMode {
     lastState = robot.catapultLoaded();
   }
 
+  /**
+   * Control launch with side-to-side on left stick
+   * @param gp
+   */
   void launchOverride(Gamepad gp) {
     double throttle = gp.left_stick_x*.5;
     isMoving = false;
