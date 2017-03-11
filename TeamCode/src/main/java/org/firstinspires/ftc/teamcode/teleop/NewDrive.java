@@ -32,17 +32,15 @@ public class NewDrive extends OpMode {
 
     transfer(gamepad2);
     lift(gamepad2);
-//    boop(gamepad2);
-
-
+    boop(gamepad2);
 
     telemetry.addData("servo", chamberPos);
     telemetry.update();
   }
 
   void boop(Gamepad gp) {
-    boolean go_out = gp.right_bumper;
-    boolean go_in = gp.left_bumper;
+    boolean go_out = gp.dpad_right;
+    boolean go_in = gp.dpad_left;
 
     if (go_out) {
       robot.pushOut();

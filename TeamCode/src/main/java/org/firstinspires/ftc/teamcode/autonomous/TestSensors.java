@@ -25,7 +25,7 @@ public class TestSensors extends LinearOpMode{
 //      telemetry.addData("Distance", robot.getDistance());
       telemetry.addData("Distance Front", robot.getFrontDistance());
       telemetry.addData("Distance Back", robot.getBackDistance());
-      telemetry.addData("Left Line", robot.isOnLinel());
+//      telemetry.addData("Left Line", robot.isOnLinel());
       telemetry.addData("Red", robot.colorSensor.red());
       telemetry.addData("Blue", robot.colorSensor.blue());
       telemetry.update();

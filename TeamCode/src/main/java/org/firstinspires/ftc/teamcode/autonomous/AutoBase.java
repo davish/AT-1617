@@ -168,7 +168,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
     if (settings.numShots > 1) {
       transferParticle();
-      sleep(SLEEP_TIME*2);
+      sleep(SLEEP_TIME);
       fireParticle();
 
     }
@@ -185,7 +185,7 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
   }
 
-  public int pushButton (int color) throws InterruptedException {
+  public int pushButton (int color, boolean second) throws InterruptedException {
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
     redLeft = robot.colorSensor.red();
@@ -194,42 +194,55 @@ public abstract class AutoBase extends LinearOpMode {
 //    redLeft = 1;
 //    blueLeft = 0;
     int hit = 0;
-
-    sleep(250);
     if(redLeft*color > blueLeft*color) {
-      push();
+      if (second) pushSecond();
+      else pushFirst();
       hit = 1;
       sleep(500);
     }
 
-    driveTicks(hit == 0 ? SPEED / 2 * getDir() : SPEED * getDir(), 290);
     if (hit==0) {
+      driveTicks(SPEED / 2 * getDir(), 290);
       sleep(500);
 
       redLeft = robot.colorSensor.red();
       blueLeft = robot.colorSensor.blue();
       print("Red:" + redLeft + ", Blue: " + blueLeft);
-      sleep(250);
 
       if (redLeft * color > blueLeft * color) {
-        push();
+        if (second) pushSecond();
+        else pushFirst();
         hit = -1;
       }
     }
     return hit;
   }
 
-  void push() {
+  void pushFirst() {
     robot.pushOut();
-    sleep(1500);
+    sleep(2000);
     robot.pushStop();
 //    sleep(200);
-    moveTicks(STRAFE_SPEED, -Math.PI / 2, 300, 500);
+    moveTicks(STRAFE_SPEED, -Math.PI / 2, 500, 500);
     sleep(200);
     robot.pushIn();
+    moveTicks(STRAFE_SPEED, Math.PI / 2, 250, 500);
     sleep(1500);
     robot.pushStop();
-    moveTicks(STRAFE_SPEED, Math.PI / 2, 300, 500);
+  }
+
+  void pushSecond() {
+    robot.pushOut();
+    sleep(2000);
+    robot.pushStop();
+//    sleep(200);
+    moveTicks(.8, -Math.PI / 2, 500, 500);
+    sleep(200);
+    robot.pushIn();
+    moveTicks(.8, Math.PI / 2, 250, 500);
+    sleep(1500);
+    robot.pushStop();
+//    moveTicks(STRAFE_SPEED, Math.PI / 2, 500, 500);
   }
 
   void approachBeacon() {
@@ -241,7 +254,7 @@ public abstract class AutoBase extends LinearOpMode {
       print("finding line...");
       moveUntilOnLine(SPEED / 2, BACKWARD);
       print("line found.");
-      sleep(SLEEP_TIME * 3);
+      sleep(SLEEP_TIME);
       // drive forward to align with beacon, then push the proper button
       print("drive forwards");
       driveTicks(SPEED / 2 * getDir(), 200);

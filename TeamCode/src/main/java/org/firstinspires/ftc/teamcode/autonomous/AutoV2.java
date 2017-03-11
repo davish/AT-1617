@@ -36,23 +36,28 @@ public abstract class AutoV2 extends AutoBase{
     driveTicks(FAST_SPEED * getDir(), 2400);
     sleep(SLEEP_TIME);
 
-    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 47 : 40); // rotate into alignment with wall
+    rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 42); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME);
-
     approachBeacon();
     sleep(SLEEP_TIME);
-    pushButton((int)getDir());
-    sleep(SLEEP_TIME);
+    int btn = pushButton((int)getDir(), false);
+//    sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      driveTicks(FAST_SPEED*getDir(), 2200); // go with encoders fast until we're past the line, then approach beacon normally.
+      driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490); // go with encoders fast until we're past the line, then approach beacon normally.
+      moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
       approachBeacon();
       sleep(SLEEP_TIME);
-      pushButton((int) getDir());
+      pushButton((int) getDir(), true);
+      if (settings.knockCapBall) {
+        robot.drive(1, 0, 0, 1);
+        sleep(3000);
+        robot.stopMotors();
+      }
     }
   }
 }

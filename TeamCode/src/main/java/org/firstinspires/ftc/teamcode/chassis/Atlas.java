@@ -92,7 +92,7 @@ public class Atlas {
 
 
     public double getDistance() {
-        return dist.getVoltage() * 98;
+        return (getFrontDistance() + getBackDistance())/2;
     }
 
     public double getFrontDistance() {
@@ -160,12 +160,11 @@ public class Atlas {
         pickup.setPower(pow);
     }
 
-    void drive(float fl, float bl, float fr, float br) {
+    public void drive(float fl, float bl, float fr, float br) {
         FL.setPower(fl);
         BL.setPower(bl);
         FR.setPower(fr);
         BR.setPower(br);
-
     }
 
     void moveLeft() {
