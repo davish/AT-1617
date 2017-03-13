@@ -30,6 +30,7 @@ public class Atlas {
 
     Servo transfer;
     Servo pusher;
+    public Servo foot;
 
     DigitalChannel chooLimit;
 
@@ -50,6 +51,14 @@ public class Atlas {
     public final double STEP_SIZE = .02;
     public final int DELAY_TIME = 100;
 
+    /*
+     * Values for top foot.
+     */
+
+    public final double FOOT_IN = 0;
+    public final double FOOT_UP = 1;
+    public final double FOOT_DOWN = .5;
+
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
 
@@ -64,6 +73,7 @@ public class Atlas {
         lift = hwMap.dcMotor.get("lift");
         transfer = hwMap.servo.get("transfer");
         pusher = hwMap.servo.get("pusher");
+        foot = hwMap.servo.get("foot");
 
         transfer.setPosition(REST_POSITION);
         pushStop();

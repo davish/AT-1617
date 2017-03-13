@@ -57,12 +57,23 @@ public class NewDrive extends OpMode {
     boolean go_up = gp.left_stick_y > .1 && gp.right_stick_y > .1;
     boolean go_down = gp.left_stick_y < -.1 && gp.right_stick_y < -.1;
 
+    boolean foot_up = gp.right_bumper && gp.dpad_up;
+    boolean foot_down = gp.right_bumper && gp.dpad_down;
+    boolean foot_in = gp.right_bumper && gp.left_bumper;
+
     if (go_up)
       robot.lift.setPower(1);
     else if (go_down)
       robot.lift.setPower(-1);
     else
       robot.lift.setPower(0);
+
+    if (foot_up)
+      robot.foot.setPosition(robot.FOOT_UP);
+    else if (foot_down)
+      robot.foot.setPosition(robot.FOOT_DOWN);
+    else if (foot_in)
+      robot.foot.setPosition(robot.FOOT_IN);
   }
 
   void transfer(Gamepad gp) {
