@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.chassis.Atlas;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InterruptedIOException;
 
 /**
  * Created by davis on 11/25/16.
@@ -73,6 +72,33 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(settings.delay*1000); // delay running OpMode as much as the settings app tells you to.
     telemetry.update();
     run();
+  }
+
+
+  long startPaddleAction = -1;
+  long paddleActionDuration = -1;
+  /**
+   * This function should be called at the end of every loop in this program.
+   * It manages actions that are being done asynchronously.
+   */
+  void manageAsync() {
+    // if the button pusher is moving it has exceeded its duration, stop the paddle.
+    if (startPaddleAction != -1 && System.currentTimeMillis() - startPaddleAction > paddleActionDuration) {
+      robot.pushStop();
+      startPaddleAction = paddleActionDuration = -1;
+    }
+  }
+
+  void asyncPushOut(int millis) {
+    startPaddleAction = System.currentTimeMillis();
+    paddleActionDuration = millis;
+    robot.pushOut();
+  }
+
+  void asyncPushIn(int millis) {
+    startPaddleAction = System.currentTimeMillis();
+    paddleActionDuration = millis;
+    robot.pushIn();
   }
 
   /**
@@ -142,6 +168,7 @@ public abstract class AutoBase extends LinearOpMode {
       telemetry.addData("Target", ticks);
       telemetry.addData("Current", robot.getTicks());
       telemetry.update();
+      manageAsync();
     }
     robot.stopMotors();
   }
@@ -200,6 +227,7 @@ public abstract class AutoBase extends LinearOpMode {
 //        break;
 //      }
 //      prevHeading = robot.imu.heading();
+      manageAsync();
     } while (Math.abs(robot.imu.heading()) < degs && opModeIsActive());
 
 //    while (b && Math.abs(robot.getTicks()) < fallbackTicks && opModeIsActive()) {
@@ -254,6 +282,7 @@ public abstract class AutoBase extends LinearOpMode {
       telemetry.addData("front", frontDist);
       telemetry.addData("back", backDist);
       telemetry.update();
+      manageAsync();
     } while (Math.abs(frontDist - backDist) > 1.0 && opModeIsActive());
     robot.stopMotors();
   }
@@ -327,10 +356,8 @@ public abstract class AutoBase extends LinearOpMode {
 //    sleep(200);
     moveTicks(STRAFE_SPEED, -Math.PI / 2, 500, 500);
     sleep(200);
-    robot.pushIn();
+    asyncPushIn(2000);
     moveTicks(STRAFE_SPEED, Math.PI / 2, 700, 1000);
-    sleep(1000);
-    robot.pushStop();
   }
 
   /**
@@ -346,10 +373,8 @@ public abstract class AutoBase extends LinearOpMode {
 //    sleep(200);
     moveTicks(.8, -Math.PI / 2, 500, 500);
     sleep(200);
-    robot.pushIn();
+    asyncPushIn(2000);
     moveTicks(.8, Math.PI / 2, 250, 500);
-    sleep(1500);
-    robot.pushStop();
 //    moveTicks(STRAFE_SPEED, Math.PI / 2, 500, 500);
   }
 
@@ -392,6 +417,7 @@ public abstract class AutoBase extends LinearOpMode {
     while (robot.getDistance() > dist && opModeIsActive()) {
       robot.imu.update();
       robot.moveStraight(pow, angle, robot.imu.heading(), h);
+      manageAsync();
     }
     robot.stopMotors();
   }
@@ -414,6 +440,7 @@ public abstract class AutoBase extends LinearOpMode {
   void moveUntilOnLine(double pow, double angle) {
     while (!robot.isOnLinel() && opModeIsActive()) {
       robot.move(pow, angle, 0);
+      manageAsync();
     }
     robot.stopMotors();
   }
