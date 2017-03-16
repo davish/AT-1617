@@ -4,7 +4,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
  * Created by davis on 2/21/17.
  */
 public abstract class AutoV2 extends AutoBase{
-  double WALL_DISTANCE = 7;
+  double WALL_DISTANCE = 7.6;
   public void run() throws InterruptedException {
     robot.colorSensor.enableLed(false);
 
@@ -58,9 +58,10 @@ public abstract class AutoV2 extends AutoBase{
       // go with encoders fast until we're past the line, then approach beacon normally.
       // Depending on what side of the button was hit, use different encoder values.
       if (getDir() == 1)
-        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2400 : 2690);
+        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2500 : 2800);
       else
         driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
+      sleep(SLEEP_TIME);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
       approachBeacon();
       sleep(SLEEP_TIME);
@@ -71,8 +72,8 @@ public abstract class AutoV2 extends AutoBase{
       }
       else if (settings.endOnCenter) {
         moveTicks(FAST_SPEED, Math.PI/2, 900);
-        alignWithWall();
-        driveTicks(1.0 * getDir(), getDir() == 1 ? 4500 : 4700);
+//        alignWithWall();
+        driveTicks(1.0 * getDir(), getDir() == 1 ? 4600 : 4800);
       }
     }
   }

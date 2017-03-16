@@ -39,8 +39,8 @@ public class NewDrive extends OpMode {
   }
 
   void boop(Gamepad gp) {
-    boolean go_out = gp.dpad_right;
-    boolean go_in = gp.dpad_left;
+    boolean go_out = gp.dpad_left;
+    boolean go_in = gp.dpad_right;
 
     if (go_out) {
       robot.pushOut();

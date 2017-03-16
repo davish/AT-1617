@@ -328,7 +328,7 @@ public abstract class AutoBase extends LinearOpMode {
 
     if (hit==0) { // if we didn't hit the first side, drive forward and sense the next side.
       driveTicks(SPEED / 2 * getDir(), 290);
-//      sleep(500);
+      sleep(500);
 
       redLeft = robot.colorSensor.red();
       blueLeft = robot.colorSensor.blue();
@@ -396,11 +396,11 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
       // drive forward to align with beacon
       print("drive forwards");
-      driveTicks(SPEED / 2 * getDir(), 200);
+      driveTicks(SPEED / 2 * getDir(), 125);
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
-      driveTicks(SPEED, 400);
+      driveTicks(SPEED, 450);
     }
   }
 
