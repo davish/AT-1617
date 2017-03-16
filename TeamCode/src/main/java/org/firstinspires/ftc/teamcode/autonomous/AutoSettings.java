@@ -32,7 +32,7 @@ public class AutoSettings extends LinearOpMode {
     telemetry.addData("Hit beacon 2", settings.beacon2);
     telemetry.addData("Shoot how many particles", settings.numShots);
     telemetry.addData("Knock off cap ball", settings.knockCapBall);
-    telemetry.addData("End on center", settings.endOnCenter);
+    telemetry.addData("End on Ramp", settings.endOnCenter);
     telemetry.update();
     waitForStart();
 
@@ -90,6 +90,7 @@ public class AutoSettings extends LinearOpMode {
           }
           break;
         case 4:
+          if (settings.endOnCenter) menu++; // either knock cap or end on center
           telemetry.addData(">", "Knock off Cap Ball?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
@@ -101,7 +102,8 @@ public class AutoSettings extends LinearOpMode {
           }
           break;
         case 5:
-          telemetry.addData(">", "End on center?");
+          if (settings.knockCapBall) menu++; // either knock cap or end on center
+          telemetry.addData(">", "Sprint to ramp?");
           telemetry.addData("a)", "yes");
           telemetry.addData("b)", "no");
           if (gamepad1.a || gamepad1.b) {

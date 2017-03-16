@@ -57,14 +57,22 @@ public abstract class AutoV2 extends AutoBase{
     if (settings.beacon2) {
       // go with encoders fast until we're past the line, then approach beacon normally.
       // Depending on what side of the button was hit, use different encoder values.
-      driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
+      if (getDir() == 1)
+        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2400 : 2690);
+      else
+        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
       approachBeacon();
       sleep(SLEEP_TIME);
       pushButton((int) getDir(), true);
       if (settings.knockCapBall) {
-        rotateDegs(-ROTATE_SPEED * getDir(), 30);
-        driveTicks(-FAST_SPEED * getDir(), 3250);
+        rotateDegs(-ROTATE_SPEED * getDir(), getDir() == 1 ? 45 : 30);
+        driveTicks(-FAST_SPEED * getDir(), 3500);
+      }
+      else if (settings.endOnCenter) {
+        moveTicks(FAST_SPEED, Math.PI/2, 900);
+        alignWithWall();
+        driveTicks(1.0 * getDir(), getDir() == 1 ? 4500 : 4700);
       }
     }
   }

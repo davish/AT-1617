@@ -53,7 +53,7 @@ public abstract class AutoBase extends LinearOpMode {
     telemetry.addData("Hit beacon 2", settings.beacon2);
     telemetry.addData("Shoot how many particles", settings.numShots);
     telemetry.addData("Knock off cap ball", settings.knockCapBall);
-    telemetry.addData("End on center", settings.endOnCenter);
+    telemetry.addData("Sprint to Ramp", settings.endOnCenter);
     telemetry.update();
     telemetry.update();
   }
@@ -323,12 +323,12 @@ public abstract class AutoBase extends LinearOpMode {
       if (second) pushSecond();
       else pushFirst();
       hit = 1;
-      sleep(500);
+//      sleep(500);
     }
 
     if (hit==0) { // if we didn't hit the first side, drive forward and sense the next side.
       driveTicks(SPEED / 2 * getDir(), 290);
-      sleep(500);
+//      sleep(500);
 
       redLeft = robot.colorSensor.red();
       blueLeft = robot.colorSensor.blue();
@@ -386,10 +386,10 @@ public abstract class AutoBase extends LinearOpMode {
    */
   void approachBeacon() {
     if (getDir() > 0) {
-      print("going forward...");
-      driveTicks(SPEED * getDir(), 300);
-      robot.stopMotors();
-      sleep(SLEEP_TIME);
+//      print("going forward...");
+//      driveTicks(SPEED * getDir(), 300);
+//      robot.stopMotors();
+//      sleep(SLEEP_TIME);
       print("finding line...");
       moveUntilOnLine(SPEED / 2, BACKWARD);
       print("line found.");
