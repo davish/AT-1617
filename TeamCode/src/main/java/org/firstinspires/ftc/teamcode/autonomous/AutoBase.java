@@ -287,6 +287,15 @@ public abstract class AutoBase extends LinearOpMode {
     robot.stopMotors();
   }
 
+  void initHeading() throws InterruptedException {
+    robot.imu.update();
+    while (Math.abs(robot.imu.rawHeading() - getDir() == 1 ? 180 : 0) > 5 && opModeIsActive()){
+      robot.imu.update();
+      robot.move(0, 0, ROTATE_SPEED * -FtcUtil.sign(robot.imu.rawHeading()));
+    }
+    robot.stopMotors();
+  }
+
   /**
    * Move each side of the robot independently to align perpendicular to the line on the mat.
    * [Still in testing, DOESN'T WORK]

@@ -43,6 +43,14 @@ public class Gyro {
       return -366;
   }
 
+  public double rawHeading() {
+    if (angles != null) {
+      return -angles.firstAngle;
+    }
+    else
+      return -366;
+  }
+
   public void resetHeading() {
     if (angles != null)
       forwardHeading = angles.firstAngle;

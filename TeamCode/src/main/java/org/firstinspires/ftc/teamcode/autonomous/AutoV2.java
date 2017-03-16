@@ -44,7 +44,8 @@ public abstract class AutoV2 extends AutoBase{
     rotateDegs(ROTATE_SPEED * getDir(), getDir() == 1 ? 50 : 42); // rotate into alignment with wall
     sleep(SLEEP_TIME);
 
-    alignWithWall(); // align using ultrasonic sensors
+//    alignWithWall(); // align using ultrasonic sensors
+    initHeading();
 
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
