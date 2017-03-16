@@ -55,9 +55,9 @@ public class Atlas {
      * Values for top foot.
      */
 
-    public final double FOOT_IN = 0;
-    public final double FOOT_UP = 1;
-    public final double FOOT_DOWN = .5;
+    public final double FOOT_IN = .62;
+    public final double FOOT_UP = .06;
+    public final double FOOT_DOWN = .29;
 
     public void init(HardwareMap ahwMap, boolean initSensors) {
         hwMap = ahwMap;
@@ -74,6 +74,7 @@ public class Atlas {
         transfer = hwMap.servo.get("transfer");
         pusher = hwMap.servo.get("pusher");
         foot = hwMap.servo.get("foot");
+        foot.setPosition(FOOT_IN);
 
         transfer.setPosition(REST_POSITION);
         pushStop();
