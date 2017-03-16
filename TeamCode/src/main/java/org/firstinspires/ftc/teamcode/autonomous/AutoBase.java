@@ -409,7 +409,7 @@ public abstract class AutoBase extends LinearOpMode {
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
-      driveTicks(SPEED, 450);
+      driveTicks(SPEED, 390);
     }
   }
 
