@@ -45,6 +45,7 @@ public abstract class AutoBase extends LinearOpMode {
     }
     robot = new Atlas();
     robot.init(hardwareMap);
+    robot.colorSensor.enableLed(false);
     while (!robot.catapultLoaded()) // load catapult as part of initialization.
       robot.runChoo(1);
     robot.runChoo(0);
