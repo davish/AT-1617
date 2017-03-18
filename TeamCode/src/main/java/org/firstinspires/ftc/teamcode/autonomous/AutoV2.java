@@ -19,11 +19,14 @@ public abstract class AutoV2 extends AutoBase{
       driveTicks(-SPEED, FORWARD_TICKS);
       sleep(SLEEP_TIME*2);
       shootParticles();
-      robot.runPickup(-1); // brush cap ball out of the way by running nom backwards.
-      sleep(SLEEP_TIME);
 
       if (settings.knockCapBall) {
+        robot.runPickup(-1); // brush cap ball out of the way by running nom backwards.
+        sleep(SLEEP_TIME);
         driveTicks(-SPEED, CAP_BALL_TICKS);
+      }
+      else {
+        driveTicks(SPEED, FORWARD_TICKS/2);
       }
       robot.runPickup(0);
       stop();

@@ -325,6 +325,7 @@ public abstract class AutoBase extends LinearOpMode {
   public int pushButton (int color, boolean second) throws InterruptedException {
     int redLeft, blueLeft;
     robot.colorSensor.enableLed(false);
+    sleep(500);
     redLeft = robot.colorSensor.red();
     blueLeft = robot.colorSensor.blue();
     print("Red:" + redLeft + ", Blue: " + blueLeft);
@@ -406,7 +407,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
       // drive forward to align with beacon
       print("drive forwards");
-      driveTicks(SPEED / 2 * getDir(), 125);
+      driveTicks(SPEED / 2 * getDir(), 110);
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
