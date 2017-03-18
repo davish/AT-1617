@@ -446,13 +446,28 @@ public abstract class AutoBase extends LinearOpMode {
    * Move robot until it senses a white line.
    * @param pow speed to move at
    * @param angle angle to move at.
+   * @param maxTicks maximum number of encoder ticks to move before trying again
      */
-  void moveUntilOnLine(double pow, double angle) {
-    while (!robot.isOnLinel() && opModeIsActive()) {
+  void moveUntilOnLine(double pow, double angle, int maxTicks) {
+    robot.resetTicks();
+    while (!robot.isOnLinel() && Math.abs(robot.getTicks()) < maxTicks && opModeIsActive()) {
       robot.move(pow, angle, 0);
       manageAsync();
     }
     robot.stopMotors();
+    if (Math.abs(robot.getTicks()) > maxTicks) {
+      moveTicks(pow, angle + Math.PI, maxTicks + maxTicks / 2);
+
+      while (!robot.isOnLinel() && opModeIsActive()) {
+        robot.move(pow, angle, 0);
+        manageAsync();
+      }
+      robot.stopMotors();
+    }
+  }
+
+  void moveUntilOnLine(double pow, double angle) {
+    moveUntilOnLine(pow, angle, 1000);
   }
   void print(String s) {
     telemetry.addData(">", s);

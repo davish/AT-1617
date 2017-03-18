@@ -59,7 +59,7 @@ public abstract class AutoV2 extends AutoBase{
       // go with encoders fast until we're past the line, then approach beacon normally.
       // Depending on what side of the button was hit, use different encoder values.
       if (getDir() == 1)
-        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2500 : 2800);
+        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2600 : 2800);
       else
         driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
       sleep(SLEEP_TIME);
