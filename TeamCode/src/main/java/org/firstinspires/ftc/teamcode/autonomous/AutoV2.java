@@ -63,7 +63,7 @@ public abstract class AutoV2 extends AutoBase{
       // go with encoders fast until we're past the line, then approach beacon normally.
       // Depending on what side of the button was hit, use different encoder values.
       if (settings.evadeDefense) {
-        moveTicks(FAST_SPEED, Math.PI/2, 1000);
+        moveTicks(1.0, Math.PI/2, 1800);
       }
       if (!settings.waitForDefense) {
         if (getDir() == 1)
@@ -72,14 +72,15 @@ public abstract class AutoV2 extends AutoBase{
           driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2200 : 2490);
       } else {
         if (getDir() == 1)
-          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2200 : 2400);
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 1600 : 1800);
         else
-          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 1800 : 2090);
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 1200 : 1490);
 
         while (System.currentTimeMillis() - startTime < 23000)
           ;
 
-        driveTicks(FAST_SPEED * getDir(), 400);
+        if (getDir() == 1)
+          driveTicks(FAST_SPEED * getDir(), 1000);
       }
 
       sleep(SLEEP_TIME);

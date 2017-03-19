@@ -55,6 +55,8 @@ public abstract class AutoBase extends LinearOpMode {
     telemetry.addData("Shoot how many particles", settings.numShots);
     telemetry.addData("Knock off cap ball", settings.knockCapBall);
     telemetry.addData("Sprint to Ramp", settings.endOnCenter);
+    telemetry.addData("DEFENSE: Wait for block", settings.waitForDefense);
+    telemetry.addData("DEFENSE: Evade defense", settings.evadeDefense);
     telemetry.update();
     telemetry.update();
   }
