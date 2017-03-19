@@ -6,6 +6,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 public abstract class AutoV2 extends AutoBase{
   double WALL_DISTANCE = 7.6;
   public void run() throws InterruptedException {
+    long startTime = System.currentTimeMillis();
     robot.colorSensor.enableLed(false);
 
     /*
@@ -61,10 +62,26 @@ public abstract class AutoV2 extends AutoBase{
     if (settings.beacon2) {
       // go with encoders fast until we're past the line, then approach beacon normally.
       // Depending on what side of the button was hit, use different encoder values.
-      if (getDir() == 1)
-        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2600 : 2800);
-      else
-        driveTicks(FAST_SPEED*getDir(), btn == 1 ? 2200 : 2490);
+      if (settings.evadeDefense) {
+        moveTicks(FAST_SPEED, Math.PI/2, 1000);
+      }
+      if (!settings.waitForDefense) {
+        if (getDir() == 1)
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2600 : 2800);
+        else
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2200 : 2490);
+      } else {
+        if (getDir() == 1)
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2200 : 2400);
+        else
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 1800 : 2090);
+
+        while (System.currentTimeMillis() - startTime < 23000)
+          ;
+
+        driveTicks(FAST_SPEED * getDir(), 400);
+      }
+
       sleep(SLEEP_TIME);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
       approachBeacon();

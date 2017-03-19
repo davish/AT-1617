@@ -9,4 +9,6 @@ public class Settings {
   boolean knockCapBall = true;
   boolean endOnCenter = true;
   int delay = 0;
+  boolean waitForDefense = false;
+  boolean evadeDefense = false;
 }

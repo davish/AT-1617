@@ -113,6 +113,30 @@ public class AutoSettings extends LinearOpMode {
             menu++;
           }
           break;
+        case 6:
+          if (settings.evadeDefense) menu++;
+          telemetry.addData(">", "DEFENSE: Wait for Second Beacon?");
+          telemetry.addData("a)", "yes");
+          telemetry.addData("b)", "no");
+          if (gamepad1.a || gamepad1.b) {
+            settings.waitForDefense = gamepad1.a;
+            ReadWriteFile.writeFile(sfile, gson.toJson(settings));
+            sleep(DEBOUNCE_DELAY);
+            menu++;
+          }
+          break;
+        case 7:
+          if (settings.waitForDefense) menu++;
+          telemetry.addData(">", "DEFENSE: Evade Blocking Team?");
+          telemetry.addData("a)", "yes");
+          telemetry.addData("b)", "no");
+          if (gamepad1.a || gamepad1.b) {
+            settings.evadeDefense = gamepad1.a;
+            ReadWriteFile.writeFile(sfile, gson.toJson(settings));
+            sleep(DEBOUNCE_DELAY);
+            menu++;
+          }
+          break;
         default:
           menu = 0;
           break;
