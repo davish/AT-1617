@@ -48,8 +48,9 @@ public class Atlas {
      */
     public final double LOAD_POSITION = .0;
     public final double REST_POSITION = .5;
-    public final double STEP_SIZE = .02;
-    public final int DELAY_TIME = 100;
+    public final double STEP_SIZE = .1;
+    public final int DELAY_TIME = 200;
+
 
     /*
      * Values for top foot.

@@ -15,7 +15,7 @@ public class LoadChoo extends LinearOpMode{
 
   public void runOpMode() throws InterruptedException {
     Atlas robot = new Atlas();
-    robot.init(hardwareMap);
+    robot.init(hardwareMap, false);
     while (!robot.catapultLoaded())
       robot.runChoo(1);
     robot.runChoo(0);
