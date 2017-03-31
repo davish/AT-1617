@@ -49,7 +49,7 @@ public class Atlas {
     public final double LOAD_POSITION = .0;
     public final double REST_POSITION = .5;
     public final double STEP_SIZE = .1;
-    public final int DELAY_TIME = 200;
+    public final int DELAY_TIME = 230;
 
 
     /*
