@@ -150,7 +150,7 @@ public class NewDrive extends OpMode {
   void launchMain(Gamepad gp) {
     // We want this to be a button tap. If the button is pressed, set isMoving to true, if it's
     // been pressed in the past, persist that state.
-    isMoving = (gp.y || isMoving) && !gp.x;
+    isMoving = (gp.y || isMoving) && !gp.x && transferState == 0;
     // if we're moving and we're transitioning from open to closed, stop moving
     if (isMoving && !lastState && robot.catapultLoaded()) {
       isMoving = false;
