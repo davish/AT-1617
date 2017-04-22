@@ -367,7 +367,7 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(2000);
     robot.pushStop();
 //    sleep(200);
-    moveTicks(STRAFE_SPEED, -Math.PI / 2, 500, 500);
+    moveTicks(STRAFE_SPEED, -Math.PI / 2, 700, 1000);
     sleep(200);
     asyncPushIn(2000);
     moveTicks(STRAFE_SPEED, Math.PI / 2, 700, 1000);
@@ -409,7 +409,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
       // drive forward to align with beacon
       print("drive forwards");
-      driveTicks(SPEED / 2 * getDir(), 110);
+      driveTicks(SPEED / 2 * getDir(), 200);
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
