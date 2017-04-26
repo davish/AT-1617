@@ -47,7 +47,7 @@ public class Atlas {
      * Values for transfer. Adjust these to change speed of transfer/servo positions in both telop and auto.
      */
     public final double LOAD_POSITION = .0;
-    public final double REST_POSITION = .5;
+    public final double REST_POSITION = .53;
     public final double STEP_SIZE = .1;
     public final int DELAY_TIME = 230;
 

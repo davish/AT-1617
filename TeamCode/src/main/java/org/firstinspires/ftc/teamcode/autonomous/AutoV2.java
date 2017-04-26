@@ -34,10 +34,13 @@ public abstract class AutoV2 extends AutoBase{
       return;
     }
 
-    driveTicks(-FAST_SPEED, 1000); // drive 1250 forward to shoot
+    int fullticks = 1250;
+    int shootingdist = 800;
+
+    driveTicks(-FAST_SPEED, shootingdist); // drive 1250 forward to shoot
     sleep(SLEEP_TIME);
     shootParticles();
-    driveTicks(-SPEED, 250); // drive forward some more to align with old shooting
+    driveTicks(-SPEED, fullticks - shootingdist); // drive forward some more to align with old shooting
     sleep(SLEEP_TIME);
     rotateDegs(ROTATE_SPEED, getDir() == 1 ? 110 : 45); // rotate and move towards beacon
     sleep(SLEEP_TIME);
@@ -85,18 +88,22 @@ public abstract class AutoV2 extends AutoBase{
 
       sleep(SLEEP_TIME);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
+//      if (getDir() == -1) driveTicks(-SPEED, 200);
       approachBeacon();
       sleep(SLEEP_TIME);
       pushButton((int) getDir(), true);
       if (settings.knockCapBall) {
-        rotateDegs(-ROTATE_SPEED * getDir(), getDir() == 1 ? 45 : 30);
-        driveTicks(-FAST_SPEED * getDir(), 3500);
+        rotateDegs(-ROTATE_SPEED, getDir() == 1 ? 40 : 140);
+        robot.runPickup(-1);
+        driveTicks(-FAST_SPEED, 3500);
+        robot.runPickup(0);
       }
       else if (settings.endOnCenter) {
         moveTicks(FAST_SPEED, Math.PI/2, 900);
 //        alignWithWall();
         driveTicks(1.0 * getDir(), getDir() == 1 ? 4600 : 4800);
       }
+
     }
   }
 }

@@ -367,10 +367,10 @@ public abstract class AutoBase extends LinearOpMode {
     sleep(2000);
     robot.pushStop();
 //    sleep(200);
-    moveTicks(STRAFE_SPEED, -Math.PI / 2, 700, 1000);
+    moveTicks(.8, -Math.PI / 2, 700, 1000);
     sleep(200);
     asyncPushIn(2000);
-    moveTicks(STRAFE_SPEED, Math.PI / 2, 700, 1000);
+    moveTicks(.8, Math.PI / 2, 700, 1000);
   }
 
   /**
@@ -409,7 +409,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
       // drive forward to align with beacon
       print("drive forwards");
-      driveTicks(SPEED / 2 * getDir(), 200);
+      driveTicks(SPEED / 2 * getDir(), 150);
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
@@ -451,9 +451,10 @@ public abstract class AutoBase extends LinearOpMode {
    * @param angle angle to move at.
    * @param maxTicks maximum number of encoder ticks to move before trying again
      */
-  void moveUntilOnLine(double pow, double angle, int maxTicks) {
+  void moveUntilOnLine(double pow, double angle, int maxTicks, long maxMillis) {
     robot.resetTicks();
-    while (!robot.isOnLinel() && Math.abs(robot.getTicks()) < maxTicks && opModeIsActive()) {
+    long time = System.currentTimeMillis();
+    while (!robot.isOnLinel() && Math.abs(robot.getTicks()) < maxTicks && opModeIsActive() && System.currentTimeMillis() - time < maxMillis) {
       robot.move(pow, angle, 0);
       manageAsync();
     }
@@ -470,7 +471,7 @@ public abstract class AutoBase extends LinearOpMode {
   }
 
   void moveUntilOnLine(double pow, double angle) {
-    moveUntilOnLine(pow, angle, 1000);
+    moveUntilOnLine(pow, angle, 1000, 4000);
   }
   void print(String s) {
     telemetry.addData(">", s);
