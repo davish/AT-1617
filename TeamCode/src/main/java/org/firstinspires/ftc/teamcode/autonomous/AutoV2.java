@@ -15,8 +15,8 @@ public abstract class AutoV2 extends AutoBase{
      * With the robot lined up to shoot in the vortex when it moves forward.
      */
     if (!settings.beacon1 && !settings.beacon2 && settings.numShots > 0) {
-      int FORWARD_TICKS = 2500;
-      int CAP_BALL_TICKS = 1200;
+      int FORWARD_TICKS = 2200;
+      int CAP_BALL_TICKS = 1500;
       driveTicks(-SPEED, FORWARD_TICKS);
       sleep(SLEEP_TIME*2);
       shootParticles();
@@ -57,23 +57,26 @@ public abstract class AutoV2 extends AutoBase{
     print("strafe");
     moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
     sleep(SLEEP_TIME);
-    approachBeacon();
+    approachBeacon(1);
     sleep(SLEEP_TIME);
     int btn = pushButton((int)getDir(), false);
 //    sleep(SLEEP_TIME);
 
     if (settings.beacon2) {
-      // go with encoders fast until we're past the line, then approach beacon normally.
-      // Depending on what side of the button was hit, use different encoder values.
       if (settings.evadeDefense) {
         moveTicks(1.0, Math.PI/2, 1800);
       }
+
+      // go with encoders fast until we're past the line, then approach beacon normally.
+      // Depending on what side of the button was hit, use different encoder values.
       if (!settings.waitForDefense) {
         if (getDir() == 1)
-          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2600 : 2800);
+          driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2600 : 2800); // driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2800 : 2900);
         else
           driveTicks(FAST_SPEED * getDir(), btn == 1 ? 2200 : 2490);
-      } else {
+      }
+
+      else {
         if (getDir() == 1)
           driveTicks(FAST_SPEED * getDir(), btn == 1 ? 1600 : 1800);
         else
@@ -88,8 +91,8 @@ public abstract class AutoV2 extends AutoBase{
 
       sleep(SLEEP_TIME);
       moveUntilCloserThan(WALL_DISTANCE, .8); // strafe until we're within pushing range
-//      if (getDir() == -1) driveTicks(-SPEED, 200);
-      approachBeacon();
+//      if (getDir() == 1) driveTicks(SPEED*getDir(), 200);
+      approachBeacon(2);
       sleep(SLEEP_TIME);
       pushButton((int) getDir(), true);
       if (settings.knockCapBall) {

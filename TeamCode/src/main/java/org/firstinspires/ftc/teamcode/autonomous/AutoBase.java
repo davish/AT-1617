@@ -397,7 +397,7 @@ public abstract class AutoBase extends LinearOpMode {
    * 2) Align on the line in front of the beacon
    * 3) Drive a number of ticks to line up with first side of beacon.
    */
-  void approachBeacon() {
+  void approachBeacon(int num) {
     if (getDir() > 0) {
 //      print("going forward...");
 //      driveTicks(SPEED * getDir(), 300);
@@ -409,7 +409,7 @@ public abstract class AutoBase extends LinearOpMode {
       sleep(SLEEP_TIME);
       // drive forward to align with beacon
       print("drive forwards");
-      driveTicks(SPEED / 2 * getDir(), 150);
+      driveTicks(SPEED / 2 * getDir(), num == 1 ? 150 : 200);
     } else if (getDir() < 0) {
       moveUntilOnLine(SPEED / 2, BACKWARD);
       sleep(SLEEP_TIME);
@@ -459,7 +459,7 @@ public abstract class AutoBase extends LinearOpMode {
       manageAsync();
     }
     robot.stopMotors();
-    if (Math.abs(robot.getTicks()) > maxTicks) {
+    if (Math.abs(robot.getTicks()) > maxTicks || System.currentTimeMillis() - time > maxMillis) {
       moveTicks(pow, angle + Math.PI, maxTicks + maxTicks / 2);
 
       while (!robot.isOnLinel() && opModeIsActive()) {
@@ -467,11 +467,12 @@ public abstract class AutoBase extends LinearOpMode {
         manageAsync();
       }
       robot.stopMotors();
+//      moveUntilOnLine(pow, angle, maxTicks, maxMillis);
     }
   }
 
   void moveUntilOnLine(double pow, double angle) {
-    moveUntilOnLine(pow, angle, 1000, 4000);
+    moveUntilOnLine(pow, angle, 1000, 2000);
   }
   void print(String s) {
     telemetry.addData(">", s);
