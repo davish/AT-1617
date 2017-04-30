@@ -6,7 +6,6 @@ package org.firstinspires.ftc.teamcode.autonomous;
 public abstract class AutoV2 extends AutoBase{
   double WALL_DISTANCE = 7.6;
   public void run() throws InterruptedException {
-    long startTime = System.currentTimeMillis();
     robot.colorSensor.enableLed(false);
 
     /*
@@ -38,7 +37,7 @@ public abstract class AutoV2 extends AutoBase{
     int shootingdist = 800;
 
     driveTicks(-FAST_SPEED, shootingdist); // drive 1250 forward to shoot
-    sleep(SLEEP_TIME);
+    sleep(700);
     shootParticles();
     driveTicks(-SPEED, fullticks - shootingdist); // drive forward some more to align with old shooting
     sleep(SLEEP_TIME);
@@ -96,7 +95,7 @@ public abstract class AutoV2 extends AutoBase{
       sleep(SLEEP_TIME);
       pushButton((int) getDir(), true);
       if (settings.knockCapBall) {
-        rotateDegs(-ROTATE_SPEED, getDir() == 1 ? 40 : 140);
+        rotateDegs(-ROTATE_SPEED, getDir() == 1 ? 40 : 120);
         robot.runPickup(-1);
         driveTicks(-FAST_SPEED, 3500);
         robot.runPickup(0);

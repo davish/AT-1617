@@ -26,7 +26,7 @@ public abstract class AutoBase extends LinearOpMode {
   double ROTATE_SPEED = 0.5;
 
 
-
+  long startTime;
   static final double FORWARD = 0;
   static final double BACKWARD = Math.PI;
 
@@ -70,6 +70,7 @@ public abstract class AutoBase extends LinearOpMode {
   public void runOpMode() throws InterruptedException{
     setup();
     waitForStart();
+    startTime = System.currentTimeMillis();
     telemetry.addData(">", settings.delay + " second delay");
     telemetry.update();
     sleep(settings.delay*1000); // delay running OpMode as much as the settings app tells you to.
@@ -347,10 +348,17 @@ public abstract class AutoBase extends LinearOpMode {
       blueLeft = robot.colorSensor.blue();
       print("Red:" + redLeft + ", Blue: " + blueLeft);
 
-      if (redLeft * color > blueLeft * color) {
+      if (redLeft * color >= blueLeft * color) {
         if (second) pushSecond();
         else pushFirst();
         hit = -1;
+      }
+      else if (redLeft * color < blueLeft * color) {
+        driveTicks(-SPEED / 2 * getDir(), 290);
+        sleep(SLEEP_TIME);
+        if (second) pushSecond();
+        else pushFirst();
+        hit = 1;
       }
     }
     return hit;
@@ -457,6 +465,16 @@ public abstract class AutoBase extends LinearOpMode {
     while (!robot.isOnLinel() && Math.abs(robot.getTicks()) < maxTicks && opModeIsActive() && System.currentTimeMillis() - time < maxMillis) {
       robot.move(pow, angle, 0);
       manageAsync();
+
+//      if (Math.abs(robot.getTicks()) > maxTicks || System.currentTimeMillis() - time > maxMillis) {
+//        if (count++ > 3) break;
+//        print("Missed line. Trying for the " + count + " time");
+//        robot.stopMotors();
+//        sleep(250);
+//        driveTicks(-SPEED, maxTicks+maxTicks/2);
+//        time = System.currentTimeMillis();
+//        robot.resetTicks();
+//      }
     }
     robot.stopMotors();
     if (Math.abs(robot.getTicks()) > maxTicks || System.currentTimeMillis() - time > maxMillis) {
@@ -476,6 +494,10 @@ public abstract class AutoBase extends LinearOpMode {
   }
   void print(String s) {
     telemetry.addData(">", s);
+    telemetry.update();
+  }
+  void print2(String s) {
+    telemetry.addData("!", s);
     telemetry.update();
   }
 }
